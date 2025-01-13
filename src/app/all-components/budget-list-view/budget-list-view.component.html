@@ -1,0 +1,77 @@
+<div class="main-content section-background" style="min-height: 91vh">
+    <section class="main-content">
+      <h2 class="heading" *ngIf="!viewMode">UPDATE BUDGET HEAD</h2>
+      <h2 class="heading" *ngIf="viewMode">VIEW BUDGET HEAD</h2>
+  
+      <form [formGroup]="budgetFormGroup">
+        <div class="row">
+          <div class="col-2">
+            <label for="v_BUDGET">Budget Type : </label>
+            <select class="form-select" id="v_BUDGET" formControlName="budgetType" (change)="changeBudgetDropDown()"
+              *ngIf="!viewMode">
+              <option value="Work Budget">Work Budget</option>
+              <option value="Cash Budget">Cash Budget</option>
+            </select>
+            <input type="text" class="form-control view" formControlName="budgetType" readonly *ngIf="viewMode">
+          </div>
+  
+          <div class="col-3">
+            <label for="v_HEAD">Main Group : </label>
+            <select class="form-select" id="v_HEAD" formControlName="mainGroup" required *ngIf="!viewMode">
+              <option *ngFor="let items of budgetTypeArray" [value]="items">{{items}}</option>
+            </select>
+            <input type="text" class="form-control view" formControlName="mainGroup" readonly *ngIf="viewMode">
+          </div>
+  
+          <div class="col-3">
+            <label for="v_GROUP">Group :</label>
+            <input class="form-control" type="text" id="v_GROUP" formControlName="group" required *ngIf="!viewMode" />
+            <input class="form-control view" type="text" id="v_GROUP" formControlName="group" readonly *ngIf="viewMode" />
+  
+          </div>
+  
+          <div class="col-2">
+  
+            <label for="v_GROUP">Group Total :</label>
+            <select class="form-select budgetTotal" formControlName="groupTotal" *ngIf="!viewMode">
+              <option value="A">Total A</option>
+              <option value="B">Total B</option>
+              <option value="C">Total C</option>
+              <option value="">Others</option>
+            </select> <input class="form-control view" type="text" id="v_GROUP" formControlName="groupTotal" readonly *ngIf="viewMode" />
+  
+          </div>
+  
+          <div class="addButton col-2 mt-2" *ngIf="!viewMode">
+            <label for="">Add Sub-group</label>
+            <button mat-button color="primary" (click)="addSubgroup()">
+              <mat-icon>add_circle</mat-icon>
+            </button>
+          </div>
+        </div>
+        <br />
+  
+        <div class="subgroups" formArrayName="subGroup">
+          <div class="row" *ngFor="let subGroup of getSubGroup['controls']; let i = index" [formGroupName]="i">
+            <div class="col-3">
+              <label>Subgroup{{ i + 1 }}</label>
+              <div class="input-with-button">
+                <input class="form-control" type="text" formControlName="subGroup" required *ngIf="!viewMode" />
+                <input class="form-control view" type="text" formControlName="subGroup" readonly *ngIf="viewMode" />
+              </div>
+            </div>
+            <div class="deleteButton col-2" *ngIf="!viewMode">
+              <button mat-icon-button color="warn" type="button" (click)="removeSubgroup(i)">
+                <mat-icon>remove_circle</mat-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+  
+        <div class="submitbutton">
+          <button class="btn btn-primary" routerLink="/famodule/home/budget-list"> Back </button>
+          <button class="btn btn-success" (click)="postUpdateBudget()" *ngIf="!viewMode"> Update </button>
+        </div>
+      </form>
+    </section>
+  </div>

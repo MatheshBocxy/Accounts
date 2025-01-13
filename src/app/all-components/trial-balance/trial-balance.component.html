@@ -1,0 +1,140 @@
+<div class="wholepage" style="overflow: hidden;">
+    <div class="container row mb-2">
+      <div class="col-1"></div>
+      <div class="col-3">
+        <label>Division Wise</label>
+        <select class="form-select">
+          <option *ngFor="let division of divisions" [value]="division">{{ division }}</option>
+        </select>
+      </div>
+  
+      <!-- <div class="col-3">
+        <label>Code Wise</label>
+        <select class="form-select">
+          <option>code Wise</option>
+          <option>code Wise</option>
+          <option>code Wise</option>
+        </select>
+      </div> -->
+  
+      <div class="col-3">
+        <label>Year</label>
+        <select class="form-select">
+          <option *ngFor="let year of annualYears" [value]="year">{{ year }}</option>
+        </select>
+      </div>
+  
+      <div class="col-2">
+        <label>From</label>
+        <input type="date" class="form-control">
+      </div>
+      <div class="col-2">
+        <label>To</label>
+        <input type="date" class="form-control">
+      </div>
+  
+    </div>
+    <!-- <div class="container row">
+      <div class="form-group col-md">
+        <mat-form-field appearance="fill">
+          <mat-label>Division Wise:</mat-label>
+          <mat-select placeholder="DivisionWise" [(ngModel)]="selectedDivision" id="division">
+            <mat-option *ngFor="let division of divisions" [value]="division">{{ division }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+  
+      <div class="form-group col-md">
+        <mat-form-field appearance="fill">
+          <mat-label>Code Wise:</mat-label>
+          <mat-select placeholder="CodeWise" [(ngModel)]="selectedCodeWise" id="codeWise">
+            <mat-option *ngFor="let code of codeWise" [value]="code">{{ code }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+  
+      <div class="form-group col-md">
+        <mat-form-field appearance="fill">
+          <mat-label>Financial Year:</mat-label>
+          <mat-select placeholder="Financial Year" (ngModelChange)="checkDates()" [(ngModel)]="selectedYear"
+            id="annualYear">
+            <mat-option disabled selected>Financial Year</mat-option>
+            <mat-option *ngFor="let year of annualYears" [value]="year">{{ year }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+  
+      <div class="form-group col-md">
+        <mat-form-field appearance="fill">
+          <mat-label>Period</mat-label>
+  
+          <mat-date-range-input [rangePicker]="picker">
+            <input matStartDate placeholder="From Date" [min]="DropSelectYear1" [max]="DropSelectedYear2"
+              [(ngModel)]="fromDate" name="fromDate" id="fromDate">
+            <input matEndDate placeholder="To Date" [min]="DropSelectYear1" [max]="DropSelectedYear2" [(ngModel)]="toDate"
+              [max]="maxDate" name="toDate" id="toDate">
+  
+          </mat-date-range-input>
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-date-range-picker #picker></mat-date-range-picker>
+        </mat-form-field>
+      </div>
+    </div> -->
+  
+  
+  
+    <section class="main-content table1">
+      <section class="main-table">
+        <table class="table">
+          <thead>
+  
+            <tr>
+              <th class="heading1 mx-auto" colspan="8">TRIAL BALANCE FOR THE PERIOD FROM {{ fromDate | date:'mediumDate'
+                }} to {{ toDate | date:'mediumDate'}} </th>
+            </tr>
+            <tr>
+              <th class="heading1 mx-auto" colspan="1">CODE NO.</th>
+              <th class="heading1 mx-auto" colspan="1">DESCRIPTION</th>
+              <th class="heading1 mx-auto" colspan="2">OPENING BALANCE </th>
+              <th class="heading1 mx-auto" colspan="2">DURING THE MONTH </th>
+              <th class="heading1 mx-auto" colspan="2">CLOSING BALANCE</th>
+            </tr>
+            <tr>
+              <th class="heading2 mx-auto" colspan="1"></th>
+              <th class="heading2 mx-auto" colspan="1"></th>
+              <th class="heading2 mx-auto" colspan="1">DEBIT</th>
+              <th class="heading2 mx-auto" colspan="1">CREDIT</th>
+              <th class="heading2 mx-auto" colspan="1">DEBIT</th>
+              <th class="heading2 mx-auto" colspan="1">CREDIT</th>
+              <th class="heading2 mx-auto" colspan="1">DEBIT</th>
+              <th class="heading2 mx-auto" colspan="1">CREDIT</th>
+  
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of data">
+              <td class="heading2">{{ item.accountNumber }}</td>
+              <td class="heading2">{{ item.description }}</td>
+              <td class="heading2">{{ item.openingBalanceDebit }}</td>
+              <td class="heading2">{{ item.openingBalanceCredit }}</td>
+              <td class="heading2">{{ item.duringMonthDebit }}</td>
+              <td class="heading2">{{ item.duringMonthCredit }}</td>
+              <td class="heading2">{{ item.closingBalanceDebit }}</td>
+              <td class="heading2">{{ item.closingBalanceCredit }}</td>
+            </tr>
+  
+            <tr>
+              <td class="heading3"></td>
+              <td class="heading3">Total:</td>
+              <td class="heading3"></td>
+              <td class="heading3"></td>
+              <td class="heading3"></td>
+              <td class="heading3"></td>
+              <td class="heading3"></td>
+              <td class="heading3"></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+    </section>
+  </div>

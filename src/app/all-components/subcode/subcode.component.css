@@ -1,0 +1,222 @@
+.main-content {
+  padding: 2rem;
+  border-radius: 20px;
+  background-color: #f2d8d8;
+
+}
+
+.header-row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.sub-heading {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #161F6D;
+}
+
+.form-section-background {
+  /* background-color: #B47B84; */
+  background-color: #2E6583;
+  color: white;
+  /* border-radius: 20px; */
+  padding: 10px;
+}
+
+.filter-row {
+  background-color: #f2d8d8;
+  border-radius: 1rem;
+  padding: 0.5rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.search-container {
+  position: relative;
+  display: inline-block;
+}
+
+/* .submitbutton{
+    border-radius: 20px !important;
+    font-size: 15px !important;
+    width: 120px !important;
+    height: 30px !important;
+    padding: 2px !important;
+  } */
+#mass {
+
+  border-radius: 20px !important;
+  font-size: 15px !important;
+  width: 120px !important;
+  height: 30px !important;
+  padding: 2px !important;
+}
+
+.search-input {
+  padding: 0.5rem 1rem;
+  border: 1px solid #ccc;
+  border-radius: 1rem;
+  background-color: #F6F8FA;
+}
+
+.search-icon {
+  position: absolute;
+  top: 50%;
+  right: 8px;
+  transform: translateY(-50%);
+  background-color: transparent;
+  border: none;
+  display: flex;
+}
+
+.search-icon mat-icon {
+  color: #161F6D;
+}
+
+.date-container input {
+  background-color: #F6F8FA;
+  border: 1px solid #ccc;
+  border-radius: 1rem;
+  padding: 0.4rem;
+}
+
+.excel-btn {
+  color: #161F6D;
+  font-size: 14px;
+  font-weight: 500;
+  border: 1px solid #161F6D;
+}
+
+.excel-btn .bi-download {
+  width: 1rem;
+  margin-right: 5px;
+}
+
+.pdf-btn {
+  color: #161F6D;
+  font-size: 14px;
+  font-weight: 500;
+  border: 1px solid #161F6D;
+  margin-left: 20px;
+}
+
+.pdf-btn .bi-download {
+  width: 1rem;
+  margin-right: 5px;
+}
+
+.add-dataBtn {
+  color: #161F6D;
+  font-size: 14px;
+  font-weight: 500;
+  border: 1px solid #161F6D;
+}
+
+.add-dataBtn .bi-plus {
+  width: 1.5rem;
+  margin-right: 5px;
+}
+
+.filter-row .label {
+  color: #161F6D;
+  font-weight: bold;
+}
+
+.btn-info {
+  color: white;
+  background-color: #B47B84 !important;
+  border-radius: 20px !important;
+  box-shadow: 2px 2px #323eae;
+}
+
+.btn-info:hover {
+  background-color: #B47B84 !important;
+}
+
+.schemes-table th {
+  /* background-color: #B47B84 !important; */
+  background-color: #2E6583 !important;
+
+
+  color: #F6F4EB;
+}
+
+.master-button {
+  border-radius: 1rem;
+  background-color: #50163C;
+  color: white;
+  font-size: 14px;
+}
+
+.add-dataBtn {
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
+  background-color: #434a96;
+  border: 1px solid #161F6D;
+}
+
+.add-dataBtn:hover {
+  background-color: #161F6D;
+}
+
+.schemeBorder {
+  /* border: 5px solid #B47B84; */
+  border: 5px solid #2E6583;
+
+  /* border-radius: 20px; */
+}
+
+.biExcel-btn {
+  /* color:green !important; */
+  margin-top: -3px;
+}
+
+.biPdf-btn {
+  /* color:brown !important; */
+  margin-top: -5px;
+}
+
+.excelBtn {
+  box-shadow: 0px 0px 3px 1px;
+  font-weight: 500;
+  color: white;
+  background-color: #26582fd0;
+}
+
+.pdfBtn {
+  box-shadow: 0px 0px 3px 1px;
+  font-weight: 500;
+  color: white;
+  background-color: #a5481d;
+}
+
+/* .thFirst{
+    border-top-left-radius: 20px !important;
+    border-bottom-left-radius:20px !important;
+  }
+  .thBottom{
+    border-top-right-radius: 20px !important;
+    border-bottom-right-radius:20px !important;
+  } */
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+  /* Optional: Remove the margin */
+}
+
+.form-section-background mat-select {
+  background-color: white !important;
+  height: 37px;
+  /* width: ; */
+  border-radius: 5px;
+}
+
+.pdfExcel {
+  display: flex;
+  justify-content: space-between;
+}

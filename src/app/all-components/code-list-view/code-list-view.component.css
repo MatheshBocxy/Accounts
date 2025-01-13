@@ -1,0 +1,49 @@
+.main-content {
+  padding: 1rem;
+}
+
+.heading {
+  align-items: center;
+  margin-left: 25rem;
+}
+
+.submitButton {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+
+  /* Adjust as needed */
+}
+
+.submitButton .btn {
+  margin-left: 5px;
+}
+
+.custom-button {
+  background-color: #161F6D;
+  color: #ffffff;
+  margin-left: 1rem;
+}
+
+.section-background {
+  background-color: beige;
+  width: 100%;
+}
+
+.view {
+  border: transparent !important;
+  box-shadow: none !important;
+  ;
+}
+
+.codeFormStyle {
+  display: flex;
+  flex-wrap: wrap;
+
+}
+
+.formBorder {
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  border-radius: 15px;
+  padding: 1rem;
+}

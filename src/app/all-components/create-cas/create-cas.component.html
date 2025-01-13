@@ -1,0 +1,100 @@
+<section class="main_table">
+    <table class="table">
+      <thead>
+        <tr>
+          <th class="head">CASH ANALYSIS SHEET REGISTER</th>
+        </tr>
+        <tr>
+          <th class="head1">RECEIPTS / PAYMENTS</th>
+        </tr>
+      </thead>
+    </table>
+    <div class="row wiseForm">
+      <div class="col-2">
+        <label for="">DivisionWise:</label>
+        <select class="form-select">
+          <option value="" selected> --Select--</option>
+          <option *ngFor="let division of divisions" [value]="division">{{ division }}</option>
+        </select>
+      </div>
+  
+      <div class=" col-2">
+        <label for="">CodeWise:</label>
+        <select class="form-select">
+          <option value="" selected> --Select--</option>
+          <option *ngFor="let division of divisions" [value]="division">{{ division }}</option>
+        </select>
+      </div>
+  
+      <div class=" col-2">
+        <label for="">Type:</label>
+        <select class="form-select">
+          <option value="" selected> --Select--</option>
+          <option value="Receipts">Receipts</option>
+          <option value="Payments">Payments</option>
+        </select>
+      </div>
+  
+  
+      <div class=" col-2">
+        <label for="">Financial Year:</label>
+        <select [(ngModel)]="selectedAnnualYear" class="form-select">
+          <option value="Select Annual Year" selected> --Select--</option>
+          <option *ngFor="let year of annualYears" [value]="year">{{ year }}</option>
+        </select>
+      </div>
+  
+  
+      <div class=" col-2">
+        <label for="fromDate">From Date:</label>
+        <input class="  form-control" type="date" id="fromDate" name="fromDate" [(ngModel)]="fromDate"
+          (change)="onDateChange($event)" />
+      </div>
+  
+      <div class=" col-2">
+        <label for="toDate">To Date:</label>
+        <input class=" form-control" type="date" id="toDate" name="toDate" [(ngModel)]="toDate"
+          (change)="onDateChange($event)" />
+      </div>
+    </div>
+    <!-- </thead> -->
+    <!-- </table>  -->
+    <!-- </section>  -->
+  
+    <section class="main_table">
+      <mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+        <ng-container matColumnDef="Date">
+          <mat-header-cell *matHeaderCellDef> <b>DATE</b> </mat-header-cell>
+          <mat-cell *matCellDef="let item"> {{ item?.Date }} </mat-cell>
+        </ng-container>
+  
+        <ng-container matColumnDef="accCode">
+          <mat-header-cell *matHeaderCellDef> <b>ACC CODE</b> </mat-header-cell>
+          <mat-cell *matCellDef="let item"> {{ item?.accCode }} </mat-cell>
+        </ng-container>
+  
+        <!-- <ng-container matColumnDef="description">
+          <mat-header-cell *matHeaderCellDef> <b>DESCRIPTION</b></mat-header-cell>
+          <mat-cell *matCellDef="let item"> {{ item?.description }} </mat-cell>
+        </ng-container> -->
+  
+        <ng-container matColumnDef="voucherNo">
+          <mat-header-cell *matHeaderCellDef> <b>Ref No</b> </mat-header-cell>
+          <mat-cell *matCellDef="let item"> {{ item?.voucherNo }} </mat-cell>
+        </ng-container>
+  
+        <ng-container matColumnDef="amount">
+          <mat-header-cell *matHeaderCellDef> <b>AMOUNT</b> </mat-header-cell>
+          <mat-cell *matCellDef="let item"> {{ item?.amount }} </mat-cell>
+        </ng-container>
+  
+        <!-- <ng-container matColumnDef="remarks">
+          <mat-header-cell *matHeaderCellDef> <b>REMARKS</b> </mat-header-cell>
+          <mat-cell *matCellDef="let item"> {{ item?.remarks }} </mat-cell>
+        </ng-container> -->
+  
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+      </mat-table>
+    </section>
+  </section>

@@ -1,0 +1,235 @@
+/* General styling for tables and form-select */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+thead tr th {
+  /* background-color: #a2a7ce98; */
+  color: white;
+  background-color: #2E6583;
+  text-transform: uppercase;
+}
+
+th[rowspan="3"] {
+  vertical-align: middle;
+}
+
+.first_heading {
+  position: sticky;
+  border: none;
+}
+
+.stickyTop {
+  position: sticky;
+  top: 0;
+}
+
+.stickyTopYear {
+  position: sticky;
+  top: 57px;
+}
+
+.stickyTopMonth {
+  position: sticky;
+  top: 113.5px;
+}
+
+input {
+  border: none;
+}
+
+.btn {
+  margin-left: 20px;
+}
+
+th,
+td {
+  border: 0.1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.city_dropdown {
+  padding-left: 5px;
+  margin-left: 60px;
+}
+
+.form-select {
+  padding: 5px;
+}
+
+/* Styling for the main-table section */
+.main-table {
+  margin-top: 20px;
+  padding: 5px;
+}
+
+.ff:hover {
+  background-color: rgb(205, 219, 143);
+}
+
+.beButton {
+  background-color: #d4e1f0 !important;
+}
+
+.rbeButton {
+  background-color: #d4e1f0 !important;
+}
+
+/* .table-headingBe {
+  align-items: center;
+  padding-left: 150px;
+} */
+
+.btn:focus {
+  background-color: rgb(57, 57, 160);
+}
+
+
+/* Styling for the input fields */
+input[type="text"] {
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+}
+
+/* Styling for the select dropdowns */
+select.form-select {
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+}
+
+/* Additional styling for the selected options in the dropdown */
+select.form-select option:checked {
+  background-color: #007bff;
+  color: white;
+}
+
+/* Optional styling for alternate row colors in the table body */
+tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+/* .btn1:active{
+    background-color: #161F6D;
+    } */
+
+/* .input6 {
+      font-style: none;
+    } */
+.buttons {
+  margin-left: 500px;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+  /* Optional: Remove the margin */
+}
+
+.viewHeading {
+  text-align: center;
+}
+
+.editHeading {
+  text-align: center;
+}
+
+.allTotal {
+  background-color: rgb(236, 231, 231) !important;
+}
+
+.dropdownButton {
+  color: green;
+  margin-top: 10px;
+  margin-left: 20px;
+  cursor: pointer;
+}
+
+.topBackButton {
+  display: flex;
+  justify-content: space-between;
+}
+
+.label-name {
+  font-size: large;
+  font-weight: 500;
+}
+
+.matExpansionPanel {
+  margin-top: 10px;
+  padding-bottom: 10px;
+}
+
+.remarksField {
+  border: black 2px solid;
+}
+
+.filterSelected {
+  display: flex;
+  justify-content: space-between;
+}
+
+.search-input {
+  position: relative;
+  border: 1px solid #ccc;
+  border-radius: 1rem;
+  background-color: #F6F8FA;
+}
+
+.position {
+  position: relative;
+}
+
+.search-icon {
+  position: absolute;
+  margin-left: -32px;
+  margin-top: 8px;
+}
+
+.search-icon mat-icon {
+  color: #161F6D;
+}
+
+.filterBar {
+  display: flex;
+  justify-content: space-between;
+}
+
+.loader-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+/* Spinner styles */
+.spinner {
+  border: 8px solid #f3f3f3;
+  border-top: 8px solid #3498db;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+}
+
+/* Keyframes for spinner animation */
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}

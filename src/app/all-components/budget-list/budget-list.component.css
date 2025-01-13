@@ -1,0 +1,263 @@
+.main-content {
+  padding: 2rem;
+}
+
+.mainSection {
+  /* background-color: #d7f7fc; */
+  background-color: #f2d8d8;
+}
+
+#excel {
+
+  background-color: #26582fd0;
+  color: white;
+}
+
+#m1 {
+  color: white;
+}
+
+.header-row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.heading {
+  text-align: center;
+}
+
+.subGroupForm {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.remove_circle {
+  margin-top: -10px;
+}
+
+.addButtonLabel {
+  margin-top: 30px;
+}
+
+.addButton {
+  margin-top: 16px;
+}
+
+.form-control {
+  width: 150px !important;
+  height: 40px !important;
+}
+
+.budgetSelect,
+.mainSelect {
+  width: 150px !important;
+  height: 40px !important;
+}
+
+.sub-heading {
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #161F6D;
+}
+
+
+
+.filter-row {
+  /* background-color: #ffffff; */
+  background-color: #f2d8d8;
+
+  border-radius: 1rem;
+  padding: 0.5rem 1rem;
+  display: flex;
+}
+
+.search-input {
+  position: relative;
+  padding: 0.5rem 1rem;
+  border: 1px solid #ccc;
+  border-radius: 1rem;
+  background-color: #F6F8FA;
+}
+
+.p {
+  position: relative;
+}
+
+.search-icon {
+  position: absolute;
+  margin-left: -32px;
+  margin-top: 8px;
+}
+
+.search-icon mat-icon {
+  color: #161F6D;
+}
+
+.date-container input {
+  background-color: #F6F8FA;
+  border: 1px solid #ccc;
+  border-radius: 1rem;
+  padding: 0.4rem;
+}
+
+.excel-btn {
+  color: #161F6D;
+  font-size: 14px;
+  font-weight: 500;
+  border: 1px solid #161F6D;
+  margin-left: 20px;
+}
+
+.excel-btn .bi-download {
+  width: 1rem;
+  margin-right: 5px;
+}
+
+.pdf-btn {
+  color: #161F6D;
+  font-size: 14px;
+  font-weight: 500;
+  border: 1px solid #161F6D;
+  margin-left: 20px;
+}
+
+.pdf-btn .bi-download {
+  width: 1rem;
+  margin-right: 5px;
+}
+
+.add-dataBtn {
+  color: #161F6D;
+  font-size: 14px;
+  font-weight: 500;
+  border: 1px solid #161F6D;
+}
+
+.add-dataBtn .bi-plus {
+  width: 1rem;
+  margin-right: 5px;
+}
+
+#uu {
+  /* border: 5px solid #B47B84; */
+  border: 5px solid #2E6583;
+
+  /* border-radius: 20px; */
+}
+
+.filter-row .label {
+  color: #161F6D;
+  font-weight: bold;
+}
+
+.schemes-table th {
+  /* background-color: #161F6D !important; */
+  /* background-color: #B47B84; */
+  background-color: #2E6583;
+  color: #F6F4EB;
+}
+
+.master-button {
+  border-radius: 1rem;
+  background-color: #50163C;
+  color: white;
+  font-size: 14px;
+}
+
+.section-background {
+  /* background-color: #B47B84; */
+  background-color: #2E6583;
+  color: white;
+  /* border-radius: 20px; */
+  padding: 10px;
+}
+
+
+.numberCenter {
+  text-align: center;
+}
+
+.subgroups {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.subGroupPara {
+  margin-top: -5px;
+}
+
+.addMainGroup {
+  margin-top: 3px;
+  color: #161F6D;
+}
+
+.mainGroupSelect {
+  display: flex;
+}
+
+.bi-patch-check-fill {
+  color: #166d24;
+  margin-left: 3px;
+  margin-top: 5px;
+}
+
+.bi-x-circle {
+  color: red;
+  margin-top: 5px;
+}
+
+.bi-x-octagon-fill {
+  color: red;
+  margin-top: 5px;
+}
+
+.submitbutton {
+  border-radius: 20px !important;
+  font-size: 15px !important;
+  width: 90px !important;
+  height: 30px !important;
+  padding: 2px !important;
+}
+
+.biExcel-btn {
+  /* color:green !important; */
+  margin-top: -3px;
+}
+
+.biPdf-btn {
+  /* color:brown !important; */
+  margin-top: -5px;
+  color: #F6F4EB;
+}
+
+.excelBtn {
+  box-shadow: 0px 0px 3px 1px;
+  font-weight: 500;
+}
+
+#mw {
+  color: white;
+}
+
+.pdfBtn {
+  box-shadow: 0px 0px 3px 1px;
+  font-weight: 500;
+  background-color: #a5481d;
+  color: white;
+}
+
+.budgetTotal {
+  width: 100px !important;
+}
+
+.totalAbc {
+  display: flex;
+}
+
+@media print {
+  .schemes-table {
+    font-size: 12px;
+    /* Adjust font size if necessary */
+  }
+}

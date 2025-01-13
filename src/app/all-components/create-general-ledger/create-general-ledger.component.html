@@ -1,0 +1,196 @@
+<section class="main">
+    <div class="row">
+      <div class="col-1"></div>
+      <div class="col-2">
+        <label for="">DivisionWise</label>
+        <select class="form-select">
+          <option value="" selected> --Select--</option>
+          <option *ngFor="let division of divisions" [value]="division">{{ division }}</option>
+        </select>
+      </div>
+  
+      <div class="col-2">
+        <label for="">CodeWise</label>
+        <select class="form-select">
+          <option value="" selected>--Select--</option>
+          <option *ngFor="let codeWise of codeWise" [value]="codeWise">{{ codeWise }}</option>
+        </select>
+      </div>
+  
+      <div class="col-2">
+        <label for=""> Financial Year</label>
+        <select [(ngModel)]="selectedAnnualYear" class="form-select">
+          <option value="Select Annual Year" selected>--Select--</option>
+          <option *ngFor="let year of annualYears" [value]="year">{{ year }}</option>
+        </select>
+      </div>
+  
+      <div class="col-2">
+        <label class="div" for="fromDate">From Date:</label>
+        <input class=" fromDate form-control" type="date" id="fromDate" name="fromDate" [(ngModel)]="fromDate"
+          (change)="onDateChange($event)" />
+      </div>
+  
+      <div class="col-2">
+        <label class="col-2" for="toDate">ToDate:</label>
+        <input class="fromDate form-control" type="date" id="toDate" name="toDate" [(ngModel)]="toDate"
+          (change)="onDateChange($event)" />
+      </div>
+    </div><br>
+    <table class="table">
+      <tr>
+        <th class="heading mx-auto" colspan="8">GENERAL LEDGER</th>
+      </tr>
+    </table>
+    <section class="main-content">
+      <section class="m-2">
+        <div class="row">
+          <div class="col-2">
+            <!-- <label class="d-heading"><B>DIVISION</B></label>
+            <input type="text" class="months  form-control"> -->
+          </div>
+          
+          <div class="col-4">
+            <label class="d-heading"><b>ACC CODE</b> </label>
+            <input type="text" class="months form-control" style="width: 340px;">
+          </div>
+          <!-- <div class="col-2">
+            <label class=""><b>ACC DESCRIPTION</b></label>
+            <input type="text" class="months  form-control">
+          </div> -->
+          <div class="col-2">
+            <label class="d-heading"><b>BUDGET PROVISION</b></label>
+            <input type="text" class="months form-control">
+          </div>
+          <div class="col-2">
+            <label class="d-heading"><b>OPENING BALANCE</b></label>
+            <input type="text" class="months form-control">
+          </div>
+        </div>
+      </section>
+  
+      <section class="main_table">
+        <div style="max-height: 400px; overflow: auto;">
+          <mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+            <ng-container matColumnDef="position">
+              <mat-header-cell *matHeaderCellDef><b>No.</b></mat-header-cell>
+              <mat-cell *matCellDef="let element">{{element.position}}</mat-cell>
+            </ng-container>
+  
+            <ng-container matColumnDef="Date">
+              <mat-header-cell *matHeaderCellDef><b>Date</b></mat-header-cell>
+              <mat-cell *matCellDef="let element">{{element.Date}}</mat-cell>
+            </ng-container>
+  
+            <ng-container matColumnDef="documentNo">
+              <mat-header-cell *matHeaderCellDef><b>Document Ref </b></mat-header-cell>
+              <mat-cell *matCellDef="let element">{{element.documentNo}}</mat-cell>
+            </ng-container>
+  
+            <ng-container matColumnDef="voucherNo">
+              <mat-header-cell *matHeaderCellDef><b>Ref No</b></mat-header-cell>
+              <mat-cell *matCellDef="let element">{{element.voucherNo}}</mat-cell>
+            </ng-container>
+  
+            <ng-container matColumnDef="description">
+              <mat-header-cell *matHeaderCellDef><b>Description</b></mat-header-cell>
+              <mat-cell *matCellDef="let element">{{element.description}}</mat-cell>
+            </ng-container>
+  
+            <ng-container matColumnDef="debit">
+              <mat-header-cell *matHeaderCellDef><b>Debit</b></mat-header-cell>
+              <mat-cell *matCellDef="let element">{{element.debit}}</mat-cell>
+            </ng-container>
+  
+            <ng-container matColumnDef="credit">
+              <mat-header-cell *matHeaderCellDef><b>Credit</b></mat-header-cell>
+              <mat-cell *matCellDef="let element">{{element.credit}}</mat-cell>
+            </ng-container>
+  
+            <ng-container matColumnDef="closingBalance">
+              <mat-header-cell *matHeaderCellDef><b>ClosingBalance</b></mat-header-cell>
+              <mat-cell *matCellDef="let element">{{element.closingBalance}}</mat-cell>
+            </ng-container>
+  
+            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+          </mat-table>
+        </div>
+      </section>
+  
+  
+    </section>
+  
+    <section class="main-footer-content">
+  
+      <form class="footerForm row" [formGroup]="GendralLedgerForm">
+        <div class="col-7">
+          <h4 class="footerHeading">TOTAL</h4>
+        </div>
+        <div class="col">
+          <label class="footer_heading d-heading"><b>Debit</b></label>
+          <input type="text" class="input form-control" formControlName="totalDebit">
+        </div>
+        <div class="col">
+          <label class="footer_heading d-heading"><b>Credit</b></label>
+          <input type="text" class="input form-control" formControlName="totalCredit">
+        </div>
+        <div class="col">
+          <label class=" footer_heading d-heading"><b>Closing Balance</b></label>
+          <input type="text" class="input form-control" formControlName="totalCloseBal">
+        </div>
+  
+        <!-- Receipt Total Section -->
+        <div class="col-7">
+          <h4 class="footerHeading">RECEIPT TOTAL</h4>
+        </div>
+        <div class="col">
+          <label class="footer_heading d-heading"><b>Debit</b></label>
+          <input type="text" class="input form-control" formControlName="receiptDebit">
+        </div>
+        <div class="col">
+          <label class="footer_heading d-heading"><b>Credit</b></label>
+          <input type="text" class="input form-control" formControlName="ReceiptCredit">
+        </div>
+        <div class="col">
+          <!-- <label class="footer_heading d-heading"><b>Closing Balance</b></label>
+          <input type="text" class="input form-control"> -->
+        </div>
+  
+        <!-- Payment Total Section -->
+        <div class="col-7">
+          <h4 class="footerHeading">PAYMENT TOTAL</h4>
+  
+        </div>
+        <div class="col">
+          <label class="footer_heading d-heading"><b>Debit</b></label>
+          <input type="text" class="input form-control" formControlName="paymentDebit">
+        </div>
+        <div class="col">
+          <label class="footer_heading d-heading"><b>Credit</b></label>
+          <input type="text" class="input form-control" formControlName="paymentCredit">
+        </div>
+        <div class="col">
+          <!-- <label class="footer_heading d-heading"><b>Closing Balance</b></label>
+          <input type="text" class="input form-control"> -->
+        </div>
+  
+        <!-- JV Total Section -->
+        <div class="col-7">
+          <h4 class="footerHeading">JV TOTAL</h4>
+        </div>
+        <div class="col">
+          <label class="footer_heading d-heading"><b>Debit</b></label>
+          <input type="text" class="input form-control" formControlName="jvDebit">
+        </div>
+        <div class="col">
+          <label class="footer_heading d-heading"><b>Credit</b></label>
+          <input type="text" class="input form-control" formControlName="jvCredit">
+        </div>
+        <div class="col">
+          <!-- <label class="footer_heading d-heading"><b>Closing Balance</b></label>
+          <input type="text" class="input form-control"> -->
+        </div>
+      </form>
+    </section>
+  </section>

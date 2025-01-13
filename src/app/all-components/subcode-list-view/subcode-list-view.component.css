@@ -1,0 +1,41 @@
+.main-content {
+  padding: 2rem;
+}
+
+.heading {
+  align-items: center;
+  margin-left: 25rem;
+}
+
+.submitButton {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+  /* Adjust as needed */
+}
+
+.submitButton .btn {
+  margin-left: 5px;
+}
+
+.custom-button {
+  background-color: #161F6D;
+  color: #ffffff;
+  margin-left: 1rem;
+}
+
+.section-background {
+  background-color: beige;
+}
+
+.view {
+  border: transparent !important;
+  box-shadow: none !important;
+  ;
+}
+
+.main-content mat-select {
+  background-color: white !important;
+  height: 37px;
+  border-radius: 5px;
+}

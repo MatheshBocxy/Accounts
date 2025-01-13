@@ -1,0 +1,35 @@
+.main-content {
+    padding: 2rem;
+  }
+  .heading{
+    margin-left: 25rem;
+  }
+  .submitButton {
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+  }
+  .submitButton .btn{
+    margin-left: 5px;
+  }
+  
+  .custom-button {
+    background-color: #161F6D;
+    color: #ffffff;
+    margin-left: 1rem;
+  }
+  .section-background {
+    background-color: beige;
+  }
+  
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0; /* Optional: Remove the margin */
+  }
+
+  .view{
+    border: transparent !important;
+    box-shadow: none !important;;
+  }
+  

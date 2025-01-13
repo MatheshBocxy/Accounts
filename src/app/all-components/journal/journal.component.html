@@ -1,0 +1,118 @@
+<section class="main-content">
+    <div class="header-row">
+        <h3 class="sub-heading mx-auto">JOURNAL</h3>
+        <!-- <button class="btn btn-light excel-btn">
+            <span><svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-download"
+                    viewBox="0 0 16 16">
+                    <path
+                        d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z" />
+                    <path
+                        d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z" />
+                </svg></span>Export to Excel</button> -->
+    </div>
+    <div class="filter-row mb-2">
+        <div>
+            <div class="search-container">
+                <div>
+                    <input matInput #input type="text" id="search-input" class="search-input" placeholder="Search...">
+                    <div class="search-icon">
+                        <mat-icon>search</mat-icon>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-4 ms-5"></div>
+        <div class="col-3">
+            <button class="btn btn-light add-dataBtn" routerLink="/famodule/home/create-journal">
+                <span><svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-plus"
+                        viewBox="0 0 16 16">
+                        <path
+                            d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
+                    </svg></span>New Journal</button>
+        </div>
+
+        <div>
+            <button class="btn btn-light excelBtn me-1">
+                <span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        class="bi bi-file-earmark-arrow-down-fill biExcel-btn" viewBox="0 0 16 16">
+                        <path
+                            d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0M9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1m-1 4v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 0 1 .708-.708L7.5 11.293V7.5a.5.5 0 0 1 1 0" />
+                    </svg></span>Excel</button>
+        </div>
+        <div>
+            <button class="btn btn-light pdfBtn">
+                <span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        class="bi bi-file-earmark-arrow-down-fill biPdf-btn" viewBox="0 0 16 16">
+                        <path
+                            d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0M9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1m-1 4v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 0 1 .708-.708L7.5 11.293V7.5a.5.5 0 0 1 1 0" />
+                    </svg></span>PDF</button>
+        </div>
+    </div>
+
+    <div>
+      <table mat-table [dataSource]="allGstDataSource" matSort class="schemes-table">
+        <!-- Serial Number Column -->
+        <ng-container matColumnDef="S.No">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="thFirst"> S.No. </th>
+          <td mat-cell *matCellDef="let gst; let i = index"> {{i + 1}} </td>
+        </ng-container>
+      
+        <!-- Division Column -->
+        <ng-container matColumnDef="userDivision">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Division </th>
+          <td mat-cell *matCellDef="let gst"> {{gst.userDivision}} </td>
+        </ng-container>
+      
+        <!-- JV Number Column -->
+        <ng-container matColumnDef="jvNo">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> JV No </th>
+          <td mat-cell *matCellDef="let gst"> {{gst.jvNo}} </td>
+        </ng-container>
+      
+        <!-- JV Date Column -->
+        <ng-container matColumnDef="jvDate">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Date </th>
+          <td mat-cell *matCellDef="let gst"> {{gst.jvDate | date: 'dd-MM-yyyy'}} </td>
+        </ng-container>
+      
+        <!-- Total Debit Column -->
+        <ng-container matColumnDef="totalDebit">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Debit </th>
+          <td mat-cell *matCellDef="let gst"> {{gst.totalDebit}} </td>
+        </ng-container>
+      
+        <!-- Total Credit Column -->
+        <ng-container matColumnDef="totalCredit">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Credit </th>
+          <td mat-cell *matCellDef="let gst"> {{gst.totalCredit}} </td>
+        </ng-container>
+      
+        <!-- Action Column -->
+        <ng-container matColumnDef="ACTION">
+          <th mat-header-cell *matHeaderCellDef> Action </th>
+          <td mat-cell *matCellDef="let gst">
+            <div class="d-flex">
+              <a style="color: #161F6D; cursor: pointer;" (click)="viewmode('view', gst.id)">
+                <span class="material-symbols-rounded">visibility</span>
+              </a>
+              <a style="color: #161F6D; cursor: pointer;" (click)="editmode('edit', gst.id)">
+                <span class="material-symbols-rounded">edit</span>
+              </a>
+            </div>
+          </td>
+        </ng-container>
+      
+        <!-- Header and Row Definitions -->
+        <tr mat-header-row *matHeaderRowDef="gstTableColumns"></tr>
+        <tr mat-row *matRowDef="let gst; columns: gstTableColumns;"></tr>
+      
+        <!-- No Data Row -->
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell" colspan="7">No data matching the filter "{{input.value}}"</td>
+        </tr>
+      </table>
+      
+          
+        <mat-paginator [pageSizeOptions]="[10, 25, 100]" aria-label="Select page of users"></mat-paginator>
+    </div>
+</section>

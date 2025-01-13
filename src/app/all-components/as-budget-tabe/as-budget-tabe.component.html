@@ -1,0 +1,173 @@
+<section class="main-content">
+    <h3 class="sub-heading">Addition Sanction Budget Estimate / Revised Budget Estimate</h3>
+    <div class="filter-row mb-1">
+        <div class="me-2">
+            <div class="search-container">
+                <div>
+                    <input type="text" id="search-input" class="search-input" placeholder="Search..." />
+                    <div class="search-icon">
+                        <mat-icon>search</mat-icon>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-2 yearSelection ms-1">
+            <select class="form-select">
+                <option value="">Year</option>
+                <option *ngFor="let item of financialYears" value="{{ item }}-{{ item + 1 }}">
+                    {{ item }}-{{ item + 1 }}
+                </option>
+            </select>
+        </div>
+
+        <div>
+            <select class="form-select me-1">
+                <option value="">Status</option>
+                <option value="Approved">Approved</option>
+                <option value="Active">Pending</option>
+                <option value="Draft">Draft</option>
+            </select>
+        </div>
+
+        <div class="col-3" *ngIf="loginRole == 'EE_Division' || loginRole == 'AO'">
+            <button class="btn btn-light add-dataBtn" *ngIf="asBeRbe == 'AS-BE'"
+                (click)="newBudgetButtonClick('AS-BE')">
+                <span><svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-plus"
+                        viewBox="0 0 16 16">
+                        <path
+                            d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
+                    </svg></span>New AS-BE
+            </button>
+            <button class="btn btn-light add-dataBtn" *ngIf="asBeRbe == 'AS-RBE'"
+                (click)="newBudgetButtonClick('AS-RBE')">
+                <span><svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-plus"
+                        viewBox="0 0 16 16">
+                        <path
+                            d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
+                    </svg></span>New AS-RBE
+            </button>
+        </div>
+
+        <div>
+            <button class="btn btn-light excelBtn me-1">
+                <span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        class="bi bi-file-earmark-arrow-down-fill biExcel-btn" viewBox="0 0 16 16">
+                        <path
+                            d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0M9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1m-1 4v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 0 1 .708-.708L7.5 11.293V7.5a.5.5 0 0 1 1 0" />
+                    </svg></span>Excel
+            </button>
+        </div>
+
+        <div>
+            <button class="btn btn-light pdfBtn">
+                <span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        class="bi bi-file-earmark-arrow-down-fill biPdf-btn" viewBox="0 0 16 16">
+                        <path
+                            d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0M9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1m-1 4v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 0 1 .708-.708L7.5 11.293V7.5a.5.5 0 0 1 1 0" />
+                    </svg></span>PDF
+            </button>
+        </div>
+    </div>
+
+    <!-- Table -->
+
+    <div>
+        <mat-tab-group animationDuration="400ms" color="warn" (selectedTabChange)="onTabChange($event)">
+            <mat-tab label="AS-BE">
+                <table class="table schemes-table mt-2">
+                    <thead>
+                        <tr>
+                            <th>S.No</th>
+                            <!-- <th>Division</th> -->
+                            <th>Year</th>
+                            <th>Proposed</th>
+                            <th>Fixed</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let items of asBeListResponce; let i = index;">
+                            <td [ngClass]="{'highlight-first-row': i===0}">{{i + 1}}</td>
+                            <!-- <td>{{items.division}}</td> -->
+                            <td [ngClass]="{'highlight-first-row': i===0}">{{items.beLastYear}}</td>
+                            <td [ngClass]="{'highlight-first-row': i===0}">{{items.asBeProposedTotal}}</td>
+                            <td [ngClass]="{'highlight-first-row': i===0}">{{items.asBeFixedTotal}}</td>
+                            <td [ngClass]="{'statusActive': items.commonStatus == 'Active',
+                                'statusDraft': items.commonStatus == 'Draft',
+                                'statusApproved': items.commonStatus == 'Approved',
+                                'highlight-first-row': i===0}">
+                                {{items.commonStatus}}
+                            </td>
+                            <td [ngClass]="{'highlight-first-row': i===0}">
+                                <div class="tableButtons">
+                                    <a *ngIf="(items.commonStatus == '' || items.commonStatus == 'Draft') && loginDivision != 'Head_office'"
+                                        (click)="penButton('edit','AS-BE',items.beLastYear,items.count)"><span
+                                            class="material-symbols-rounded actionButton">edit</span></a>
+
+                                    <a *ngIf="(items.commonStatus == '' || items.commonStatus == 'Draft') && loginDivision == 'Head_office' && loginRole != 'MD'"
+                                        (click)="penButton('edit','AS-BE',items.beLastYear,items.count)"><span
+                                            class="material-symbols-rounded actionButton">edit</span></a>
+
+                                    <!-- <a *ngIf="(items.commonStatus == '' || items.commonStatus == 'Draft') && loginDivision == 'Head_office' && loginRole != 'MD'"
+                                        (click)="penButton('edit','AS-BE',items.beLastYear,3)"><span
+                                            class="material-symbols-rounded actionButton">edit</span></a> -->
+
+                                    <a (click)="eyeButton('view','AS-BE',items.beLastYear,items.count)"><span
+                                            class="material-symbols-rounded actionButton">visibility</span></a>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </mat-tab>
+            <mat-tab label="AS-RBE">
+                <table class="table schemes-table mt-2">
+                    <thead>
+                        <tr>
+                            <th>S.No</th>
+                            <!-- <th>Division</th> -->
+                            <th>Year</th>
+                            <th>Proposed</th>
+                            <th>Fixed</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let items of asRbeListResponce; let i = index;">
+                            <td [ngClass]="{'highlight-first-row': i===0}">{{i+1}}</td>
+                            <!-- <td>{{items.division}}</td> -->
+                            <td [ngClass]="{'highlight-first-row': i===0}">{{items.rbeYear}}</td>
+                            <td [ngClass]="{'highlight-first-row': i===0}">{{items.asRbeProposedTotal}}</td>
+                            <td [ngClass]="{'highlight-first-row': i===0}">{{items.asRbeFixedTotal}}</td>
+                            <td [ngClass]="{'statusActive': items.commonStatus == 'Active',
+                                'statusDraft': items.commonStatus == 'Draft',
+                                'statusApproved': items.commonStatus == 'Approved',
+                                'highlight-first-row': i===0}">
+                                {{items.commonStatus}}
+                            </td>
+
+                            <td [ngClass]="{'highlight-first-row': i===0}">
+                                <div class="tableButtons">
+                                    <a *ngIf="(items.commonStatus == '' || items.commonStatus == 'Draft') && loginDivision != 'Head_office'"
+                                        (click)="penButton('edit','AS-RBE',items.rbeYear,items.count)"><span
+                                            class="material-symbols-rounded actionButton">edit</span></a>
+
+                                    <a *ngIf="(items.commonStatus == '' || items.commonStatus == 'Draft') && (loginDivision == 'Head_office' && loginRole != 'MD')"
+                                        (click)="penButton('edit','AS-RBE',items.rbeYear,items.count)"><span
+                                            class="material-symbols-rounded actionButton">edit</span></a>
+
+                                    <a (click)="eyeButton('view','AS-RBE',items.rbeYear,items.count)"><span
+                                            class="material-symbols-rounded actionButton">visibility</span></a>
+                                </div>
+                            </td>
+
+                        </tr>
+                    </tbody>
+                </table>
+            </mat-tab>
+        </mat-tab-group>
+    </div>
+</section>

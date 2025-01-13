@@ -1,0 +1,108 @@
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+th[rowspan="3"] {
+  vertical-align: middle;
+}
+
+input {
+  border: none;
+}
+
+.btn {
+  margin-left: 20px;
+}
+
+th,
+td {
+  border: 0.1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.city_dropdown {
+  padding-left: 5px;
+  margin-left: 60px;
+}
+
+.form-select {
+  padding: 5px;
+}
+
+.main-table {
+  padding: 20px;
+}
+
+.gf {
+  width: 10px;
+}
+
+.table-headingBe {
+  align-items: center;
+}
+
+input[type="text"] {
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+}
+
+select.form-select {
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+}
+
+select.form-select option:checked {
+  background-color: #007bff;
+  color: white;
+}
+
+.input6 {
+  font-style: none;
+}
+
+.sNoInputBox {
+  width: 50px !important;
+}
+
+.btnBE.active {
+  background-color: #2E6583;
+  color: white;
+}
+
+.btnRBE.active {
+  background-color: #2E6583;
+  color: white;
+}
+
+.topBeRbeButtons {
+  display: flex;
+  justify-content: center;
+}
+
+.backButtonClick {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.topBackButton {
+  display: flex;
+  justify-content: space-between;
+}
+
+.dropdownButton {
+  color: green;
+  margin-top: 3px;
+  margin-left: 20px;
+  cursor: pointer;
+}
+
+::ng-deep .table>:not(:last-child)>:last-child>* {
+  border-bottom: #fff !important;
+}

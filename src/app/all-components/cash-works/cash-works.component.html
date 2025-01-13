@@ -1,0 +1,341 @@
+<section class="main-content">
+    <div class="header-row">
+        <h3 class="sub-heading mx-auto">CONSOLIDATION</h3>
+        <!-- <button class="btn btn-light excel-btn">
+            <span><svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-download"
+                    viewBox="0 0 16 16">
+                    <path
+                        d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z" />
+                    <path
+                        d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z" />
+                </svg></span>Export to Excel</button> -->
+    </div><br>
+
+    <div class="beRbe_button">
+        <button class="btn buttonbutton" (click)="beRbeButton('BE')" [class.active]="beRbe == 'BE'">
+            BE
+        </button>
+        <button class="btn buttonbutton" (click)="beRbeButton('RBE')" [class.active]="beRbe == 'RBE'">
+            RBE
+        </button>
+    </div> <br>
+
+    <div class="filter-row mb-2">
+        <div>
+            <div class="search-container">
+                <div>
+                    <input matInput #input type="text" [(ngModel)]="filteredValue" (keyup)="filterSearch($event)"
+                        id="search-input" class="search-input" placeholder="Search...">
+                    <div class="search-icon">
+                        <mat-icon>search</mat-icon>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div *ngIf="beRbe == 'BE'">
+            <div *ngIf="tabName == 'CASH'">
+                <select class="form-select custom-width" (input)="selectDivisionDropDown_BE($event,'cash')">
+                    <option value="">Year Cash BE</option>
+                    <option *ngFor="let item of financialYears" value="{{ item }}-{{ item + 1 }}">{{ item }}-{{ item + 1
+                        }}</option>
+                </select>
+            </div>
+
+            <div *ngIf="tabName == 'WORK'">
+                <select class="form-select custom-width" (input)="selectDivisionDropDown_BE($event,'work')">
+                    <option value="">Year Work BE</option>
+                    <option *ngFor="let item of financialYears" value="{{ item }}-{{ item + 1 }}">{{ item }}-{{ item + 1
+                        }}</option>
+                </select>
+            </div>
+        </div>
+
+        <div *ngIf="beRbe == 'RBE'">
+            <div *ngIf="tabNameRbe == 'CASH'">
+                <select class="form-select custom-width" (input)="selectDivisionDropDown_RBE($event,'cash')">
+                    <option value="">Year Cash RBE</option>
+                    <option *ngFor="let item of financialYears" value="{{ item }}-{{ item + 1 }}">{{ item }}-{{ item + 1
+                        }}</option>
+                </select>
+            </div>
+
+            <div *ngIf="tabNameRbe == 'WORK'">
+                <select class="form-select custom-width" (input)="selectDivisionDropDown_RBE($event,'work')">
+                    <option value="">Year Work RBE</option>
+                    <option *ngFor="let item of financialYears" value="{{ item }}-{{ item + 1 }}">{{ item }}-{{ item + 1
+                        }}</option>
+                </select>
+            </div>
+        </div>
+
+
+        <div class="col-5">
+        </div>
+
+        <div>
+            <button class="btn btn-light excelBtn">
+                <span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        class="bi bi-file-earmark-arrow-down-fill biExcel-btn" viewBox="0 0 16 16">
+                        <path
+                            d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0M9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1m-1 4v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 0 1 .708-.708L7.5 11.293V7.5a.5.5 0 0 1 1 0" />
+                    </svg></span>Excel</button>
+        </div>
+        <div>
+            <button class="btn btn-light pdfBtn">
+                <span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        class="bi bi-file-earmark-arrow-down-fill biPdf-btn" viewBox="0 0 16 16">
+                        <path
+                            d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0M9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1m-1 4v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 0 1 .708-.708L7.5 11.293V7.5a.5.5 0 0 1 1 0" />
+                    </svg></span>PDF</button>
+        </div>
+    </div>
+
+    <!-- BE WORKS & CASH-->
+
+    <div *ngIf="beRbe == 'BE'">
+        <!-- CASH FLOW -->
+        <mat-tab-group color="warn" animationDuration="800ms" (selectedTabChange)="onTabChange($event)">
+            <mat-tab label="CASH FLOW" class="lo">
+                <table mat-table [dataSource]="allBudgetDataSource_cash" matSort class="schemes-table mt-2">
+                    <div class="lo">
+                        <!-- ID Column -->
+                        <ng-container matColumnDef="S.No">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="thFirst"> S.No. </th>
+                            <td mat-cell *matCellDef="let budget; let i = index">
+                                {{ i + 1 }}
+                            </td>
+
+                        </ng-container>
+
+                        <!-- Division Column -->
+                        <ng-container matColumnDef="year">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Year </th>
+                            <td mat-cell *matCellDef="let budget"> {{budget.beLastYear}} </td>
+                        </ng-container>
+
+                        <!-- Division Column -->
+                        <ng-container matColumnDef="proposed">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Proposed</th>
+                            <td mat-cell *matCellDef="let budget" style="padding-left: 60px;">
+                                {{(budget.beLastYearPropossedTotal || 0).toFixed(2)}} </td>
+                        </ng-container>
+
+                        <!-- Scheme Name Column -->
+                        <ng-container matColumnDef="fixed">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Fixed </th>
+                            <td mat-cell *matCellDef="let budget" style="padding-left: 60px;">
+                                {{(budget.beLastYearFixedTotal || 0).toFixed(2)}} </td>
+                        </ng-container>
+
+                        <!-- Action Column -->
+                        <ng-container matColumnDef="ACTION">
+                            <th mat-header-cell *matHeaderCellDef class="thBottom"> Action </th>
+                            <td mat-cell *matCellDef="let budget" class="p-0">
+                                <div class="d-flex justify-content-evenly">
+                                    <a (click)="toConsolidation_BE('cash',budget.beLastYear,budget.keyValue)"
+                                        style="color: #161F6D; cursor: pointer;"><span
+                                            class="material-symbols-rounded">visibility</span></a>
+                                    <!-- <a routerLink="/property/home/scheme" style="color: #161F6D;"><span
+                                            class="material-symbols-rounded">edit</span></a> -->
+                                </div>
+                            </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="budgetTableColumns"></tr>
+                        <tr mat-row *matRowDef="let budget; columns: budgetTableColumns;"></tr>
+
+                        <!-- Row shown when there is no matching data. -->
+                        <tr class="mat-row" *matNoDataRow>
+                            <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
+                        </tr>
+                    </div>
+                </table>
+            </mat-tab>
+
+            <!-- WORK -->
+
+            <mat-tab label="WORKS FLOW">
+                <table mat-table [dataSource]="allBudgetDataSource_work" matSort class="schemes-table mt-2">
+                    <!-- ID Column -->
+                    <ng-container matColumnDef="S.No">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="thFirst"> S.No. </th>
+                        <td mat-cell *matCellDef="let budget; let i = index">
+                            {{ i + 1 }}
+                        </td>
+                    </ng-container>
+
+                    <!-- Division Column -->
+                    <ng-container matColumnDef="year">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Year </th>
+                        <td mat-cell *matCellDef="let budget"> {{budget.beLastYear}} </td>
+                    </ng-container>
+
+                    <!-- Division Column -->
+                    <ng-container matColumnDef="proposed">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Proposed</th>
+                        <td mat-cell *matCellDef="let budget" style="padding-left: 60px;">
+                            {{(budget.beLastYearPropossedTotal || 0).toFixed(2)}} </td>
+                    </ng-container>
+
+                    <!-- Scheme Name Column -->
+                    <ng-container matColumnDef="fixed">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Fixed </th>
+                        <td mat-cell *matCellDef="let budget" style="padding-left: 60px;">
+                            {{(budget.beLastYearFixedTotal || 0).toFixed(2)}} </td>
+                    </ng-container>
+
+                    <!-- Action Column -->
+                    <ng-container matColumnDef="ACTION">
+                        <th mat-header-cell *matHeaderCellDef class="thBottom"> Action </th>
+                        <td mat-cell *matCellDef="let budget" class="p-0">
+                            <div class="d-flex justify-content-evenly">
+                                <a (click)="toConsolidation_BE('work',budget.beLastYear,budget.keyValue)"
+                                    style="color: #161F6D; cursor: pointer;"><span
+                                        class="material-symbols-rounded">visibility</span></a>
+                                <!-- <a routerLink="/property/home/scheme" style="color: #161F6D;"><span
+                                        class="material-symbols-rounded">edit</span></a> -->
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="budgetTableColumns"></tr>
+                    <tr mat-row *matRowDef="let budget; columns: budgetTableColumns;"></tr>
+
+                    <!-- Row shown when there is no matching data. -->
+                    <tr class="mat-row" *matNoDataRow>
+                        <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
+                    </tr>
+                </table>
+
+                <!-- </div> -->
+                <!--</mat-tab-group> -->
+                <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of users"></mat-paginator>
+            </mat-tab>
+        </mat-tab-group>
+    </div>
+
+    <!-- RBE WORKS & CASH-->
+
+    <div *ngIf="beRbe == 'RBE'">
+        <!-- CASH FLOW -->
+        <mat-tab-group color="warn" animationDuration="800ms" (selectedTabChange)="onTabChange_Rbe($event)">
+            <mat-tab label="CASH FLOW" class="lo">
+                <table mat-table [dataSource]="allBudgetDataSourceRBE_Cash" matSort class="schemes-table mt-2">
+                    <div class="lo">
+                        <!-- ID Column -->
+                        <ng-container matColumnDef="S.No">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="thFirst"> S.No. </th>
+                            <td mat-cell *matCellDef="let budget; let i = index">
+                                {{ i + 1 }}
+                            </td>
+
+                        </ng-container>
+
+                        <!-- Division Column -->
+                        <ng-container matColumnDef="year">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Year </th>
+                            <td mat-cell *matCellDef="let budget"> {{budget.rbeYear}} </td>
+                        </ng-container>
+
+                        <!-- Division Column -->
+                        <ng-container matColumnDef="proposed">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Proposed</th>
+                            <td mat-cell *matCellDef="let budget" style="padding-left: 60px;">
+                                {{(budget.rbeLastPropossedTotal || 0).toFixed(2)}} </td>
+                        </ng-container>
+
+                        <!-- Scheme Name Column -->
+                        <ng-container matColumnDef="fixed">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Fixed </th>
+                            <td mat-cell *matCellDef="let budget" style="padding-left: 60px;">
+                                {{(budget.rbeLastFixedTotal || 0).toFixed(2)}} </td>
+                        </ng-container>
+
+                        <!-- Action Column -->
+                        <ng-container matColumnDef="ACTION">
+                            <th mat-header-cell *matHeaderCellDef class="thBottom"> Action </th>
+                            <td mat-cell *matCellDef="let budget" class="p-0">
+                                <div class="d-flex justify-content-evenly">
+                                    <a (click)="toConsolidation_BE('cash',budget.rbeYear,budget.keyValue)"
+                                        style="color: #161F6D; cursor: pointer;"><span
+                                            class="material-symbols-rounded">visibility</span></a>
+                                    <!-- <a routerLink="/property/home/scheme" style="color: #161F6D;"><span
+                                            class="material-symbols-rounded">edit</span></a> -->
+                                </div>
+                            </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="budgetTableColumns"></tr>
+                        <tr mat-row *matRowDef="let budget; columns: budgetTableColumns;"></tr>
+
+                        <!-- Row shown when there is no matching data. -->
+                        <tr class="mat-row" *matNoDataRow>
+                            <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
+                        </tr>
+                    </div>
+                </table>
+            </mat-tab>
+
+            <!-- WORK -->
+
+            <mat-tab label="WORKS FLOW">
+                <table mat-table [dataSource]="allBudgetDataSourceRBE_Work" matSort class="schemes-table mt-2">
+                    <!-- ID Column -->
+                    <ng-container matColumnDef="S.No">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="thFirst"> S.No. </th>
+                        <td mat-cell *matCellDef="let budget; let i = index">
+                            {{ i + 1 }}
+                        </td>
+                    </ng-container>
+
+                    <!-- Division Column -->
+                    <ng-container matColumnDef="year">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Year </th>
+                        <td mat-cell *matCellDef="let budget"> {{budget.rbeYear}} </td>
+                    </ng-container>
+
+                    <!-- Division Column -->
+                    <ng-container matColumnDef="proposed">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Proposed</th>
+                        <td mat-cell *matCellDef="let budget" style="padding-left: 60px;">
+                            {{(budget.rbeLastPropossedTotal || 0).toFixed(2)}} </td>
+                    </ng-container>
+
+                    <!-- Scheme Name Column -->
+                    <ng-container matColumnDef="fixed">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Fixed </th>
+                        <td mat-cell *matCellDef="let budget" style="padding-left: 60px;"> {{(budget.rbeLastFixedTotal
+                            || 0).toFixed(2)}}
+                        </td>
+                    </ng-container>
+
+                    <!-- Action Column -->
+                    <ng-container matColumnDef="ACTION">
+                        <th mat-header-cell *matHeaderCellDef class="thBottom"> Action </th>
+                        <td mat-cell *matCellDef="let budget" class="p-0">
+                            <div class="d-flex justify-content-evenly">
+                                <a (click)="toConsolidation_BE('work',budget.rbeYear,budget.keyValue)"
+                                    style="color: #161F6D; cursor: pointer;"><span
+                                        class="material-symbols-rounded">visibility</span></a>
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="budgetTableColumns"></tr>
+                    <tr mat-row *matRowDef="let budget; columns: budgetTableColumns;"></tr>
+
+                    <!-- Row shown when there is no matching data. -->
+                    <tr class="mat-row" *matNoDataRow>
+                        <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
+                    </tr>
+                </table>
+
+                <!-- </div> -->
+                <!--</mat-tab-group> -->
+                <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of users"></mat-paginator>
+            </mat-tab>
+        </mat-tab-group>
+    </div>
+
+</section>

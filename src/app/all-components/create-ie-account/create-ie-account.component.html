@@ -1,0 +1,227 @@
+<section class="card mainContent">
+    <h1 style="text-align: center; padding:5px; font-weight: 500;" >INCOME AND EXPENDITURE ACCOUNT
+      FOR THE YEAR ENDED</h1>
+  
+    <div class="container row mb-2">
+      <div class="col-2"></div>
+      <div class="col-3">
+        <label>Division Wise</label>
+        <select class="form-select">
+          <option *ngFor="let division of divisions" [value]="division">{{ division }}</option>
+        </select>
+      </div>
+      <div class="col-2">
+        <label>Year</label>
+        <select class="form-select">
+          <option *ngFor="let year of annualYears" [value]="year">{{ year }}</option>
+        </select>
+      </div>
+      <div class="col-2">
+        <label>From</label>
+        <input type="date" class="form-control">
+      </div>
+      <div class="col-2">
+        <label>To</label>
+        <input type="date" class="form-control">
+      </div>
+    </div>
+    
+    
+        <table class="table">
+          <thead>
+            <tr class="application-table">
+              <th style="width: 260px">INCOME</th>
+              <th style="width: 10px">SCHEDULE</th>
+  
+              <th style="width: 100px">Current F.Y (amount){{ selectedYear && selectedYear !== 'Select Annual Year' ? selectedYear
+                : '' }}</th>
+              <th style="width: 100px">Previous F.Y (amount){{ selectedYear && selectedYear !== 'Select Annual Year' ?
+                (+selectedYear.split('-')[0] - 1)
+                + ' - ' + (+selectedYear.split('-')[1] - 1) : '' }}</th>
+  
+              <th style="width: 260px">EXPENDITURE</th>
+              <th style="width: 10px">SCHEDULE</th>
+  
+              <th style="width: 100px">Current F.Y (amount){{ selectedYear && selectedYear !== 'Select Annual Year' ? selectedYear
+                : '' }}</th>
+              <th style="width: 100px">Previous F.Y (amount){{ selectedYear && selectedYear !== 'Select Annual Year' ?
+                (+selectedYear.split('-')[0] - 1)
+                + ' - ' + (+selectedYear.split('-')[1] - 1) : '' }}</th>
+  
+            </tr>
+          </thead>
+          <!-- <tbody>
+            <th><b>INCOME</b></th>
+          </tbody> -->
+          <tbody>
+  
+            <tr>
+              <th><b>INCOME:</b></th>
+              <td></td>
+              <td></td>
+              <td></td>
+              <th><b>EXPENDITURE:</b></th>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <th>INCOME FROM SALES </th>
+              <td>1</td>
+              <td></td>
+              <td></td>
+              <th>COST OF CONSTRUCTIONS </th>
+              <td>5</td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <th>INCOME FROM INTEREST </th>
+              <td>2</td>
+              <td></td>
+              <td></td>
+              <th>REPAIRS AND MAINTENANCE</th>
+              <td>6</td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <th>OTHER OPERATING INCOME</th>
+              <td>3</td>
+              <td></td>
+              <td></td>
+              <th>EMPLOYEE EMOLUMENTS & WELFARE</th>
+              <td>7</td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <th>MISCELLANEOUS INCOME</th>
+              <td>4</td>
+              <td></td>
+              <td></td>
+              <th>SPECIAL STAFF COST L.A</th>
+              <td>8</td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <th>ADMINISTRATIVE COST </th>
+              <td>9</td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <th>FINANCE CHARGES </th>
+              <td>10</td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <th>DEPRECIATION </th>
+              <td>11</td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <th>EXCESS OF EXPDR. OVER INCOME</th>
+              <td></td>
+              <td></td>
+              <td></td>
+              <th>EXCESS OF INCOME OVER EXPDR. </th>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <th>Total</th>
+              <td></td>
+              <td class="tableTotal"></td>
+              <td></td>
+              <th>Total</th>
+              <td></td>
+              <td class="tableTotal"></td>
+              <td></td>
+            </tr>
+  
+  
+            <!-- <tr>
+              <th><b>EXPENDITURE:</b></th>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <th>COST OF CONSTRUCTIONS </th>
+              <td>5</td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <th>REPAIRS AND MAINTENANCE</th>
+              <td>6</td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <th>EMPLOYEE EMOLUMENTS & WELFARE</th>
+              <td>7</td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <th>SPECIAL STAFF COST L.A</th>
+              <td>8</td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <th>ADMINISTRATIVE COST </th>
+              <td>9</td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <th>FINANCE CHARGES </th>
+              <td>10</td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <th>DEPRECIATION </th>
+              <td>11</td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <th>EXCESS OF INCOME OVER EXPDR. </th>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <th>Total</th>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr> -->
+  
+  
+          </tbody>
+        </table>
+        <div class="bottomSpace">
+  
+        </div>
+      </section>

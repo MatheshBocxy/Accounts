@@ -1,0 +1,29 @@
+.card{
+    padding: 20px;
+}
+
+   .tbody td{
+    font-size: 20px;
+   }
+   .table {
+    border-collapse: collapse;
+    width: 100%;
+    
+   }
+
+
+.table th, .table td {
+    border: 1px solid rgb(255, 232, 232);
+    padding: 8px;
+   
+}
+
+/* .table th {
+    background-color: #f2f2f2;
+} */
+.application-table th {
+    background-color:  #161F6D;
+    color: white;
+    font-size:15px;
+    text-align: center;
+   }

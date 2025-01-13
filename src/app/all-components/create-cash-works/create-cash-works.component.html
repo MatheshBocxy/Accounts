@@ -1,0 +1,1709 @@
+<section class="main-table">
+
+  <div class="topBackButton">
+    <a (click)="backButtonClick()" style="cursor: pointer; font-size: 16px; font-weight: 700;"><svg
+        xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-bar-left"
+        viewBox="0 0 16 16">
+        <path fill-rule="evenodd"
+          d="M12.5 15a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5M10 8a.5.5 0 0 1-.5.5H3.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L3.707 7.5H9.5a.5.5 0 0 1 .5.5" />
+      </svg>Back</a>
+    <h2>Rs in LAKHS...</h2>
+  </div>
+
+  <div class="row" *ngIf="division == 'Head_office'">
+    <div class="col-3">
+      <label for="">Filter : </label>
+      <select class="form-select" (change)="selectDivisionDropdown($event)">
+        <option value="All">All</option>
+        <option *ngFor="let item of allDivisions" value="{{item}}">{{item}}</option>
+      </select>
+    </div>
+  </div>
+
+  <mat-tab-group animationDuration="1000ms" color="warn">
+    <!--------------- Cash flow BE -------------------->
+
+    <mat-tab label="{{valueType}} - CASH FLOW" *ngIf="CashFlow && be">
+
+      <section class="card mt-2">
+        <div class="main-content">
+          <table class="table">
+            <thead>
+              <tr>
+                <th colspan="10" class="header-title" style="text-align: center;">TAMIL NADU HOUSING BOARD</th>
+              </tr>
+              <tr>
+                <th colspan="10" class="sub-header" style="text-align: center;">Budget Estimate for {{budgetYear}}
+                </th>
+              </tr>
+              <tr>
+                <th colspan="10" class="sub-header" style="text-align: center;">CASH BUDGET</th>
+              </tr>
+              <tr>
+                <th rowspan="3" style="text-align: center;">Sl.No.</th>
+                <th rowspan="3" colspan="3" style="text-align: center;">Particulars</th>
+                <th style="text-align: center;">Actuals</th>
+                <th style="text-align: center;" *ngIf="isPreviousBeRbe">RBE</th>
+                <th style="text-align: center;">RBE</th>
+                <th style="text-align: center;">Actuals Up To</th>
+                <th colspan="2" style="text-align: center;">BE</th>
+              </tr>
+              <tr>
+                <th style="text-align: center;width: 100px;">{{ActualsYearValue}}</th>
+                <th style="text-align: center;width: 100px;" *ngIf="isPreviousBeRbe">{{beRbePreviousYear}}</th>
+                <th style="text-align: center;width: 100px;">{{rbeYearValue}}</th>
+                <th style="text-align: center;width: 100px;">{{ActualsUpToYearValue}}</th>
+                <th style="text-align: center;width: 100px;" colspan="2">{{beLastYearValue}}</th>
+              </tr>
+              <tr>
+                <th></th>
+                <th *ngIf="isPreviousBeRbe"></th>
+                <th></th>
+                <th></th>
+                <th style="text-align: center;width: 100px;">Proposed</th>
+                <th style="text-align: center;width: 100px;">Fixed</th>
+              </tr>
+            </thead>
+            <!-- A -->
+            <tbody>
+              <tr>
+                <td class="no-border"></td>
+                <td colspan="12" class="resource-title" style="font-size: large; font-weight: 600;">RESOURCES</td>
+              </tr>
+
+              <ng-container *ngFor="let resource of allSubGroupsResource_A; let i = index">
+                <tr *ngIf="resource.subGroup.length === 0">
+                  <td>{{ i + 1 }}</td>
+                  <td colspan="3">
+                    <p style="cursor: pointer;" (click)="budgetSplitUpPopUp(resource.bedto,'BE')">{{ resource.heading }}
+                    </p>
+                  </td>
+                  <td style="text-align: right;">{{ (resource.actuals || 0).toFixed(2) }}</td>
+                  <td style="text-align: right;" *ngIf="isPreviousBeRbe">{{ (resource.previousRbe || 0).toFixed(2) }}
+                  </td>
+                  <td style="text-align: right;">{{ (resource.rbe || 0).toFixed(2) }}</td>
+                  <td style="text-align: right;">{{ (resource.actualsUpTo || 0).toFixed(2) }}</td>
+                  <td style="text-align: right;">{{ (resource.beLastYearProposed || 0).toFixed(2) }}</td>
+                  <td style="text-align: right;">{{ (resource.beLastYearFixed || 0).toFixed(2) }}</td>
+                </tr>
+
+                <tr *ngIf="resource.subGroup.length !== 0">
+                  <td>{{ i + 1 }}</td>
+                  <td colspan="3">
+                    <p style="cursor: pointer;" (click)="budgetSplitUpPopUp(resource.bedto,'BE')">{{ resource.heading }}
+                    </p>
+                  </td>
+                  <td style="text-align: right;">{{ resource.actuals}}</td>
+                  <td style="text-align: right;" *ngIf="isPreviousBeRbe">{{ resource.previousRbe}}</td>
+                  <td style="text-align: right;">{{ resource.rbe}}</td>
+                  <td style="text-align: right;">{{ resource.actualsUpTo}}</td>
+                  <td style="text-align: right;">{{ resource.beLastYearProposed}}</td>
+                  <td style="text-align: right;">{{ resource.beLastYearFixed}}</td>
+                </tr>
+
+                <!-- Loop through subgroups if they exist -->
+                <ng-container *ngIf="resource.subGroup">
+                  <tr *ngFor="let subResource of resource.subGroup; let j = index">
+                    <td></td>
+                    <td colspan="3">
+                      <p style="cursor: pointer;" (click)="budgetSplitUpPopUp(subResource.bedto,'BE')">{{
+                        subResource.heading
+                        }}</p>
+                    </td>
+                    <td style="text-align: right;">{{ (subResource.actuals || 0).toFixed(2) }}</td>
+                    <td style="text-align: right;" *ngIf="isPreviousBeRbe">{{ (subResource.previousRbe || 0).toFixed(2)
+                      }}</td>
+                    <td style="text-align: right;">{{ (subResource.rbe || 0).toFixed(2) }}</td>
+                    <td style="text-align: right;">{{ (subResource.actualsUpTo || 0).toFixed(2) }}</td>
+                    <td style="text-align: right;">{{ (subResource.beLastYearProposed || 0).toFixed(2) }}</td>
+                    <td style="text-align: right;">{{ (subResource.beLastYearFixed || 0).toFixed(2) }}</td>
+                  </tr>
+                </ng-container>
+              </ng-container>
+
+              <tr>
+                <td></td>
+                <td colspan="3" style="font-size: medium; font-weight: 500; text-align: center;" class="resource-title">
+                  Total (A)</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">{{(actualsResource_A).toFixed(2)}}
+                </td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;" *ngIf="isPreviousBeRbe">
+                  {{(rbePreviousResource_A).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">{{(rbeResource_A).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">
+                  {{(actualUpToResource_A).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">
+                  {{(beProposedResource_A).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">{{(beFixedResource_A).toFixed(2)}}
+                </td>
+              </tr>
+            </tbody>
+            <!-- B -->
+            <tbody>
+              <tr>
+                <td class="no-border"></td>
+              </tr>
+              <ng-container *ngFor="let resource of allSubGroupsResource_B; let i = index">
+                <tr *ngIf="resource.subGroup.length === 0">
+                  <td>{{ i + 1 }}</td>
+                  <td colspan="3">
+                    <p style="cursor: pointer;" (click)="budgetSplitUpPopUp(resource.bedto,'BE')">{{ resource.heading }}
+                    </p>
+                  </td>
+                  <td style="text-align: right;">{{ (resource.actuals || 0).toFixed(2) }}</td>
+                  <td style="text-align: right;" *ngIf="isPreviousBeRbe">{{ (resource.previousRbe || 0).toFixed(2) }}
+                  </td>
+                  <td style="text-align: right;">{{ (resource.rbe || 0).toFixed(2) }}</td>
+                  <td style="text-align: right;">{{ (resource.actualsUpTo || 0).toFixed(2) }}</td>
+                  <td style="text-align: right;">{{ (resource.beLastYearProposed || 0).toFixed(2) }}</td>
+                  <td style="text-align: right;">{{ (resource.beLastYearFixed || 0).toFixed(2) }}</td>
+                </tr>
+
+                <tr *ngIf="resource.subGroup.length !== 0">
+                  <td>{{ i + 1 }}</td>
+                  <td colspan="3">
+                    <p style="cursor: pointer;" (click)="budgetSplitUpPopUp(resource.bedto,'BE')">{{ resource.heading }}
+                    </p>
+                  </td>
+                  <td style="text-align: right;">{{ resource.actuals}}</td>
+                  <td style="text-align: right;" *ngIf="isPreviousBeRbe">{{ resource.previousRbe}}</td>
+                  <td style="text-align: right;">{{ resource.rbe}}</td>
+                  <td style="text-align: right;">{{ resource.actualsUpTo}}</td>
+                  <td style="text-align: right;">{{ resource.beLastYearProposed}}</td>
+                  <td style="text-align: right;">{{ resource.beLastYearFixed}}</td>
+                </tr>
+
+                <!-- Loop through subgroups if they exist -->
+                <ng-container *ngIf="resource.subGroup">
+                  <tr *ngFor="let subResource of resource.subGroup; let j = index">
+                    <td></td>
+                    <td colspan="3">
+                      <p style="cursor: pointer;" (click)="budgetSplitUpPopUp(subResource.bedto,'BE')">{{
+                        subResource.heading
+                        }}</p>
+                    </td>
+                    <td style="text-align: right;">{{ (subResource.actuals || 0).toFixed(2) }}</td>
+                    <td style="text-align: right;" *ngIf="isPreviousBeRbe">{{ (subResource.previousRbe || 0).toFixed(2)
+                      }}</td>
+                    <td style="text-align: right;">{{ (subResource.rbe || 0).toFixed(2) }}</td>
+                    <td style="text-align: right;">{{ (subResource.actualsUpTo || 0).toFixed(2) }}</td>
+                    <td style="text-align: right;">{{ (subResource.beLastYearProposed || 0).toFixed(2) }}</td>
+                    <td style="text-align: right;">{{ (subResource.beLastYearFixed || 0).toFixed(2) }}</td>
+                  </tr>
+                </ng-container>
+              </ng-container>
+              <tr>
+                <td class="no-border"></td>
+                <td colspan="3" style="font-size: medium; font-weight: 500; text-align: center;" class="resource-title">
+                  Total (B)</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">{{(actualsResource_B).toFixed(2)}}
+                </td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;" *ngIf="isPreviousBeRbe">
+                  {{(rbePreviousResource_B).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">
+                  {{(rbeResource_B).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">
+                  {{(actualUpToResource_B).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">
+                  {{(beProposedResource_B).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">{{(beFixedResource_B).toFixed(2)}}
+                </td>
+              </tr>
+              <tr>
+                <td class="no-border"></td>
+                <td colspan="12" style="font-size: medium; font-weight: 500;" class="resource-title">Other Receipts</td>
+              </tr>
+            </tbody>
+            <!-- C -->
+            <tbody>
+              <tr>
+                <td class="no-border"></td>
+              </tr>
+              <ng-container *ngFor="let resource of allSubGroupsResource_C; let i = index">
+                <tr *ngIf="resource.subGroup.length === 0">
+                  <td>{{ i + 1 }}</td>
+                  <td colspan="3">
+                    <p style="cursor: pointer;" (click)="budgetSplitUpPopUp(resource.bedto,'BE')">{{ resource.heading }}
+                    </p>
+                  </td>
+                  <td style="text-align: right;">{{ (resource.actuals || 0).toFixed(2) }}</td>
+                  <td style="text-align: right;" *ngIf="isPreviousBeRbe">{{ (resource.previousRbe || 0).toFixed(2) }}
+                  </td>
+                  <td style="text-align: right;">{{ (resource.rbe || 0).toFixed(2) }}</td>
+                  <td style="text-align: right;">{{ (resource.actualsUpTo || 0).toFixed(2) }}</td>
+                  <td style="text-align: right;">{{ (resource.beLastYearProposed || 0).toFixed(2) }}</td>
+                  <td style="text-align: right;">{{ (resource.beLastYearFixed || 0).toFixed(2) }}</td>
+                </tr>
+
+                <tr *ngIf="resource.subGroup.length !== 0">
+                  <td>{{ i + 1 }}</td>
+                  <td colspan="3">
+                    <p style="cursor: pointer;" (click)="budgetSplitUpPopUp(resource.bedto,'BE')">{{ resource.heading }}
+                    </p>
+                  </td>
+                  <td style="text-align: right;">{{ resource.actuals}}</td>
+                  <td style="text-align: right;" *ngIf="isPreviousBeRbe">{{ resource.previousRbe}}</td>
+                  <td style="text-align: right;">{{ resource.rbe}}</td>
+                  <td style="text-align: right;">{{ resource.actualsUpTo}}</td>
+                  <td style="text-align: right;">{{ resource.beLastYearProposed}}</td>
+                  <td style="text-align: right;">{{ resource.beLastYearFixed}}</td>
+                </tr>
+
+                <!-- Loop through subgroups if they exist -->
+                <ng-container *ngIf="resource.subGroup">
+                  <tr *ngFor="let subResource of resource.subGroup; let j = index">
+                    <td></td>
+                    <td colspan="3">
+                      <p style="cursor: pointer;" (click)="budgetSplitUpPopUp(subResource.bedto,'BE')">{{
+                        subResource.heading
+                        }}</p>
+                    </td>
+                    <td style="text-align: right;">{{ (subResource.actuals || 0).toFixed(2) }}</td>
+                    <td style="text-align: right;" *ngIf="isPreviousBeRbe">{{ (subResource.previousRbe || 0).toFixed(2)
+                      }}</td>
+                    <td style="text-align: right;">{{ (subResource.rbe || 0).toFixed(2) }}</td>
+                    <td style="text-align: right;">{{ (subResource.actualsUpTo || 0).toFixed(2) }}</td>
+                    <td style="text-align: right;">{{ (subResource.beLastYearProposed || 0).toFixed(2) }}</td>
+                    <td style="text-align: right;">{{ (subResource.beLastYearFixed || 0).toFixed(2) }}</td>
+                  </tr>
+                </ng-container>
+              </ng-container>
+              <tr>
+                <td class="no-border"></td>
+                <td colspan="3" style="font-size: medium; font-weight: 500; text-align: center;" class="resource-title">
+                  Total (C)</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">
+                  {{(actualsResource_C).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;" *ngIf="isPreviousBeRbe">
+                  {{(rbePreviousResource_C).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">
+                  {{(rbeResource_C).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">
+                  {{(actualUpToResource_C).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">
+                  {{(beProposedResource_C).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">
+                  {{(beFixedResource_C).toFixed(2)}}</td>
+              </tr>
+              <tr>
+                <td class="no-border"></td>
+                <td colspan="3" style="font-size: medium; font-weight: 500; text-align: center;" class="resource-title">
+                  Total Resources (A+B+C)</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">
+                  {{(actualsResourceTotal).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;" *ngIf="isPreviousBeRbe">
+                  {{(rbePreviousResourceTotal).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">
+                  {{(rbeResourceTotal).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">
+                  {{(actualUpToResourceTotal).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">
+                  {{(proposedResourceTotal).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">{{(fixedResourceTotal).toFixed(2)}}
+                </td>
+
+              </tr>
+            </tbody>
+
+            <!-- Commitments -->
+
+            <!-- A -->
+            <tbody>
+              <tr>
+                <td class="no-border"></td>
+                <td colspan="12" class="resource-title" style="font-size: large; font-weight: 600;">COMMITMENTS</td>
+              </tr>
+              <ng-container *ngFor="let resource of allSubGroupsCommitments_A; let i = index">
+                <tr *ngIf="resource.subGroup.length === 0">
+                  <td>{{ i + 1 }}</td>
+                  <td colspan="3">
+                    <p style="cursor: pointer;" (click)="budgetSplitUpPopUp(resource.bedto,'BE')">{{ resource.heading }}
+                    </p>
+                  </td>
+                  <td style="text-align: right;">{{ (resource.actuals || 0).toFixed(2) }}</td>
+                  <td style="text-align: right;" *ngIf="isPreviousBeRbe">{{ (resource.previousRbe || 0).toFixed(2) }}
+                  </td>
+                  <td style="text-align: right;">{{ (resource.rbe || 0).toFixed(2) }}</td>
+                  <td style="text-align: right;">{{ (resource.actualsUpTo || 0).toFixed(2) }}</td>
+                  <td style="text-align: right;">{{ (resource.beLastYearProposed || 0).toFixed(2) }}</td>
+                  <td style="text-align: right;">{{ (resource.beLastYearFixed || 0).toFixed(2) }}</td>
+                </tr>
+
+                <tr *ngIf="resource.subGroup.length !== 0">
+                  <td>{{ i + 1 }}</td>
+                  <td colspan="3" style="cursor: pointer;" (click)="budgetSplitUpPopUp(resource.bedto,'BE')">{{
+                    resource.heading }}</td>
+                  <td style="text-align: right;">{{ resource.actuals}}</td>
+                  <td style="text-align: right;" *ngIf="isPreviousBeRbe">{{ resource.previousRbe}}</td>
+                  <td style="text-align: right;">{{ resource.rbe}}</td>
+                  <td style="text-align: right;">{{ resource.actualsUpTo}}</td>
+                  <td style="text-align: right;">{{ resource.beLastYearProposed}}</td>
+                  <td style="text-align: right;">{{ resource.beLastYearFixed}}</td>
+                </tr>
+
+                <!-- Loop through subgroups if they exist -->
+                <ng-container *ngIf="resource.subGroup">
+                  <tr *ngFor="let subResource of resource.subGroup; let j = index">
+                    <td></td>
+                    <td colspan="3">
+                      <p style="cursor: pointer;" (click)="budgetSplitUpPopUp(resource.bedto,'BE')">{{
+                        subResource.heading }}</p>
+                    </td>
+                    <td style="text-align: right;">{{ (subResource.actuals || 0).toFixed(2) }}</td>
+                    <td style="text-align: right;" *ngIf="isPreviousBeRbe">{{ (subResource.previousRbe || 0).toFixed(2)
+                      }}</td>
+                    <td style="text-align: right;">{{ (subResource.rbe || 0).toFixed(2) }}</td>
+                    <td style="text-align: right;">{{ (subResource.actualsUpTo || 0).toFixed(2) }}</td>
+                    <td style="text-align: right;">{{ (subResource.beLastYearProposed || 0).toFixed(2) }}</td>
+                    <td style="text-align: right;">{{ (subResource.beLastYearFixed || 0).toFixed(2) }}</td>
+                  </tr>
+                </ng-container>
+              </ng-container>
+              <tr>
+                <td class="no-border"></td>
+                <td colspan="3" style="font-size: medium; font-weight: 500; text-align: center;" class="resource-title">
+                  Total (A)</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">
+                  {{(actualsCommitments_A).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;" *ngIf="isPreviousBeRbe">
+                  {{(rbePreviousCommitments_A).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">
+                  {{(rbeCommitments_A).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">
+                  {{(actualUpToCommitments_A).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">
+                  {{(beProposedCommitments_A).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">
+                  {{(beFixedCommitments_A).toFixed(2)}}</td>
+              </tr>
+            </tbody>
+            <!-- B -->
+            <tbody>
+              <tr>
+                <td class="no-border"></td>
+              </tr>
+              <ng-container *ngFor="let resource of allSubGroupsCommitments_B; let i = index">
+                <tr *ngIf="resource.subGroup.length === 0">
+                  <td>{{ i + 1 }}</td>
+                  <td colspan="3">
+                    <p style="cursor: pointer;" (click)="budgetSplitUpPopUp(resource.bedto,'BE')">{{ resource.heading }}
+                    </p>
+                  </td>
+                  <td style="text-align: right;">{{ (resource.actuals || 0).toFixed(2) }}</td>
+                  <td style="text-align: right;" *ngIf="isPreviousBeRbe">{{ (resource.previousRbe || 0).toFixed(2) }}
+                  </td>
+                  <td style="text-align: right;">{{ (resource.rbe || 0).toFixed(2) }}</td>
+                  <td style="text-align: right;">{{ (resource.actualsUpTo || 0).toFixed(2) }}</td>
+                  <td style="text-align: right;">{{ (resource.beLastYearProposed || 0).toFixed(2) }}</td>
+                  <td style="text-align: right;">{{ (resource.beLastYearFixed || 0).toFixed(2) }}</td>
+                </tr>
+
+                <tr *ngIf="resource.subGroup.length !== 0">
+                  <td>{{ i + 1 }}</td>
+                  <td colspan="3" style="cursor: pointer;" (click)="budgetSplitUpPopUp(resource.bedto,'BE')">{{
+                    resource.heading }}</td>
+                  <td style="text-align: right;">{{ resource.actuals}}</td>
+                  <td style="text-align: right;" *ngIf="isPreviousBeRbe">{{ resource.previousRbe}}</td>
+                  <td style="text-align: right;">{{ resource.rbe}}</td>
+                  <td style="text-align: right;">{{ resource.actualsUpTo}}</td>
+                  <td style="text-align: right;">{{ resource.beLastYearProposed}}</td>
+                  <td style="text-align: right;">{{ resource.beLastYearFixed}}</td>
+                </tr>
+
+                <!-- Loop through subgroups if they exist -->
+                <ng-container *ngIf="resource.subGroup">
+                  <tr *ngFor="let subResource of resource.subGroup; let j = index">
+                    <td></td>
+                    <td colspan="3">
+                      <p style="cursor: pointer;" (click)="budgetSplitUpPopUp(resource.bedto,'BE')">{{
+                        subResource.heading }}</p>
+                    </td>
+                    <td style="text-align: right;">{{ (subResource.actuals || 0).toFixed(2) }}</td>
+                    <td style="text-align: right;" *ngIf="isPreviousBeRbe">{{ (subResource.previousRbe || 0).toFixed(2)
+                      }}</td>
+                    <td style="text-align: right;">{{ (subResource.rbe || 0).toFixed(2) }}</td>
+                    <td style="text-align: right;">{{ (subResource.actualsUpTo || 0).toFixed(2) }}</td>
+                    <td style="text-align: right;">{{ (subResource.beLastYearProposed || 0).toFixed(2) }}</td>
+                    <td style="text-align: right;">{{ (subResource.beLastYearFixed || 0).toFixed(2) }}</td>
+                  </tr>
+                </ng-container>
+              </ng-container>
+              <tr>
+                <td class="no-border"></td>
+                <td colspan="3" style="font-size: medium; font-weight: 500;text-align: center;" class="resource-title">
+                  Total (B)</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">
+                  {{(actualsCommitments_B).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;" *ngIf="isPreviousBeRbe">
+                  {{(rbePreviousCommitments_B).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">
+                  {{(rbeCommitments_B).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">
+                  {{(actualUpToCommitments_B).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">
+                  {{(beProposedCommitments_B).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">
+                  {{(beFixedCommitments_B).toFixed(2)}}</td>
+              </tr>
+            </tbody>
+            <!-- C -->
+            <tbody>
+              <tr>
+                <td class="no-border"></td>
+              </tr>
+              <ng-container *ngFor="let resource of allSubGroupsCommitments_C; let i = index">
+                <tr *ngIf="resource.subGroup.length === 0">
+                  <td>{{ i + 1 }}</td>
+                  <td colspan="3">
+                    <p style="cursor: pointer;" (click)="budgetSplitUpPopUp(resource.bedto,'BE')">{{ resource.heading }}
+                    </p>
+                  </td>
+                  <td style="text-align: right;">{{ (resource.actuals || 0).toFixed(2) }}</td>
+                  <td style="text-align: right;" *ngIf="isPreviousBeRbe">{{ (resource.previousRbe || 0).toFixed(2) }}
+                  </td>
+                  <td style="text-align: right;">{{ (resource.rbe || 0).toFixed(2) }}</td>
+                  <td style="text-align: right;">{{ (resource.actualsUpTo || 0).toFixed(2) }}</td>
+                  <td style="text-align: right;">{{ (resource.beLastYearProposed || 0).toFixed(2) }}</td>
+                  <td style="text-align: right;">{{ (resource.beLastYearFixed || 0).toFixed(2) }}</td>
+                </tr>
+
+                <tr *ngIf="resource.subGroup.length !== 0">
+                  <td>{{ i + 1 }}</td>
+                  <td colspan="3" style="cursor: pointer;" (click)="budgetSplitUpPopUp(resource.bedto,'BE')">{{
+                    resource.heading }}</td>
+                  <td style="text-align: right;">{{ resource.actuals}}</td>
+                  <td style="text-align: right;" *ngIf="isPreviousBeRbe">{{ resource.previousRbe}}</td>
+                  <td style="text-align: right;">{{ resource.rbe}}</td>
+                  <td style="text-align: right;">{{ resource.actualsUpTo}}</td>
+                  <td style="text-align: right;">{{ resource.beLastYearProposed}}</td>
+                  <td style="text-align: right;">{{ resource.beLastYearFixed}}</td>
+                </tr>
+
+                <!-- Loop through subgroups if they exist -->
+                <ng-container *ngIf="resource.subGroup">
+                  <tr *ngFor="let subResource of resource.subGroup; let j = index">
+                    <td></td>
+                    <td colspan="3">
+                      <p style="cursor: pointer;" (click)="budgetSplitUpPopUp(resource.bedto,'BE')">{{
+                        subResource.heading }}</p>
+                    </td>
+                    <td style="text-align: right;">{{ (subResource.actuals || 0).toFixed(2) }}</td>
+                    <td style="text-align: right;" *ngIf="isPreviousBeRbe">{{ (subResource.previousRbe || 0).toFixed(2)
+                      }}</td>
+                    <td style="text-align: right;">{{ (subResource.rbe || 0).toFixed(2) }}</td>
+                    <td style="text-align: right;">{{ (subResource.actualsUpTo || 0).toFixed(2) }}</td>
+                    <td style="text-align: right;">{{ (subResource.beLastYearProposed || 0).toFixed(2) }}</td>
+                    <td style="text-align: right;">{{ (subResource.beLastYearFixed || 0).toFixed(2) }}</td>
+                  </tr>
+                </ng-container>
+              </ng-container>
+              <tr>
+                <td>{{lenthOfCommitments_C}}</td>
+                <td colspan="3">
+                  <p style="cursor: pointer;" (click)="cashToWorkRoute(budgetYear,'BE')">Works expenditure & Maintenance
+                  </p>
+                </td>
+                <td style="text-align: right;">{{(workToCashActualsTotal || 0).toFixed(2)}}</td>
+                <td style="text-align: right;" *ngIf="isPreviousBeRbe">{{(workToCashBeRbePreviousTotal ||
+                  0).toFixed(2)}}</td>
+                <td style="text-align: right;">{{(workToCashBeRbeTotal || 0).toFixed(2)}}</td>
+                <td style="text-align: right;">{{(workToCashActualsUpToTotal || 0).toFixed(2)}}</td>
+                <td style="text-align: right;">{{(workToCashProposedTotal || 0).toFixed(2)}}</td>
+                <td style="text-align: right;">{{(workToCashFixedTotal || 0).toFixed(2)}}</td>
+              </tr>
+              <tr>
+                <td class="no-border"></td>
+                <td colspan="3" style="font-size: medium; font-weight: 500; text-align: center;" class="resource-title">
+                  Total (C)</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">
+                  {{(actualsCommitments_C).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;" *ngIf="isPreviousBeRbe">
+                  {{(rbePreviousCommitments_C).toFixed(2)}}
+                </td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">
+                  {{(rbeCommitments_C).toFixed(2)}}
+                </td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">
+                  {{(actualUpToCommitments_C).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">
+                  {{(beProposedCommitments_C).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">
+                  {{(beFixedCommitments_C).toFixed(2)}}</td>
+              </tr>
+            </tbody>
+
+            <tbody>
+              <tr>
+                <td class="no-border"></td>
+                <td colspan="3" style="font-size: medium; font-weight: 500; text-align: center;" class="resource-title">
+                  Total Commitments
+                  (A+B+C)</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">
+                  {{(actualsCommitmentsTotal).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;" *ngIf="isPreviousBeRbe">
+                  {{(rbePerviousCommitmentsTotal).toFixed(2)}}
+                </td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">{{(rbeCommitmentsTotal).toFixed(2)}}
+                </td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">
+                  {{(actualUpToCommitmentsTotal).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">
+                  {{(proposedCommitmentsTotal).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">
+                  {{(fixedCommitmentsTotal).toFixed(2)}}</td>
+              </tr>
+
+              <tr>
+                <td class="no-border"></td>
+                <td colspan="3" style="font-size: medium; font-weight: 500; text-align: center;" class="resource-title">
+                  Cash Total</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">
+                  {{(actualOverAllTotal).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;" *ngIf="isPreviousBeRbe">
+                  {{(beRbePerviousOverAllTotal).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">
+                  {{(beRbeOverAllTotal).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">
+                  {{(actualUpToOverAllTotal).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">
+                  {{(proposedOverAllTotal).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">
+                  {{(fixedOverAllTotal).toFixed(2)}}</td>
+              </tr>
+            </tbody>
+
+          </table>
+        </div>
+      </section>
+      <div class="backButtonClick">
+        <button class="btn btn-secondary mt-2" (click)="backButtonClick()">Back</button>
+      </div>
+
+    </mat-tab>
+
+    <!--------------- Cash flow RBE ------------------->
+
+    <mat-tab label="{{valueType}} - CASH FLOW" *ngIf="CashFlow && rbe">
+
+      <section class="card mt-2">
+        <div class="main-content">
+          <table class="table">
+            <thead>
+              <tr>
+                <th colspan="12" class="header-title" style="text-align: center;">TAMIL NADU HOUSING BOARD</th>
+              </tr>
+              <tr>
+                <th colspan="12" class="sub-header" style="text-align: center;">Budget Estimate for {{budgetYear}}</th>
+              </tr>
+              <tr>
+                <th colspan="12" class="sub-header" style="text-align: center;">CASH BUDGET</th>
+              </tr>
+              <tr>
+                <th rowspan="3" style="text-align: center;">Sl.No.</th>
+                <th rowspan="3" colspan="3" style="text-align: center;">Particulars</th>
+                <th style="text-align: center;">Actuals</th>
+                <th style="text-align: center;" *ngIf="isPreviousBeRbe">BE</th>
+                <th style="text-align: center;">BE</th>
+                <th style="text-align: center;">Actuals Up To</th>
+                <th colspan="2" style="text-align: center;">RBE</th>
+              </tr>
+              <tr>
+                <th style="text-align: center; width: 100px;">{{ActualsYearRbeValue}}</th>
+                <th style="text-align: center;width: 100px;" *ngIf="isPreviousBeRbe">{{rbePreviousYearRbeValue}}</th>
+                <th style="text-align: center;width: 100px;">{{beLastYearRbeValue}}</th>
+                <th style="text-align: center;width: 100px;">{{ActualsUpToYearRbeValue}}</th>
+                <th style="text-align: center;" colspan="2">{{rbeYearRbeValue}}</th>
+              </tr>
+              <tr>
+                <th></th>
+                <th *ngIf="isPreviousBeRbe"></th>
+                <th></th>
+                <th></th>
+                <th style="text-align: center;width: 100px;">Proposed</th>
+                <th style="text-align: center;width: 100px;">Fixed</th>
+              </tr>
+            </thead>
+            <!-- 1 -->
+            <tbody>
+              <tr>
+                <td class="no-border"></td>
+                <td colspan="12" class="resource-title" style="font-size: large; font-weight: 600;">RESOURCES</td>
+              </tr>
+
+              <ng-container *ngFor="let resource of allSubGroupsResource_A; let i = index">
+                <tr *ngIf="resource.subGroup.length === 0">
+                  <td>{{ i + 1 }}</td>
+                  <td colspan="3">
+                    <p style="cursor: pointer;" (click)="budgetSplitUpPopUp(resource.bedto,'RBE')">{{ resource.heading
+                      }}
+                    </p>
+                  </td>
+                  <td style="text-align: right;">{{ (resource.actualsRbe || 0).toFixed(2) }}</td>
+                  <td style="text-align: right;" *ngIf="isPreviousBeRbe">{{ (resource.previousBeRbe || 0).toFixed(2) }}
+                  </td>
+                  <td style="text-align: right;">{{ (resource.beRbe || 0).toFixed(2) }}</td>
+                  <td style="text-align: right;">{{ (resource.actualsUpToRbe || 0).toFixed(2) }}</td>
+                  <td style="text-align: right;">{{ (resource.lastRbeProposed || 0).toFixed(2) }}</td>
+                  <td style="text-align: right;">{{ (resource.lastRbeFixed || 0).toFixed(2) }}</td>
+                </tr>
+
+                <tr *ngIf="resource.subGroup.length !== 0">
+                  <td>{{ i + 1 }}</td>
+                  <td colspan="3" style="cursor: pointer;" (click)="budgetSplitUpPopUp(resource.bedto,'RBE')">{{
+                    resource.heading }}</td>
+                  <td style="text-align: right;">{{ resource.actualsRbe}}</td>
+                  <td style="text-align: right;" *ngIf="isPreviousBeRbe">{{ resource.previousBeRbe}}</td>
+                  <td style="text-align: right;">{{ resource.beRbe}}</td>
+                  <td style="text-align: right;">{{ resource.actualsUpToRbe}}</td>
+                  <td style="text-align: right;">{{ resource.lastRbeProposed}}</td>
+                  <td style="text-align: right;">{{ resource.lastRbeFixed}}</td>
+                </tr>
+
+                <!-- Loop through subgroups if they exist -->
+                <ng-container *ngIf="resource.subGroup">
+                  <tr *ngFor="let subResource of resource.subGroup; let j = index">
+                    <td></td>
+                    <td colspan="3">
+                      <p style="cursor: pointer;" (click)="budgetSplitUpPopUp(subResource.bedto,'RBE')">{{
+                        subResource.heading }}</p>
+                    </td>
+                    <td style="text-align: right;">{{ (subResource.actualsRbe || 0).toFixed(2) }}</td>
+                    <td style="text-align: right;" *ngIf="isPreviousBeRbe">{{ (subResource.previousBeRbe ||
+                      0).toFixed(2) }}</td>
+                    <td style="text-align: right;">{{ (subResource.beRbe || 0).toFixed(2) }}</td>
+                    <td style="text-align: right;">{{ (subResource.actualsUpToRbe || 0).toFixed(2) }}</td>
+                    <td style="text-align: right;">{{ (subResource.lastRbeProposed || 0).toFixed(2) }}</td>
+                    <td style="text-align: right;">{{ (subResource.lastRbeFixed || 0).toFixed(2) }}</td>
+                  </tr>
+                </ng-container>
+              </ng-container>
+
+              <tr>
+                <td></td>
+                <td colspan="3" style="font-size: medium; font-weight: 500; text-align: center;" class="resource-title">
+                  Total (A)</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">{{(actualsResource_A).toFixed(2)}}
+                </td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;" *ngIf="isPreviousBeRbe">
+                  {{(rbePreviousResource_A).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">{{(rbeResource_A).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">
+                  {{(actualUpToResource_A).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">
+                  {{(beProposedResource_A).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">{{(beFixedResource_A).toFixed(2)}}
+                </td>
+              </tr>
+            </tbody>
+            <!-- 2 -->
+            <tbody>
+              <tr>
+                <td class="no-border"></td>
+              </tr>
+              <ng-container *ngFor="let resource of allSubGroupsResource_B; let i = index">
+                <tr *ngIf="resource.subGroup.length === 0">
+                  <td>{{ i + 1 }}</td>
+                  <td colspan="3">
+                    <p style="cursor: pointer;" (click)="budgetSplitUpPopUp(resource.bedto,'RBE')">{{ resource.heading
+                      }}
+                    </p>
+                  </td>
+                  <td style="text-align: right;">{{ (resource.actualsRbe || 0).toFixed(2) }}</td>
+                  <td style="text-align: right;" *ngIf="isPreviousBeRbe">{{ (resource.previousBeRbe || 0).toFixed(2) }}
+                  </td>
+                  <td style="text-align: right;">{{ (resource.beRbe || 0).toFixed(2) }}</td>
+                  <td style="text-align: right;">{{ (resource.actualsUpToRbe || 0).toFixed(2) }}</td>
+                  <td style="text-align: right;">{{ (resource.lastRbeProposed || 0).toFixed(2) }}</td>
+                  <td style="text-align: right;">{{ (resource.lastRbeFixed || 0).toFixed(2) }}</td>
+                </tr>
+
+                <tr *ngIf="resource.subGroup.length !== 0">
+                  <td>{{ i + 1 }}</td>
+                  <td colspan="3" style="cursor: pointer;" (click)="budgetSplitUpPopUp(resource.bedto,'RBE')">{{
+                    resource.heading }}</td>
+                  <td style="text-align: right;">{{ resource.actualsRbe}}</td>
+                  <td style="text-align: right;" *ngIf="isPreviousBeRbe">{{ resource.previousBeRbe}}</td>
+                  <td style="text-align: right;">{{ resource.beRbe}}</td>
+                  <td style="text-align: right;">{{ resource.actualsUpToRbe}}</td>
+                  <td style="text-align: right;">{{ resource.lastRbeProposed}}</td>
+                  <td style="text-align: right;">{{ resource.lastRbeFixed}}</td>
+                </tr>
+
+                <!-- Loop through subgroups if they exist -->
+                <ng-container *ngIf="resource.subGroup">
+                  <tr *ngFor="let subResource of resource.subGroup; let j = index">
+                    <td></td>
+                    <td colspan="3">
+                      <p style="cursor: pointer;" (click)="budgetSplitUpPopUp(subResource.bedto,'RBE')">{{
+                        subResource.heading }}</p>
+                    </td>
+                    <td style="text-align: right;">{{ (subResource.actualsRbe || 0).toFixed(2) }}</td>
+                    <td style="text-align: right;" *ngIf="isPreviousBeRbe">{{ (subResource.previousBeRbe ||
+                      0).toFixed(2) }}</td>
+                    <td style="text-align: right;">{{ (subResource.beRbe || 0).toFixed(2) }}</td>
+                    <td style="text-align: right;">{{ (subResource.actualsUpToRbe || 0).toFixed(2) }}</td>
+                    <td style="text-align: right;">{{ (subResource.lastRbeProposed || 0).toFixed(2) }}</td>
+                    <td style="text-align: right;">{{ (subResource.lastRbeFixed || 0).toFixed(2) }}</td>
+                  </tr>
+                </ng-container>
+              </ng-container>
+              <tr>
+                <td></td>
+                <td colspan="3" style="font-size: medium; font-weight: 500; text-align: center;" class="resource-title">
+                  Total (B)</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">{{(actualsResource_B).toFixed(2)}}
+                </td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;" *ngIf="isPreviousBeRbe">
+                  {{(rbePreviousResource_B).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">{{(rbeResource_B).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">
+                  {{(actualUpToResource_B).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">
+                  {{(beProposedResource_B).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">{{(beFixedResource_B).toFixed(2)}}
+                </td>
+              </tr>
+            </tbody>
+            <!-- 3 -->
+            <tbody>
+              <tr>
+                <td class="no-border"></td>
+              </tr>
+              <ng-container *ngFor="let resource of allSubGroupsResource_C; let i = index">
+                <tr *ngIf="resource.subGroup.length === 0">
+                  <td>{{ i + 1 }}</td>
+                  <td colspan="3">
+                    <p style="cursor: pointer;" (click)="budgetSplitUpPopUp(resource.bedto,'RBE')">{{ resource.heading
+                      }}
+                    </p>
+                  </td>
+                  <td style="text-align: right;">{{ (resource.actualsRbe || 0).toFixed(2) }}</td>
+                  <td style="text-align: right;" *ngIf="isPreviousBeRbe">{{ (resource.previousBeRbe || 0).toFixed(2) }}
+                  </td>
+                  <td style="text-align: right;">{{ (resource.beRbe || 0).toFixed(2) }}</td>
+                  <td style="text-align: right;">{{ (resource.actualsUpToRbe || 0).toFixed(2) }}</td>
+                  <td style="text-align: right;">{{ (resource.lastRbeProposed || 0).toFixed(2) }}</td>
+                  <td style="text-align: right;">{{ (resource.lastRbeFixed || 0).toFixed(2) }}</td>
+                </tr>
+
+                <tr *ngIf="resource.subGroup.length !== 0">
+                  <td>{{ i + 1 }}</td>
+                  <td colspan="3" style="cursor: pointer;" (click)="budgetSplitUpPopUp(resource.bedto,'RBE')">{{
+                    resource.heading }}</td>
+                  <td style="text-align: right;">{{ resource.actualsRbe}}</td>
+                  <td style="text-align: right;" *ngIf="isPreviousBeRbe">{{ resource.previousBeRbe}}</td>
+                  <td style="text-align: right;">{{ resource.beRbe}}</td>
+                  <td style="text-align: right;">{{ resource.actualsUpToRbe}}</td>
+                  <td style="text-align: right;">{{ resource.lastRbeProposed}}</td>
+                  <td style="text-align: right;">{{ resource.lastRbeFixed}}</td>
+                </tr>
+
+                <!-- Loop through subgroups if they exist -->
+                <ng-container *ngIf="resource.subGroup">
+                  <tr *ngFor="let subResource of resource.subGroup; let j = index">
+                    <td></td>
+                    <td colspan="3">
+                      <p style="cursor: pointer;" (click)="budgetSplitUpPopUp(subResource.bedto,'RBE')">{{
+                        subResource.heading }}</p>
+                    </td>
+                    <td style="text-align: right;">{{ (subResource.actualsRbe || 0).toFixed(2) }}</td>
+                    <td style="text-align: right;" *ngIf="isPreviousBeRbe">{{ (subResource.previousBeRbe ||
+                      0).toFixed(2) }}</td>
+                    <td style="text-align: right;">{{ (subResource.beRbe || 0).toFixed(2) }}</td>
+                    <td style="text-align: right;">{{ (subResource.actualsUpToRbe || 0).toFixed(2) }}</td>
+                    <td style="text-align: right;">{{ (subResource.lastRbeProposed || 0).toFixed(2) }}</td>
+                    <td style="text-align: right;">{{ (subResource.lastRbeFixed || 0).toFixed(2) }}</td>
+                  </tr>
+                </ng-container>
+              </ng-container>
+              <tr>
+                <td></td>
+                <td colspan="3" style="font-size: medium; font-weight: 500; text-align: center;" class="resource-title">
+                  Total (C)</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">{{(actualsResource_C).toFixed(2)}}
+                </td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;" *ngIf="isPreviousBeRbe">
+                  {{(rbePreviousResource_C).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">{{(rbeResource_C).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">
+                  {{(actualUpToResource_C).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">
+                  {{(beProposedResource_C).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">{{(beFixedResource_C).toFixed(2)}}
+                </td>
+              </tr>
+            </tbody>
+            <!-- total -->
+            <tbody>
+              <tr>
+                <td></td>
+                <td colspan="3" style="font-size: medium; font-weight: 500; text-align: center;" class="resource-title">
+                  Total Resources
+                  (A+B+C)</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">
+                  {{(actualsResourceTotal).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;" *ngIf="isPreviousBeRbe">
+                  {{(rbePreviousResourceTotal).toFixed(2)}}
+                </td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">{{(rbeResourceTotal).toFixed(2)}}
+                </td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">
+                  {{(actualUpToResourceTotal).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">
+                  {{(proposedResourceTotal).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">{{(fixedResourceTotal).toFixed(2)}}
+                </td>
+              </tr>
+            </tbody>
+
+            <!-- Commitments -->
+            <!-- 1 -->
+            <tbody>
+              <tr>
+                <td class="no-border"></td>
+                <td colspan="12" class="resource-title" style="font-size: large; font-weight: 600;">COMMITMENTS</td>
+              </tr>
+              <ng-container *ngFor="let resource of allSubGroupsCommitments_A; let i = index">
+                <tr *ngIf="resource.subGroup.length === 0">
+                  <td>{{ i + 1 }}</td>
+                  <td colspan="3">
+                    <p style="cursor: pointer;" (click)="budgetSplitUpPopUp(resource.bedto,'RBE')">{{ resource.heading
+                      }}</p>
+                  </td>
+                  <td style="text-align: right;">{{ (resource.actualsRbe || 0).toFixed(2) }}</td>
+                  <td style="text-align: right;" *ngIf="isPreviousBeRbe">{{ (resource.previousBeRbe || 0).toFixed(2) }}
+                  </td>
+                  <td style="text-align: right;">{{ (resource.beRbe || 0).toFixed(2) }}</td>
+                  <td style="text-align: right;">{{ (resource.actualsUpToRbe || 0).toFixed(2) }}</td>
+                  <td style="text-align: right;">{{ (resource.lastRbeProposed || 0).toFixed(2) }}</td>
+                  <td style="text-align: right;">{{ (resource.lastRbeFixed || 0).toFixed(2) }}</td>
+                </tr>
+
+                <tr *ngIf="resource.subGroup.length !== 0">
+                  <td>{{ i + 1 }}</td>
+                  <td colspan="3" style="cursor: pointer;" (click)="budgetSplitUpPopUp(resource.bedto,'RBE')">{{
+                    resource.heading }}</td>
+                  <td style="text-align: right;">{{ resource.actualsRbe}}</td>
+                  <td style="text-align: right;" *ngIf="isPreviousBeRbe">{{ resource.previousBeRbe}}</td>
+                  <td style="text-align: right;">{{ resource.beRbe}}</td>
+                  <td style="text-align: right;">{{ resource.actualsUpToRbe}}</td>
+                  <td style="text-align: right;">{{ resource.lastRbeProposed}}</td>
+                  <td style="text-align: right;">{{ resource.lastRbeFixed}}</td>
+                </tr>
+
+                <!-- Loop through subgroups if they exist -->
+                <ng-container *ngIf="resource.subGroup">
+                  <tr *ngFor="let subResource of resource.subGroup; let j = index">
+                    <td></td>
+                    <td colspan="3">
+                      <p style="cursor: pointer;" (click)="budgetSplitUpPopUp(subResource.bedto,'RBE')">{{
+                        subResource.heading }}</p>
+                    </td>
+                    <td style="text-align: right;">{{ (subResource.actualsRbe || 0).toFixed(2) }}</td>
+                    <td style="text-align: right;" *ngIf="isPreviousBeRbe">{{ (subResource.previousBeRbe ||
+                      0).toFixed(2) }}</td>
+                    <td style="text-align: right;">{{ (subResource.beRbe || 0).toFixed(2) }}</td>
+                    <td style="text-align: right;">{{ (subResource.actualsUpToRbe || 0).toFixed(2) }}</td>
+                    <td style="text-align: right;">{{ (subResource.lastRbeProposed || 0).toFixed(2) }}</td>
+                    <td style="text-align: right;">{{ (subResource.lastRbeFixed || 0).toFixed(2) }}</td>
+                  </tr>
+                </ng-container>
+              </ng-container>
+              <tr>
+                <td class="no-border"></td>
+                <td colspan="3" style="font-size: medium; font-weight: 500; text-align: center;" class="resource-title">
+                  Total (A)</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">
+                  {{(actualsCommitments_A).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;" *ngIf="isPreviousBeRbe">
+                  {{(rbePreviousCommitments_A).toFixed(2)}}
+                </td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">{{(rbeCommitments_A).toFixed(2)}}
+                </td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">
+                  {{(actualUpToCommitments_A).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">
+                  {{(beProposedCommitments_A).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">
+                  {{(beFixedCommitments_A).toFixed(2)}}</td>
+              </tr>
+            </tbody>
+            <!-- 2 -->
+            <tbody>
+              <tr>
+                <td class="no-border"></td>
+              </tr>
+              <ng-container *ngFor="let resource of allSubGroupsCommitments_B; let i = index">
+                <tr *ngIf="resource.subGroup.length === 0">
+                  <td>{{ i + 1 }}</td>
+                  <td colspan="3">
+                    <p style="cursor: pointer;" (click)="budgetSplitUpPopUp(resource.bedto,'RBE')">{{ resource.heading
+                      }}</p>
+                  </td>
+                  <td style="text-align: right;">{{ (resource.actualsRbe || 0).toFixed(2) }}</td>
+                  <td style="text-align: right;" *ngIf="isPreviousBeRbe">{{ (resource.previousBeRbe || 0).toFixed(2) }}
+                  </td>
+                  <td style="text-align: right;">{{ (resource.beRbe || 0).toFixed(2) }}</td>
+                  <td style="text-align: right;">{{ (resource.actualsUpToRbe || 0).toFixed(2) }}</td>
+                  <td style="text-align: right;">{{ (resource.lastRbeProposed || 0).toFixed(2) }}</td>
+                  <td style="text-align: right;">{{ (resource.lastRbeFixed || 0).toFixed(2) }}</td>
+                </tr>
+
+                <tr *ngIf="resource.subGroup.length !== 0">
+                  <td>{{ i + 1 }}</td>
+                  <td colspan="3" style="cursor: pointer;" (click)="budgetSplitUpPopUp(resource.bedto,'RBE')">{{
+                    resource.heading }}</td>
+                  <td style="text-align: right;">{{ resource.actualsRbe}}</td>
+                  <td style="text-align: right;" *ngIf="isPreviousBeRbe">{{ resource.previousBeRbe}}</td>
+                  <td style="text-align: right;">{{ resource.beRbe}}</td>
+                  <td style="text-align: right;">{{ resource.actualsUpToRbe}}</td>
+                  <td style="text-align: right;">{{ resource.lastRbeProposed}}</td>
+                  <td style="text-align: right;">{{ resource.lastRbeFixed}}</td>
+                </tr>
+
+                <!-- Loop through subgroups if they exist -->
+                <ng-container *ngIf="resource.subGroup">
+                  <tr *ngFor="let subResource of resource.subGroup; let j = index">
+                    <td></td>
+                    <td colspan="3">
+                      <p style="cursor: pointer;" (click)="budgetSplitUpPopUp(subResource.bedto,'RBE')">{{
+                        subResource.heading }}</p>
+                    </td>
+                    <td style="text-align: right;">{{ (subResource.actualsRbe || 0).toFixed(2) }}</td>
+                    <td style="text-align: right;" *ngIf="isPreviousBeRbe">{{ (subResource.previousBeRbe ||
+                      0).toFixed(2) }}</td>
+                    <td style="text-align: right;">{{ (subResource.beRbe || 0).toFixed(2) }}</td>
+                    <td style="text-align: right;">{{ (subResource.actualsUpToRbe || 0).toFixed(2) }}</td>
+                    <td style="text-align: right;">{{ (subResource.lastRbeProposed || 0).toFixed(2) }}</td>
+                    <td style="text-align: right;">{{ (subResource.lastRbeFixed || 0).toFixed(2) }}</td>
+                  </tr>
+                </ng-container>
+              </ng-container>
+              <tr>
+                <td class="no-border"></td>
+                <td colspan="3" style="font-size: medium; font-weight: 500; text-align: center;" class="resource-title">
+                  Total (B)</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">
+                  {{(actualsCommitments_B).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;" *ngIf="isPreviousBeRbe">
+                  {{(rbePreviousCommitments_B).toFixed(2)}}
+                </td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">{{(rbeCommitments_B).toFixed(2)}}
+                </td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">
+                  {{(actualUpToCommitments_B).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">
+                  {{(beProposedCommitments_B).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">
+                  {{(beFixedCommitments_B).toFixed(2)}}</td>
+              </tr>
+            </tbody>
+            <!-- 3 -->
+            <tbody>
+              <tr>
+                <td class="no-border"></td>
+              </tr>
+              <ng-container *ngFor="let resource of allSubGroupsCommitments_C; let i = index">
+                <tr *ngIf="resource.subGroup.length === 0">
+                  <td>{{ i + 1 }}</td>
+                  <td colspan="3">
+                    <p style="cursor: pointer;" (click)="budgetSplitUpPopUp(resource.bedto,'RBE')">{{ resource.heading
+                      }}</p>
+                  </td>
+                  <td style="text-align: right;">{{ (resource.actualsRbe || 0).toFixed(2) }}</td>
+                  <td style="text-align: right;" *ngIf="isPreviousBeRbe">{{ (resource.previousBeRbe || 0).toFixed(2) }}
+                  </td>
+                  <td style="text-align: right;">{{ (resource.beRbe || 0).toFixed(2) }}</td>
+                  <td style="text-align: right;">{{ (resource.actualsUpToRbe || 0).toFixed(2) }}</td>
+                  <td style="text-align: right;">{{ (resource.lastRbeProposed || 0).toFixed(2) }}</td>
+                  <td style="text-align: right;">{{ (resource.lastRbeFixed || 0).toFixed(2) }}</td>
+                </tr>
+
+                <tr *ngIf="resource.subGroup.length !== 0">
+                  <td>{{ i + 1 }}</td>
+                  <td colspan="3" style="cursor: pointer;" (click)="budgetSplitUpPopUp(resource.bedto,'RBE')">{{
+                    resource.heading }}</td>
+                  <td style="text-align: right;">{{ resource.actualsRbe}}</td>
+                  <td style="text-align: right;" *ngIf="isPreviousBeRbe">{{ resource.previousBeRbe}}</td>
+                  <td style="text-align: right;">{{ resource.beRbe}}</td>
+                  <td style="text-align: right;">{{ resource.actualsUpToRbe}}</td>
+                  <td style="text-align: right;">{{ resource.lastRbeProposed}}</td>
+                  <td style="text-align: right;">{{ resource.lastRbeFixed}}</td>
+                </tr>
+
+                <!-- Loop through subgroups if they exist -->
+                <ng-container *ngIf="resource.subGroup">
+                  <tr *ngFor="let subResource of resource.subGroup; let j = index">
+                    <td></td>
+                    <td colspan="3">
+                      <p style="cursor: pointer;" (click)="budgetSplitUpPopUp(subResource.bedto,'RBE')">{{
+                        subResource.heading }}</p>
+                    </td>
+                    <td style="text-align: right;">{{ (subResource.actualsRbe || 0).toFixed(2) }}</td>
+                    <td style="text-align: right;" *ngIf="isPreviousBeRbe">{{ (subResource.previousBeRbe ||
+                      0).toFixed(2) }}</td>
+                    <td style="text-align: right;">{{ (subResource.beRbe || 0).toFixed(2) }}</td>
+                    <td style="text-align: right;">{{ (subResource.actualsUpToRbe || 0).toFixed(2) }}</td>
+                    <td style="text-align: right;">{{ (subResource.lastRbeProposed || 0).toFixed(2) }}</td>
+                    <td style="text-align: right;">{{ (subResource.lastRbeFixed || 0).toFixed(2) }}</td>
+                  </tr>
+                </ng-container>
+              </ng-container>
+              <tr>
+                <td>{{lenthOfCommitments_C}}</td>
+                <td colspan="3">
+                  <p style="cursor: pointer;" (click)="cashToWorkRoute(budgetYear,'RBE')">Works expenditure &
+                    Maintenance
+                  </p>
+                </td>
+                <td style="text-align: right;">{{(workToCashActualsTotal || 0).toFixed(2)}}</td>
+                <td style="text-align: right;" *ngIf="isPreviousBeRbe">{{(workToCashBeRbePreviousTotal ||
+                  0).toFixed(2)}}</td>
+                <td style="text-align: right;">{{(workToCashBeRbeTotal || 0).toFixed(2)}}</td>
+                <td style="text-align: right;">{{(workToCashActualsUpToTotal || 0).toFixed(2)}}</td>
+                <td style="text-align: right;">{{(workToCashProposedTotal || 0).toFixed(2)}}</td>
+                <td style="text-align: right;">{{(workToCashFixedTotal || 0).toFixed(2)}}</td>
+              </tr>
+              <tr>
+                <td class="no-border"></td>
+                <td colspan="3" style="font-size: medium; font-weight: 500; text-align: center;" class="resource-title">
+                  Total (C)</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">
+                  {{(actualsCommitments_C).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;" *ngIf="isPreviousBeRbe">
+                  {{(rbePreviousCommitments_C).toFixed(2)}}
+                </td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">{{(rbeCommitments_C).toFixed(2)}}
+                </td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">
+                  {{(actualUpToCommitments_C).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">
+                  {{(beProposedCommitments_C).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">
+                  {{(beFixedCommitments_C).toFixed(2)}}</td>
+              </tr>
+
+              <tr>
+                <td class="no-border"></td>
+                <td colspan="3" style="font-size: medium; font-weight: 500; text-align: center;" class="resource-title">
+                  Total Commitments
+                  (A+B+C)</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">
+                  {{(actualsCommitmentsTotal).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;" *ngIf="isPreviousBeRbe">
+                  {{(rbePerviousCommitmentsTotal).toFixed(2)}}
+                </td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">{{(rbeCommitmentsTotal).toFixed(2)}}
+                </td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">
+                  {{(actualUpToCommitmentsTotal).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">
+                  {{(proposedCommitmentsTotal).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">
+                  {{(fixedCommitmentsTotal).toFixed(2)}}</td>
+              </tr>
+
+              <tr>
+                <td class="no-border"></td>
+                <td colspan="3" style="font-size: medium; font-weight: 500; text-align: center;" class="resource-title">
+                  Cash Total</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">
+                  {{(actualOverAllTotal).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;" *ngIf="isPreviousBeRbe">
+                  {{(beRbePerviousOverAllTotal).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">
+                  {{(beRbeOverAllTotal).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">
+                  {{(actualUpToOverAllTotal).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">
+                  {{(proposedOverAllTotal).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">
+                  {{(fixedOverAllTotal).toFixed(2)}}</td>
+              </tr>
+            </tbody>
+
+          </table>
+
+        </div>
+      </section>
+      <div class="backButtonClick">
+        <button class="btn btn-secondary mt-2" (click)="backButtonClick()">Back</button>
+      </div>
+    </mat-tab>
+
+    <!--------------- Work flow BE -------------------->
+
+    <mat-tab label="{{valueType}} - WORK FLOW" *ngIf="WorkFlow && be">
+
+      <section class="card mt-2">
+        <div class="main-content table1">
+          <table class="table">
+            <thead>
+              <tr>
+                <th colspan="12" class="header-title" style="text-align: center;">TAMIL NADU HOUSING BOARD</th>
+              </tr>
+              <tr>
+                <th colspan="12" class="sub-header" style="text-align: center;">Budget Estimate for {{budgetYear}}</th>
+              </tr>
+              <tr>
+                <th colspan="12" class="sub-header" style="text-align: center;">WORk BUDGET</th>
+              </tr>
+              <tr>
+                <th rowspan="3" style="text-align: center;">Sl.No.</th>
+                <th rowspan="3" colspan="3" style="text-align: center;">Particulars</th>
+                <th style="text-align: center;">Actuals</th>
+                <th style="text-align: center;" *ngIf="isPreviousBeRbe">RBE</th>
+                <th style="text-align: center;">RBE</th>
+                <th style="text-align: center;">Actuals Up To</th>
+                <th colspan="2" style="text-align: center;">BE</th>
+              </tr>
+              <tr>
+                <th style="text-align: center;">{{ActualsYearValue}}</th>
+                <th style="text-align: center;" *ngIf="isPreviousBeRbe">{{beRbePreviousYear}}</th>
+                <th style="text-align: center;">{{rbeYearValue}}</th>
+                <th style="text-align: center;">{{ActualsUpToYearValue}}</th>
+                <th style="text-align: center;" colspan="2">{{beLastYearValue}}</th>
+              </tr>
+              <tr>
+                <th></th>
+                <th *ngIf="isPreviousBeRbe"></th>
+                <th></th>
+                <th></th>
+                <th style="text-align: center; width: 100px;">Proposed</th>
+                <th style="text-align: center; width: 100px;">Fixed</th>
+              </tr>
+            </thead>
+            <!-- 1 -->
+            <tbody>
+              <tr>
+                <td class="no-border"></td>
+                <td colspan="12" class="resource-title" style="font-size: large; font-weight: 600;">A.Capital Outlay
+                </td>
+              </tr>
+
+              <ng-container *ngFor="let resource of allSubGroupsResource_A; let i = index">
+                <tr *ngIf="resource.subGroup.length === 0">
+                  <td style="text-align: center;">{{ i + 1 }}</td>
+                  <td colspan="3">
+                    <p style="cursor: pointer;" (click)="budgetSplitUpPopUp(resource.bedto,'BE')">{{ resource.heading }}
+                    </p>
+                  </td>
+                  <td style="text-align: right;">{{ (resource.actuals || 0).toFixed(2) }}</td>
+                  <td style="text-align: right;" *ngIf="isPreviousBeRbe">{{ (resource.previousRbe || 0).toFixed(2) }}
+                  </td>
+                  <td style="text-align: right;">{{ (resource.rbe || 0).toFixed(2) }}</td>
+                  <td style="text-align: right;">{{ (resource.actualsUpTo || 0).toFixed(2) }}</td>
+                  <td style="text-align: right;">{{ (resource.beLastYearProposed || 0).toFixed(2) }}</td>
+                  <td style="text-align: right;">{{ (resource.beLastYearFixed || 0).toFixed(2) }}</td>
+                </tr>
+
+                <tr *ngIf="resource.subGroup.length !== 0">
+                  <td style="text-align: center;">{{ i + 1 }}</td>
+                  <td colspan="3" style="cursor: pointer;" (click)="budgetSplitUpPopUp(resource.bedto,'BE')">{{
+                    resource.heading }}</td>
+                  <td style="text-align: right;">{{ resource.actuals}}</td>
+                  <td style="text-align: right;" *ngIf="isPreviousBeRbe">{{ resource.previousRbe}}</td>
+                  <td style="text-align: right;">{{ resource.rbe}}</td>
+                  <td style="text-align: right;">{{ resource.actualsUpTo}}</td>
+                  <td style="text-align: right;">{{ resource.beLastYearProposed}}</td>
+                  <td style="text-align: right;">{{ resource.beLastYearFixed}}</td>
+                </tr>
+
+                <!-- Loop through subgroups if they exist -->
+                <ng-container *ngIf="resource.subGroup">
+                  <tr *ngFor="let subResource of resource.subGroup; let j = index">
+                    <td></td>
+                    <td colspan="3">
+                      <p style="cursor: pointer;" (click)="budgetSplitUpPopUp(subResource.bedto,'BE')">{{
+                        subResource.heading }}</p>
+                    </td>
+                    <td style="text-align: right;">{{ (subResource.actuals || 0).toFixed(2) }}</td>
+                    <td style="text-align: right;" *ngIf="isPreviousBeRbe">{{ (subResource.previousRbe || 0).toFixed(2)
+                      }}</td>
+                    <td style="text-align: right;">{{ (subResource.rbe || 0).toFixed(2) }}</td>
+                    <td style="text-align: right;">{{ (subResource.actualsUpTo || 0).toFixed(2) }}</td>
+                    <td style="text-align: right;">{{ (subResource.beLastYearProposed || 0).toFixed(2) }}</td>
+                    <td style="text-align: right;">{{ (subResource.beLastYearFixed || 0).toFixed(2) }}</td>
+                  </tr>
+                </ng-container>
+              </ng-container>
+
+              <tr>
+                <td class="no-border"></td>
+                <td colspan="3" style="font-size: medium; font-weight: 500; text-align: center;" class="resource-title">
+                  Total (A)</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">
+                  {{(actualsResource_A).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;" *ngIf="isPreviousBeRbe">
+                  {{(rbePreviousResource_A).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">
+                  {{(rbeResource_A).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">
+                  {{(actualUpToResource_A).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">
+                  {{(beProposedResource_A).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">{{(beFixedResource_A).toFixed(2)}}
+                </td>
+              </tr>
+            </tbody>
+            <!-- 2 -->
+            <tbody>
+              <tr>
+                <td class="no-border"></td>
+                <td colspan="12" class="resource-title" style="font-size: large; font-weight: 600;">B.Deposit-Works</td>
+              </tr>
+              <ng-container *ngFor="let resource of allSubGroupsResource_B; let i = index">
+                <tr *ngIf="resource.subGroup.length === 0">
+                  <td style="text-align: center;">{{ i + 1 }}</td>
+                  <td colspan="3">
+                    <p style="cursor: pointer;" (click)="budgetSplitUpPopUp(resource.bedto,'BE')">{{ resource.heading }}
+                    </p>
+                  </td>
+                  <td style="text-align: right;">{{ (resource.actuals || 0).toFixed(2) }}</td>
+                  <td style="text-align: right;" *ngIf="isPreviousBeRbe">{{ (resource.previousRbe || 0).toFixed(2) }}
+                  </td>
+                  <td style="text-align: right;">{{ (resource.rbe || 0).toFixed(2) }}</td>
+                  <td style="text-align: right;">{{ (resource.actualsUpTo || 0).toFixed(2) }}</td>
+                  <td style="text-align: right;">{{ (resource.beLastYearProposed || 0).toFixed(2) }}</td>
+                  <td style="text-align: right;">{{ (resource.beLastYearFixed || 0).toFixed(2) }}</td>
+                </tr>
+
+                <tr *ngIf="resource.subGroup.length !== 0">
+                  <td style="text-align: center;">{{ i + 1 }}</td>
+                  <td colspan="3" style="cursor: pointer;" (click)="budgetSplitUpPopUp(resource.bedto,'BE')">{{
+                    resource.heading }}</td>
+                  <td style="text-align: right;">{{ resource.actuals}}</td>
+                  <td style="text-align: right;" *ngIf="isPreviousBeRbe">{{ resource.previousRbe}}</td>
+                  <td style="text-align: right;">{{ resource.rbe}}</td>
+                  <td style="text-align: right;">{{ resource.actualsUpTo}}</td>
+                  <td style="text-align: right;">{{ resource.beLastYearProposed}}</td>
+                  <td style="text-align: right;">{{ resource.beLastYearFixed}}</td>
+                </tr>
+
+                <!-- Loop through subgroups if they exist -->
+                <ng-container *ngIf="resource.subGroup">
+                  <tr *ngFor="let subResource of resource.subGroup; let j = index">
+                    <td></td>
+                    <td colspan="3">
+                      <p style="cursor: pointer;" (click)="budgetSplitUpPopUp(subResource.bedto,'BE')">{{
+                        subResource.heading }}</p>
+                    </td>
+                    <td style="text-align: right;">{{ (subResource.actuals || 0).toFixed(2) }}</td>
+                    <td style="text-align: right;" *ngIf="isPreviousBeRbe">{{ (subResource.previousRbe || 0).toFixed(2)
+                      }}</td>
+                    <td style="text-align: right;">{{ (subResource.rbe || 0).toFixed(2) }}</td>
+                    <td style="text-align: right;">{{ (subResource.actualsUpTo || 0).toFixed(2) }}</td>
+                    <td style="text-align: right;">{{ (subResource.beLastYearProposed || 0).toFixed(2) }}</td>
+                    <td style="text-align: right;">{{ (subResource.beLastYearFixed || 0).toFixed(2) }}</td>
+                  </tr>
+                </ng-container>
+              </ng-container>
+              <tr>
+                <td class="no-border"></td>
+                <td colspan="3" style="font-size: medium; font-weight: 500; text-align: center;" class="resource-title">
+                  Total (B)</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">{{(actualsResource_B).toFixed(2)}}
+                </td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;" *ngIf="isPreviousBeRbe">
+                  {{(rbePreviousResource_B).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">{{(rbeResource_B).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">
+                  {{(actualUpToResource_B).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">
+                  {{(beProposedResource_B).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">{{(beFixedResource_B).toFixed(2)}}
+                </td>
+              </tr>
+            </tbody>
+            <!-- 3 -->
+            <tbody>
+              <tr>
+                <td class="no-border"></td>
+                <td colspan="12" class="resource-title" style="font-size: large; font-weight: 600;">C.Revenue</td>
+              </tr>
+              <ng-container *ngFor="let resource of allSubGroupsResource_C; let i = index">
+                <tr *ngIf="resource.subGroup.length === 0">
+                  <td style="text-align: center;">{{ i + 1 }}</td>
+                  <td colspan="3">
+                    <p style="cursor: pointer;" (click)="budgetSplitUpPopUp(resource.bedto,'BE')">{{ resource.heading }}
+                    </p>
+                  </td>
+                  <td style="text-align: right;">{{ (resource.actuals || 0).toFixed(2) }}</td>
+                  <td style="text-align: right;" *ngIf="isPreviousBeRbe">{{ (resource.previousRbe || 0).toFixed(2) }}
+                  </td>
+                  <td style="text-align: right;">{{ (resource.rbe || 0).toFixed(2) }}</td>
+                  <td style="text-align: right;">{{ (resource.actualsUpTo || 0).toFixed(2) }}</td>
+                  <td style="text-align: right;">{{ (resource.beLastYearProposed || 0).toFixed(2) }}</td>
+                  <td style="text-align: right;">{{ (resource.beLastYearFixed || 0).toFixed(2) }}</td>
+                </tr>
+
+                <tr *ngIf="resource.subGroup.length !== 0">
+                  <td style="text-align: center;">{{ i + 1 }}</td>
+                  <td colspan="3" style="cursor: pointer;" (click)="budgetSplitUpPopUp(resource.bedto,'BE')">{{
+                    resource.heading }}</td>
+                  <td style="text-align: right;">{{ resource.actuals}}</td>
+                  <td style="text-align: right;" *ngIf="isPreviousBeRbe">{{ resource.previousRbe}}</td>
+                  <td style="text-align: right;">{{ resource.rbe}}</td>
+                  <td style="text-align: right;">{{ resource.actualsUpTo}}</td>
+                  <td style="text-align: right;">{{ resource.beLastYearProposed}}</td>
+                  <td style="text-align: right;">{{ resource.beLastYearFixed}}</td>
+                </tr>
+
+                <!-- Loop through subgroups if they exist -->
+                <ng-container *ngIf="resource.subGroup">
+                  <tr *ngFor="let subResource of resource.subGroup; let j = index">
+                    <td></td>
+                    <td colspan="3">
+                      <p style="cursor: pointer;" (click)="budgetSplitUpPopUp(subResource.bedto,'BE')">{{
+                        subResource.heading }}</p>
+                    </td>
+                    <td style="text-align: right;">{{ (subResource.actuals || 0).toFixed(2) }}</td>
+                    <td style="text-align: right;" *ngIf="isPreviousBeRbe">{{(subResource.previousRbe || 0).toFixed(2)
+                      }}</td>
+                    <td style="text-align: right;">{{(subResource.rbe || 0).toFixed(2) }}</td>
+                    <td style="text-align: right;">{{ (subResource.actualsUpTo || 0).toFixed(2) }}</td>
+                    <td style="text-align: right;">{{ (subResource.beLastYearProposed || 0).toFixed(2) }}</td>
+                    <td style="text-align: right;">{{ (subResource.beLastYearFixed || 0).toFixed(2) }}</td>
+                  </tr>
+                </ng-container>
+              </ng-container>
+              <tr>
+                <td class="no-border"></td>
+                <td colspan="3" style="font-size: medium; font-weight: 500; text-align: center;" class="resource-title">
+                  Total (C)</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">{{(actualsResource_C).toFixed(2)}}
+                </td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;" *ngIf="isPreviousBeRbe">
+                  {{(rbePreviousResource_C).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">{{(rbeResource_C).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">
+                  {{(actualUpToResource_C).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">
+                  {{(beProposedResource_C).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">{{(beFixedResource_C).toFixed(2)}}
+                </td>
+              </tr>
+              <tr>
+                <td class="no-border"></td>
+                <td colspan="3" style="font-size: medium; font-weight: 500; text-align: center;" class="resource-title">
+                  Grand Total (A+B+C)</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">
+                  {{(actualsResourceTotal).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;" *ngIf="isPreviousBeRbe">
+                  {{(rbePreviousResourceTotal).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">
+                  {{(rbeResourceTotal).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">
+                  {{(actualUpToResourceTotal).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">
+                  {{(proposedResourceTotal).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">
+                  {{(fixedResourceTotal).toFixed(2)}}</td>
+
+              </tr>
+            </tbody>
+          </table>
+
+        </div>
+      </section>
+      <div class="backButtonClick">
+        <button class="btn btn-secondary mt-2" (click)="backButtonClick()">Back</button>
+      </div>
+
+    </mat-tab>
+
+    <!--------------- Work flow RBE ------------------->
+
+    <mat-tab label="{{valueType}} - WORK FLOW" *ngIf="WorkFlow && rbe">
+
+      <section class="card mt-2">
+        <div class="main-content table1">
+          <table class="table">
+            <thead>
+              <tr>
+                <th colspan="12" class="header-title" style="text-align: center;">TAMIL NADU HOUSING BOARD</th>
+              </tr>
+              <tr>
+                <th colspan="12" class="sub-header" style="text-align: center;">Budget Estimate for {{budgetYear}}</th>
+              </tr>
+              <tr>
+                <th colspan="12" class="sub-header" style="text-align: center;">WORK BUDGET</th>
+              </tr>
+              <tr>
+                <th rowspan="3" style="text-align: center;">Sl.No.</th>
+                <th rowspan="3" colspan="3" style="text-align: center;">Particulars</th>
+                <th style="text-align: center;">Actuals</th>
+                <th style="text-align: center;" *ngIf="isPreviousBeRbe">BE</th>
+                <th style="text-align: center;">BE</th>
+                <th style="text-align: center;">Actuals Up To</th>
+                <th colspan="2" style="text-align: center;">RBE</th>
+              </tr>
+              <tr>
+                <th style="text-align: center; width: 100px;">{{ActualsYearRbeValue}}</th>
+                <th style="text-align: center;width: 100px;" *ngIf="isPreviousBeRbe">{{rbePreviousYearRbeValue}}</th>
+                <th style="text-align: center;width: 100px;">{{beLastYearRbeValue}}</th>
+                <th style="text-align: center;width: 100px;">{{ActualsUpToYearRbeValue}}</th>
+                <th style="text-align: center;" colspan="2">{{rbeYearRbeValue}}</th>
+              </tr>
+              <tr>
+                <th></th>
+                <th *ngIf="isPreviousBeRbe"></th>
+                <th></th>
+                <th></th>
+                <th style="text-align: center;width: 100px;">Proposed</th>
+                <th style="text-align: center;width: 100px;">Fixed</th>
+              </tr>
+            </thead>
+            <!-- 1 -->
+            <tbody>
+              <tr>
+                <td class="no-border"></td>
+                <td colspan="12" class="resource-title" style="font-size: large; font-weight: 600;">A.Capital Outlay
+              </tr>
+
+              <ng-container *ngFor="let resource of allSubGroupsResource_A; let i = index">
+                <tr *ngIf="resource.subGroup.length === 0">
+                  <td>{{ i + 1 }}</td>
+                  <td colspan="3">
+                    <p style="cursor: pointer;" (click)="budgetSplitUpPopUp(resource.bedto,'RBE')">{{ resource.heading
+                      }}</p>
+                  </td>
+                  <td style="text-align: right;">{{ (resource.actuals || 0).toFixed(2) }}</td>
+                  <td style="text-align: right;" *ngIf="isPreviousBeRbe">{{ (resource.previousBeRbe || 0).toFixed(2) }}
+                  </td>
+                  <td style="text-align: right;">{{ (resource.rbe || 0).toFixed(2) }}</td>
+                  <td style="text-align: right;">{{ (resource.actualsUpTo || 0).toFixed(2) }}</td>
+                  <td style="text-align: right;">{{ (resource.beLastYearProposed || 0).toFixed(2) }}</td>
+                  <td style="text-align: right;">{{ (resource.beLastYearFixed || 0).toFixed(2) }}</td>
+                </tr>
+
+                <tr *ngIf="resource.subGroup.length !== 0">
+                  <td>{{ i + 1 }}</td>
+                  <td colspan="3" style="cursor: pointer;" (click)="budgetSplitUpPopUp(resource.bedto,'RBE')">{{
+                    resource.heading }}</td>
+                  <td style="text-align: right;">{{ resource.actuals}}</td>
+                  <td style="text-align: right;" *ngIf="isPreviousBeRbe">{{resource.previousBeRbe}}
+                  </td>
+                  <td style="text-align: right;">{{ resource.rbe}}</td>
+                  <td style="text-align: right;">{{ resource.actualsUpTo}}</td>
+                  <td style="text-align: right;">{{ resource.beLastYearProposed}}</td>
+                  <td style="text-align: right;">{{ resource.beLastYearFixed}}</td>
+                </tr>
+
+                <!-- Loop through subgroups if they exist -->
+                <ng-container *ngIf="resource.subGroup">
+                  <tr *ngFor="let subResource of resource.subGroup; let j = index">
+                    <td></td>
+                    <td colspan="3">
+                      <p style="cursor: pointer;" (click)="budgetSplitUpPopUp(subResource.bedto,'RBE')">{{
+                        subResource.heading }}</p>
+                    </td>
+                    <td style="text-align: right;">{{ (subResource.actuals || 0).toFixed(2) }}</td>
+                    <td style="text-align: right;" *ngIf="isPreviousBeRbe">{{ (subResource.previousBeRbe ||
+                      0).toFixed(2)}}
+                    </td>
+                    <td style="text-align: right;">{{ (subResource.rbe || 0).toFixed(2) }}</td>
+                    <td style="text-align: right;">{{ (subResource.actualsUpTo || 0).toFixed(2) }}</td>
+                    <td style="text-align: right;">{{ (subResource.beLastYearProposed || 0).toFixed(2) }}</td>
+                    <td style="text-align: right;">{{ (subResource.beLastYearFixed || 0).toFixed(2) }}</td>
+                  </tr>
+                </ng-container>
+              </ng-container>
+
+              <tr>
+                <td class="no-border"></td>
+                <td colspan="3" style="font-size: medium; font-weight: 500; text-align: center;" class="resource-title">
+                  Total (A)</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">{{(actualsResource_A).toFixed(2)}}
+                </td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;" *ngIf="isPreviousBeRbe">
+                  {{(rbePreviousResource_A).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">{{(rbeResource_A).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">
+                  {{(actualUpToResource_A).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">
+                  {{(beProposedResource_A).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">{{(beFixedResource_A).toFixed(2)}}
+                </td>
+              </tr>
+            </tbody>
+            <!-- 2 -->
+            <tbody>
+              <tr>
+                <td class="no-border"></td>
+                <td colspan="12" class="resource-title" style="font-size: large; font-weight: 600;">B.Deposit-Works</td>
+              </tr>
+
+              <ng-container *ngFor="let resource of allSubGroupsResource_B; let i = index">
+                <tr *ngIf="resource.subGroup.length === 0">
+                  <td>{{ i + 1 }}</td>
+                  <td colspan="3">
+                    <p style="cursor: pointer;" (click)="budgetSplitUpPopUp(resource.bedto,'RBE')">{{ resource.heading
+                      }}</p>
+                  </td>
+                  <td style="text-align: right;">{{ (resource.actuals || 0).toFixed(2) }}</td>
+                  <td style="text-align: right;" *ngIf="isPreviousBeRbe">{{ (resource.previousBeRbe || 0).toFixed(2) }}
+                  </td>
+                  <td style="text-align: right;">{{ (resource.rbe || 0).toFixed(2) }}</td>
+                  <td style="text-align: right;">{{ (resource.actualsUpTo || 0).toFixed(2) }}</td>
+                  <td style="text-align: right;">{{ (resource.beLastYearProposed || 0).toFixed(2) }}</td>
+                  <td style="text-align: right;">{{ (resource.beLastYearFixed || 0).toFixed(2) }}</td>
+                </tr>
+
+                <tr *ngIf="resource.subGroup.length !== 0">
+                  <td>{{ i + 1 }}</td>
+                  <td colspan="3" cstyle="cursor: pointer;" (click)="budgetSplitUpPopUp(resource.bedto,'RBE')">{{
+                    resource.heading }}</td>
+                  <td style="text-align: right;">{{ resource.actuals}}</td>
+                  <td style="text-align: right;" *ngIf="isPreviousBeRbe">{{ resource.previousBeRbe}}
+                  </td>
+                  <td style="text-align: right;">{{ resource.rbe}}</td>
+                  <td style="text-align: right;">{{ resource.actualsUpTo}}</td>
+                  <td style="text-align: right;">{{ resource.beLastYearProposed}}</td>
+                  <td style="text-align: right;">{{ resource.beLastYearFixed}}</td>
+                </tr>
+
+                <!-- Loop through subgroups if they exist -->
+                <ng-container *ngIf="resource.subGroup">
+                  <tr *ngFor="let subResource of resource.subGroup; let j = index">
+                    <td></td>
+                    <td colspan="3">
+                      <p style="cursor: pointer;" (click)="budgetSplitUpPopUp(subResource.bedto,'RBE')">{{
+                        subResource.heading }}</p>
+                    </td>
+                    <td style="text-align: right;">{{ (subResource.actuals || 0).toFixed(2) }}</td>
+                    <td style="text-align: right;" *ngIf="isPreviousBeRbe">{{ (subResource.previousBeRbe ||
+                      0).toFixed(2)
+                      }}
+                    </td>
+                    <td style="text-align: right;">{{ (subResource.rbe || 0).toFixed(2) }}</td>
+                    <td style="text-align: right;">{{ (subResource.actualsUpTo || 0).toFixed(2) }}</td>
+                    <td style="text-align: right;">{{ (subResource.beLastYearProposed || 0).toFixed(2) }}</td>
+                    <td style="text-align: right;">{{ (subResource.beLastYearFixed || 0).toFixed(2) }}</td>
+                  </tr>
+                </ng-container>
+              </ng-container>
+
+              <tr>
+                <td class="no-border"></td>
+                <td colspan="3" style="font-size: medium; font-weight: 500; text-align: center;" class="resource-title">
+                  Total (B)</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">{{(actualsResource_B).toFixed(2)}}
+                </td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;" *ngIf="isPreviousBeRbe">
+                  {{(rbePreviousResource_B).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">{{(rbeResource_B).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">
+                  {{(actualUpToResource_B).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">
+                  {{(beProposedResource_B).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">{{(beFixedResource_B).toFixed(2)}}
+                </td>
+              </tr>
+            </tbody>
+            <!-- 3 -->
+            <tbody>
+              <tr>
+                <td class="no-border"></td>
+                <td colspan="12" class="resource-title" style="font-size: large; font-weight: 600;">C.Revenue</td>
+              </tr>
+
+              <ng-container *ngFor="let resource of allSubGroupsResource_C; let i = index">
+                <tr *ngIf="resource.subGroup.length === 0">
+                  <td>{{ i + 1 }}</td>
+                  <td colspan="3">
+                    <p style="cursor: pointer;" (click)="budgetSplitUpPopUp(resource.bedto,'RBE')">{{ resource.heading
+                      }}</p>
+                  </td>
+                  <td style="text-align: right;">{{ (resource.actuals || 0).toFixed(2) }}</td>
+                  <td style="text-align: right;" *ngIf="isPreviousBeRbe">{{ (resource.previousBeRbe || 0).toFixed(2) }}
+                  </td>
+                  <td style="text-align: right;">{{ (resource.rbe || 0).toFixed(2) }}</td>
+                  <td style="text-align: right;">{{ (resource.actualsUpTo || 0).toFixed(2) }}</td>
+                  <td style="text-align: right;">{{ (resource.beLastYearProposed || 0).toFixed(2) }}</td>
+                  <td style="text-align: right;">{{ (resource.beLastYearFixed || 0).toFixed(2) }}</td>
+                </tr>
+
+                <tr *ngIf="resource.subGroup.length !== 0">
+                  <td>{{ i + 1 }}</td>
+                  <td colspan="3" style="cursor: pointer;" (click)="budgetSplitUpPopUp(resource.bedto,'RBE')">{{
+                    resource.heading }}</td>
+                  <td style="text-align: right;">{{ resource.actuals}}</td>
+                  <td style="text-align: right;" *ngIf="isPreviousBeRbe">{{resource.previousBeRbe}}
+                  </td>
+                  <td style="text-align: right;">{{ resource.rbe}}</td>
+                  <td style="text-align: right;">{{ resource.actualsUpTo}}</td>
+                  <td style="text-align: right;">{{ resource.beLastYearProposed}}</td>
+                  <td style="text-align: right;">{{ resource.beLastYearFixed}}</td>
+                </tr>
+
+                <!-- Loop through subgroups if they exist -->
+                <ng-container *ngIf="resource.subGroup">
+                  <tr *ngFor="let subResource of resource.subGroup; let j = index">
+                    <td></td>
+                    <td colspan="3">
+                      <p style="cursor: pointer;" (click)="budgetSplitUpPopUp(subResource.bedto,'RBE')">{{
+                        subResource.heading }}</p>
+                    </td>
+                    <td style="text-align: right;">{{ (subResource.actuals || 0).toFixed(2) }}</td>
+                    <td style="text-align: right;" *ngIf="isPreviousBeRbe">{{ (subResource.previousBeRbe ||
+                      0).toFixed(2) }}
+                    </td>
+                    <td style="text-align: right;">{{ (subResource.rbe || 0).toFixed(2) }}</td>
+                    <td style="text-align: right;">{{ (subResource.actualsUpTo || 0).toFixed(2) }}</td>
+                    <td style="text-align: right;">{{ (subResource.beLastYearProposed || 0).toFixed(2) }}</td>
+                    <td style="text-align: right;">{{ (subResource.beLastYearFixed || 0).toFixed(2) }}</td>
+                  </tr>
+                </ng-container>
+              </ng-container>
+
+              <tr>
+                <td class="no-border"></td>
+                <td colspan="3" style="font-size: medium; font-weight: 500; text-align: center;" class="resource-title">
+                  Total (C)</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">{{(actualsResource_C).toFixed(2)}}
+                </td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;" *ngIf="isPreviousBeRbe">
+                  {{(rbePreviousResource_C).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">{{(rbeResource_C).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">
+                  {{(actualUpToResource_C).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">
+                  {{(beProposedResource_C).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">{{(beFixedResource_C).toFixed(2)}}
+                </td>
+              </tr>
+
+              <tr>
+                <td class="no-border"></td>
+                <td colspan="3" style="font-size: medium; font-weight: 500; text-align: center;" class="resource-title">
+                  Grand Total (A+B+C)</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">
+                  {{(actualsResourceTotal).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;" *ngIf="isPreviousBeRbe">
+                  {{(rbePreviousResourceTotal).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">
+                  {{(rbeResourceTotal).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">
+                  {{(actualUpToResourceTotal).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">
+                  {{(proposedResourceTotal).toFixed(2)}}</td>
+                <td style="font-size: medium; font-weight: 500; text-align: right;">
+                  {{(fixedResourceTotal).toFixed(2)}}</td>
+
+              </tr>
+
+            </tbody>
+          </table>
+
+        </div>
+      </section>
+
+      <div class="backButtonClick">
+        <button class="btn btn-secondary mt-2" (click)="backButtonClick()">Back</button>
+      </div>
+
+    </mat-tab>
+  </mat-tab-group>
+
+</section>

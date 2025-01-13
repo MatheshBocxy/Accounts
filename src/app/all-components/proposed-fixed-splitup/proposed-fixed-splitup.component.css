@@ -1,0 +1,106 @@
+.main-Section {
+    padding: 1rem;
+    /* Lighter background for contrast */
+    height: 100%;
+    width: 100%;
+    background-color: rgb(241, 238, 238);
+}
+
+.iconColor {
+    color: rgb(229, 9, 9);
+    width: 25px;
+    height: 25px;
+}
+
+.iconBack {
+    float: right;
+    color: rgb(211, 3, 3);
+    cursor: pointer;
+}
+
+.boxOfBudget {
+    height: 170px;
+    width: 270px;
+    background-color: #aff1e7;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+    border-radius: 15px;
+}
+
+.boxOfBudget:hover {
+    transform: translateY(-5px);
+    box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.2);
+    cursor: grab;
+}
+
+.boxOfApproved {
+    height: 150px;
+    width: 270px;
+    background-color: #097705;
+    color: white
+}
+
+.boxOfDraft {
+    height: 150px;
+    width: 270px;
+    background-color: #ad0714;
+    color: white
+}
+
+.boxOfActive {
+    height: 150px;
+    width: 270px;
+    background-color: #014097;
+    color: white
+}
+
+.main-boxOfBudget {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    align-items: center;
+    width: 900px;
+    height: 200px;
+}
+
+.boxHeading {
+    text-align: center;
+    font-weight: 600;
+}
+
+.boxValue {
+    color: black;
+    font-weight: 800;
+    text-align: center;
+}
+
+.topHeadding h1 {
+    text-align: center;
+    font-weight: 600;
+}
+
+.roleStatus {
+    font-weight: 500;
+    color: black;
+    padding-left: 5px;
+}
+
+.draft {
+    color: #cc0818;
+    font-weight: 600;
+}
+
+.active {
+    color: #014097;
+    font-weight: 600;
+}
+
+.approved {
+    color: green;
+    font-weight: 600;
+}
+
+.proccessing {
+    color: #870a7c;
+    font-weight: 600;
+}

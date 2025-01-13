@@ -1,0 +1,644 @@
+<section class="main-table">
+    <div *ngIf="isLoading" class="loader-overlay">
+        <div class="spinner"></div>
+    </div>
+    <h3 class="Headding" *ngIf="paramsValue.asBeRbe=='AS-BE'">Addition Sanction Budget Estimate For The Year
+        {{paramsValue.year}}</h3>
+    <h3 class="Headding" *ngIf="paramsValue.asBeRbe=='AS-RBE'">Addition Sanction Revised Budget Estimate For The Year
+        {{paramsValue.year}}
+    </h3>
+
+    <div class="topBackButton">
+        <a (click)="backButton()" style="cursor: pointer; font-size: 16px; font-weight: 700;"><svg
+                xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                class="bi bi-arrow-bar-left" viewBox="0 0 16 16">
+                <path fill-rule="evenodd"
+                    d="M12.5 15a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5M10 8a.5.5 0 0 1-.5.5H3.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L3.707 7.5H9.5a.5.5 0 0 1 .5.5" />
+            </svg>Back</a>
+        <h2>Rs in LAKH</h2>
+    </div>
+
+    <div class="filterTab">
+        <div class="col-3">
+            <div class="search-container">
+                <div class="position">
+                    <input type="text" id="search-input" class="search-input" (keyup)="searchFilter($event)"
+                        placeholder="Search...">
+                    <mat-icon class="search-icon">search</mat-icon>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-3" style="width: 200px;">
+            <select class="form-select" (change)="selectedDivisionFun($event)" *ngIf="loginDivision == 'Head_office'">
+                <option value="All">All</option>
+                <option *ngFor="let items of divisionApi" value="{{items}}">{{items}}</option>
+            </select>
+        </div>
+    </div>
+
+
+
+
+    <div class="dataTable">
+
+        <!-- AS-BE edit -->
+
+        <div *ngIf="paramsValue.asBeRbe == 'AS-BE' && paramsValue.action == 'edit'">
+            <form>
+                <table class="table table-primary">
+                    <thead>
+                        <tr>
+                            <th rowspan="2">Sch No</th>
+                            <th rowspan="2">Code No</th>
+                            <th rowspan="2">Description</th>
+                            <th>BE Fixed</th>
+                            <th>Proposed</th>
+                            <th>Fixed</th>
+                            <th>Remarks</th>
+                        </tr>
+                        <tr>
+                            <th>{{asBeRbeYear}}</th>
+                            <th>{{asBeRbeYear}}</th>
+                            <th>{{asBeRbeYear}}</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let items of getCodeBudgetAsBE; let i = index;">
+                            <td style="text-align: center; width: 40px;">{{items.code.schedule.scheduleNo}}</td>
+                            <td style="text-align: center; width: 40px;">{{items.code.codeNumber}}</td>
+                            <td style="text-align: left;">
+                                <div class="subCodeButton">
+                                    <p>{{items.code.codeName}}</p>
+                                    <svg *ngIf="getCodeBudgetAsBE[i].code.status == 'Yes'"
+                                        xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                        (click)="openSubGroupAsBeRbe(i,getCodeBudgetAsBE[i],'AS-BE','edit')"
+                                        class="bi bi-caret-down-square-fill dropdownButton" viewBox="0 0 16 16">
+                                        <path
+                                            d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm4 4a.5.5 0 0 0-.374.832l4 4.5a.5.5 0 0 0 .748 0l4-4.5A.5.5 0 0 0 12 6z" />
+                                    </svg>
+                                </div>
+                            </td>
+                            <td style="text-align: right;">{{(items.beLastFixed || 0).toFixed(2)}}</td>
+                            <td style="text-align: center;">
+                                <input type="number" [(ngModel)]="items.asBeProposed"
+                                    [ngModelOptions]="{standalone: true}"
+                                    (input)="calculateTotalsBE(); fiveDigitsWarning($event)"
+                                    (blur)="formatAmountOnBlur($event)"
+                                    [disabled]="getCodeBudgetAsBE[i].code.status == 'Yes'"
+                                    style="width: 100px; text-align: right;" placeholder="0.00">
+                            </td>
+                            <td style="text-align: center; text-align: right;">
+                                <input type="number" [(ngModel)]="items.asBeFixed" [ngModelOptions]="{standalone: true}"
+                                    (input)="calculateTotalsBE(); fiveDigitsWarning($event)"
+                                    (blur)="formatAmountOnBlur($event)"
+                                    [disabled]="getCodeBudgetAsBE[i].code.status == 'Yes'"
+                                    style="width: 100px; text-align: right;" placeholder="0.00"
+                                    [disabled]="paramsValue.division !== 'Head_office' || getCodeBudgetAsBE[i].code.status == 'Yes'">
+                            </td>
+                            <td style="text-align: center;">
+                                <input type="text" [(ngModel)]="items.remarks" [ngModelOptions]="{standalone: true}"
+                                    [disabled]=" getCodeBudgetAsBE[i].code.status=='Yes' &&
+                                    !(getCodeBudgetAsBE[i].asBeProposed && getCodeBudgetAsBE[i].asBeFixed)">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" style="text-align: center;font-size: 16px;font-weight: 600;">TOTAL</td>
+                            <td style="text-align: right;">{{(beLastFixedTotal).toFixed(2)}}</td>
+                            <td style="text-align: right; padding-right: 20px;">{{(asProposedTotalBE).toFixed(2)}}
+                            </td>
+                            <td style="text-align: right;">{{(asFixedTotalBE).toFixed(2)}}</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </form>
+        </div>
+
+        <!-- AS-BE view -->
+
+        <div *ngIf="paramsValue.asBeRbe == 'AS-BE' && paramsValue.action == 'view'">
+            <form>
+                <table class="table table-primary">
+                    <thead>
+                        <tr>
+                            <th rowspan="2">Sch No</th>
+                            <th rowspan="2">Code No</th>
+                            <th rowspan="2">Description</th>
+                            <th>BE Fixed</th>
+                            <th>Proposed</th>
+                            <th>Fixed</th>
+                            <th>Remarks</th>
+                        </tr>
+                        <tr>
+                            <th>{{asBeRbeYear}}</th>
+                            <th>{{asBeRbeYear}}</th>
+                            <th>{{asBeRbeYear}}</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let items of getCodeBudgetAsBE; let i = index;">
+                            <td style="text-align: center; width: 40px;">{{items.code.schedule.scheduleNo}}</td>
+                            <td style="text-align: center; width: 40px;">{{items.code.codeNumber}}</td>
+                            <td style="text-align: left;">
+                                <div class="subCodeButton">
+                                    <p>{{items.code.codeName}}</p>
+                                    <svg *ngIf="getCodeBudgetAsBE[i].code.status == 'Yes'"
+                                        xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                        (click)="openSubGroupAsBeRbe(i,getCodeBudgetAsBE[i],'AS-BE','edit')"
+                                        class="bi bi-caret-down-square-fill dropdownButton" viewBox="0 0 16 16">
+                                        <path
+                                            d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm4 4a.5.5 0 0 0-.374.832l4 4.5a.5.5 0 0 0 .748 0l4-4.5A.5.5 0 0 0 12 6z" />
+                                    </svg>
+                                </div>
+                            </td>
+                            <td style="text-align: right;">{{(items.beLastFixed || 0).toFixed(2)}}</td>
+                            <td style="text-align: center;">
+                                <input type="number" [(ngModel)]="items.asBeProposed"
+                                    [ngModelOptions]="{standalone: true}" style="width: 100px; text-align: right;"
+                                    placeholder="0.00" readonly>
+                            </td>
+                            <td style="text-align: center; text-align: right;">
+                                <input type="number" [(ngModel)]="items.asBeFixed" [ngModelOptions]="{standalone: true}"
+                                    style="width: 100px; text-align: right;" placeholder="0.00" readonly>
+                            </td>
+                            <td style="text-align: center;">
+                                <input type="text" [(ngModel)]="items.remarks" [ngModelOptions]="{standalone: true}"
+                                    readonly>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" style="text-align: center;font-size: 16px;font-weight: 600;">TOTAL</td>
+                            <td style="text-align: right;">{{(beLastFixedTotal || 0).toFixed(2)}}</td>
+                            <td style="text-align: right; padding-right: 20px;">{{(asProposedTotalBE).toFixed(2)}}
+                            </td>
+                            <td style="text-align: right;">{{(asFixedTotalBE).toFixed(2)}}</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </form>
+        </div>
+
+        <!-- AS-RBE edit -->
+
+        <div *ngIf="paramsValue.asBeRbe == 'AS-RBE' && paramsValue.action == 'edit'">
+            <form>
+                <table class="table table-primary">
+                    <thead>
+                        <tr>
+                            <th rowspan="2">Sch No</th>
+                            <th rowspan="2">Code No</th>
+                            <th rowspan="2">Description</th>
+                            <th>RBE Fixed</th>
+                            <th>Proposed</th>
+                            <th>Fixed</th>
+                            <th>Remarks</th>
+                        </tr>
+                        <tr>
+                            <th>{{asBeRbeYear}}</th>
+                            <th>{{asBeRbeYear}}</th>
+                            <th>{{asBeRbeYear}}</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let items of getCodeBudgetAsRBE; let i = index;">
+                            <td style="text-align: center; width: 40px;">{{items.code.schedule.scheduleNo}}</td>
+                            <td style="text-align: center; width: 40px;">{{items.code.codeNumber}}</td>
+                            <td style="text-align: left;">
+                                <div class="subCodeButton">
+                                    <p>{{items.code.codeName}}</p>
+                                    <svg *ngIf="getCodeBudgetAsRBE[i].code.status == 'Yes'"
+                                        xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                        (click)="openSubGroupAsBeRbe(i,getCodeBudgetAsRBE[i],'AS-RBE','edit')"
+                                        class="bi bi-caret-down-square-fill dropdownButton" viewBox="0 0 16 16">
+                                        <path
+                                            d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm4 4a.5.5 0 0 0-.374.832l4 4.5a.5.5 0 0 0 .748 0l4-4.5A.5.5 0 0 0 12 6z" />
+                                    </svg>
+                                </div>
+                            </td>
+                            <td style="text-align: right;">{{(items.rbeLastFixed || 0).toFixed(2)}}</td>
+                            <td style="text-align: center;">
+                                <input type="number" [(ngModel)]="items.asRbeProposed"
+                                    [ngModelOptions]="{standalone: true}"
+                                    (input)="calculateTotalsRBE(); fiveDigitsWarning($event)"
+                                    (blur)="formatAmountOnBlur($event)"
+                                    [disabled]="getCodeBudgetAsRBE[i].code.status == 'Yes'"
+                                    style="width: 100px; text-align: right;" placeholder="0.00">
+                            </td>
+                            <td style="text-align: center; text-align: right;">
+                                <input type="number" [(ngModel)]="items.asRbeFixed"
+                                    [ngModelOptions]="{standalone: true}"
+                                    (input)="calculateTotalsRBE(); fiveDigitsWarning($event)"
+                                    (blur)="formatAmountOnBlur($event)"
+                                    [disabled]="getCodeBudgetAsRBE[i].code.status == 'Yes'"
+                                    style="width: 100px; text-align: right;" placeholder="0.00"
+                                    [disabled]="paramsValue.division !== 'Head_office' || getCodeBudgetAsRBE[i].code.status == 'Yes'">
+                            </td>
+                            <td style="text-align: center;">
+                                <input type="text" [(ngModel)]="items.remarksRbe" [ngModelOptions]="{standalone: true}"
+                                    [disabled]=" getCodeBudgetAsRBE[i].code.status=='Yes' &&
+                                    !(getCodeBudgetAsRBE[i].asBeProposed && getCodeBudgetAsRBE[i].asBeFixed)"
+                                    (input)="inputRBE()">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" style="text-align: center;font-size: 16px;font-weight: 600;">TOTAL</td>
+                            <td style="text-align: right;">{{(rbeLastFixedTotal).toFixed(2)}}</td>
+                            <td style="text-align: right; padding-right: 20px;">{{(asProposedTotalRBE).toFixed(2)}}
+                            </td>
+                            <td style="text-align: right;">{{(asFixedTotalRBE).toFixed(2)}}</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </form>
+        </div>
+
+        <!-- AS-RBE view -->
+
+        <div *ngIf="paramsValue.asBeRbe == 'AS-RBE' && paramsValue.action == 'view'">
+            <form>
+                <table class="table table-primary">
+                    <thead>
+                        <tr>
+                            <th rowspan="2">Sch No</th>
+                            <th rowspan="2">Code No</th>
+                            <th rowspan="2">Description</th>
+                            <th>RBE Fixed</th>
+                            <th>Proposed</th>
+                            <th>Fixed</th>
+                            <th>Remarks</th>
+                        </tr>
+                        <tr>
+                            <th>{{asBeRbeYear}}</th>
+                            <th>{{asBeRbeYear}}</th>
+                            <th>{{asBeRbeYear}}</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let items of getCodeBudgetAsRBE; let i = index;">
+                            <td style="text-align: center; width: 40px;">{{items.code.schedule.scheduleNo}}</td>
+                            <td style="text-align: center; width: 40px;">{{items.code.codeNumber}}</td>
+                            <td style="text-align: left;">
+                                <div class="subCodeButton">
+                                    <p>{{items.code.codeName}}</p>
+                                    <svg *ngIf="getCodeBudgetAsRBE[i].code.status == 'Yes'"
+                                        xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                        (click)="openSubGroupAsBeRbe(i,getCodeBudgetAsRBE[i],'AS-RBE','edit')"
+                                        class="bi bi-caret-down-square-fill dropdownButton" viewBox="0 0 16 16">
+                                        <path
+                                            d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm4 4a.5.5 0 0 0-.374.832l4 4.5a.5.5 0 0 0 .748 0l4-4.5A.5.5 0 0 0 12 6z" />
+                                    </svg>
+                                </div>
+                            </td>
+                            <td style="text-align: right;">{{(items.rbeLastFixed || 0).toFixed(2)}}</td>
+                            <td style="text-align: center;">
+                                <input type="number" [(ngModel)]="items.asRbeProposed"
+                                    [ngModelOptions]="{standalone: true}" style="width: 100px; text-align: right;"
+                                    placeholder="0.00" readonly>
+                            </td>
+                            <td style="text-align: center; text-align: right;">
+                                <input type="number" [(ngModel)]="items.asRbeFixed"
+                                    [ngModelOptions]="{standalone: true}" style="width: 100px; text-align: right;"
+                                    placeholder="0.00" readonly>
+                            </td>
+                            <td style="text-align: center;">
+                                <input type="text" [(ngModel)]="items.remarksRbe" [ngModelOptions]="{standalone: true}"
+                                    readonly>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" style="text-align: center;font-size: 16px;font-weight: 600;">TOTAL</td>
+                            <td style="text-align: right;">{{(rbeLastFixedTotal || 0).toFixed(2)}}</td>
+                            <td style="text-align: right; padding-right: 20px;">{{(asProposedTotalRBE).toFixed(2)}}
+                            </td>
+                            <td style="text-align: right;">{{(asFixedTotalRBE).toFixed(2)}}</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </form>
+        </div>
+
+
+        <!-- BE -->
+        <!-- EE Division -->
+
+        <mat-accordion class="eeSuggestionsForm" *ngIf="eePannel && this.paramsValue.asBeRbe == 'AS-BE'">
+            <mat-expansion-panel class="expansion-panel" [expanded]=" true" (opened)="panelOpenState = true"
+                (closed)="panelOpenState = false">
+                <mat-expansion-panel-header>
+                    <h4 style="font-size: 20px; font-weight: 600;">EE - Remarks</h4>
+                </mat-expansion-panel-header>
+                <div class="suggestionForm" [formGroup]="suggestionForm">
+                    <div>
+                        <label>Remarks : </label>
+                        <textarea class="form-control" formControlName="eeRemarksBE" rows="4" cols="50"
+                            *ngIf="!mode"></textarea>
+                        <textarea class="form-control" formControlName="eeRemarksBE" rows="4" cols="50" *ngIf="mode"
+                            readonly></textarea>
+                    </div>
+                    <div>
+                        <label>Name : </label>
+                        <input type="text" class="form-control" formControlName="eeSignatureBE" *ngIf="!mode">
+                        <input type="text" class="form-control" formControlName="eeSignatureBE" *ngIf="mode" readonly>
+                    </div>
+                    <div>
+                        <label>Date : </label>
+                        <input type="input" class="form-control" formControlName="eeDateBE"
+                            *ngIf="eeFormStatus == 'Active' || eeFormStatus == 'Approved'" readonly>
+                        <input type="date" class="form-control" formControlName="eeDateBE"
+                            *ngIf="!mode && (eeFormStatus == '' || eeFormStatus == 'Draft')">
+                        <input type="date" class="form-control" formControlName="eeDateBE"
+                            *ngIf="mode && (eeFormStatus == '' || eeFormStatus == 'Draft')" readonly>
+                    </div>
+                </div>
+
+            </mat-expansion-panel>
+        </mat-accordion>
+
+        <!-- AO Head_office -->
+
+        <mat-accordion class="eeSuggestionsForm" *ngIf="aoPannel && this.paramsValue.asBeRbe == 'AS-BE'">
+            <mat-expansion-panel class="expansion-panel" [expanded]="true" (opened)="panelOpenState = true"
+                (closed)="panelOpenState = false">
+                <mat-expansion-panel-header>
+                    <h4 style="font-size: 20px; font-weight: 600;">AO - Remarks</h4>
+                </mat-expansion-panel-header>
+                <div class="suggestionForm" [formGroup]="suggestionForm">
+                    <div>
+                        <label>Remarks : </label>
+                        <textarea class="form-control" formControlName="aoRemarksBE" rows="4" cols="50"
+                            *ngIf="!mode"></textarea>
+                        <textarea class="form-control" formControlName="aoRemarksBE" rows="4" cols="50" *ngIf="mode"
+                            readonly></textarea>
+                    </div>
+                    <div>
+                        <label>Name : </label>
+                        <input type="text" class="form-control" formControlName="aoSignatureBE" *ngIf="!mode">
+                        <input type="text" class="form-control" formControlName="aoSignatureBE" *ngIf="mode" readonly>
+                    </div>
+                    <div>
+                        <label>Date : </label>
+                        <input type="input" class="form-control" formControlName="aoDateBE"
+                            *ngIf="aoFormStatus == 'Active' || aoFormStatus == 'Aproved'" readonly>
+                        <input type="date" class="form-control" formControlName="aoDateBE"
+                            *ngIf="!mode && (aoFormStatus == '' || aoFormStatus == 'Draft')">
+                        <input type="date" class="form-control" formControlName="aoDateBE"
+                            *ngIf="mode && (aoFormStatus == '' || aoFormStatus == 'Draft')" readonly>
+                    </div>
+                </div>
+
+            </mat-expansion-panel>
+        </mat-accordion>
+
+        <!-- DCAO Head_office -->
+
+        <mat-accordion class="eeSuggestionsForm" *ngIf="dcaoPannel && this.paramsValue.asBeRbe == 'AS-BE'">
+            <mat-expansion-panel class="expansion-panel" [expanded]="true" (opened)="panelOpenState = true"
+                (closed)="panelOpenState = false">
+                <mat-expansion-panel-header>
+                    <h4 style="font-size: 20px; font-weight: 600;">DCAO - Remarks</h4>
+                </mat-expansion-panel-header>
+                <div class="suggestionForm" [formGroup]="suggestionForm">
+                    <div>
+                        <label>Remarks : </label>
+                        <textarea class="form-control" formControlName="dcaoRemarksBE" rows="4" cols="50"
+                            *ngIf="!mode"></textarea>
+                        <textarea class="form-control" formControlName="dcaoRemarksBE" rows="4" cols="50" *ngIf="mode"
+                            readonly></textarea>
+                    </div>
+                    <div>
+                        <label>Name : </label>
+                        <input type="text" class="form-control" formControlName="dcaoSignatureBE" *ngIf="!mode">
+                        <input type="text" class="form-control" formControlName="dcaoSignatureBE" *ngIf="mode" readonly>
+                    </div>
+                    <div>
+                        <label>Date : </label>
+                        <input type="input" class="form-control" formControlName="dcaoDateBE"
+                            *ngIf="dcaoFormStatus == 'Active' || dcaoFormStatus == 'Approved'" readonly>
+                        <input type="date" class="form-control" formControlName="dcaoDateBE"
+                            *ngIf="!mode && (dcaoFormStatus == '' || dcaoFormStatus == 'Draft')">
+                        <input type="date" class="form-control" formControlName="dcaoDateBE"
+                            *ngIf="mode && (dcaoFormStatus == '' || dcaoFormStatus == 'Draft')" readonly>
+
+                    </div>
+                </div>
+
+            </mat-expansion-panel>
+        </mat-accordion>
+
+        <!-- FA Head_office -->
+
+        <mat-accordion class="eeSuggestionsForm" *ngIf="faPannel && this.paramsValue.asBeRbe == 'AS-BE'">
+            <mat-expansion-panel class="expansion-panel" [expanded]="true" (opened)="panelOpenState = true"
+                (closed)="panelOpenState = false">
+                <mat-expansion-panel-header>
+                    <h4 style="font-size: 20px; font-weight: 600;">FA - Remarks</h4>
+                </mat-expansion-panel-header>
+                <div class="suggestionForm" [formGroup]="suggestionForm">
+                    <div>
+                        <label>Remarks : </label>
+                        <textarea class="form-control" formControlName="faRemarksBE" rows="4" cols="50"
+                            *ngIf="!mode"></textarea>
+                        <textarea class="form-control" formControlName="faRemarksBE" rows="4" cols="50" *ngIf="mode"
+                            readonly></textarea>
+                    </div>
+                    <div>
+                        <label>Name : </label>
+                        <input type="text" class="form-control" formControlName="faSignatureBE" *ngIf="!mode">
+                        <input type="text" class="form-control" formControlName="faSignatureRBE" *ngIf="mode" readonly>
+                    </div>
+                    <div>
+                        <label>Date : </label>
+                        <input type="input" class="form-control" formControlName="faDateBE"
+                            *ngIf="faFormStatus == 'Active' || faFormStatus == 'Approved'" readonly>
+                        <input type="date" class="form-control" formControlName="faDateBE"
+                            *ngIf="!mode && (faFormStatus == '' || faFormStatus == 'Draft')">
+                        <input type="text" class="form-control" formControlName="faDateBE"
+                            *ngIf="mode && (faFormStatus == '' || faFormStatus == 'Draft')" readonly>
+                    </div>
+                </div>
+
+            </mat-expansion-panel>
+        </mat-accordion>
+
+        <!-- RBE -->
+
+        <!-- EE Division -->
+
+        <mat-accordion class="eeSuggestionsForm" *ngIf="eePannel && this.paramsValue.asBeRbe == 'AS-RBE'">
+            <mat-expansion-panel class="expansion-panel" [expanded]=" true" (opened)="panelOpenState = true"
+                (closed)="panelOpenState = false">
+                <mat-expansion-panel-header>
+                    <h4 style="font-size: 20px; font-weight: 600;">EE - Remarks</h4>
+                </mat-expansion-panel-header>
+                <div class="suggestionForm" [formGroup]="suggestionForm">
+                    <div>
+                        <label>Remarks : </label>
+                        <textarea class="form-control" formControlName="eeRemarksRBE" rows="4" cols="50"
+                            *ngIf="!mode"></textarea>
+                        <textarea class="form-control" formControlName="eeRemarksRBE" rows="4" cols="50" *ngIf="mode"
+                            readonly></textarea>
+                    </div>
+                    <div>
+                        <label>Name : </label>
+                        <input type="text" class="form-control" formControlName="eeSignatureRBE" *ngIf="!mode">
+                        <input type="text" class="form-control" formControlName="eeSignatureRBE" *ngIf="mode" readonly>
+                    </div>
+                    <div>
+                        <label>Date : </label>
+                        <input type="input" class="form-control" formControlName="eeDateRBE"
+                            *ngIf="eeFormStatus == 'Active' || eeFormStatus == 'Approved'" readonly>
+                        <input type="date" class="form-control" formControlName="eeDateRBE"
+                            *ngIf="!mode && (eeFormStatus == '' || eeFormStatus == 'Draft')">
+                        <input type="date" class="form-control" formControlName="eeDateRBE"
+                            *ngIf="mode && (eeFormStatus == '' || eeFormStatus == 'Draft')" readonly>
+                    </div>
+                </div>
+
+            </mat-expansion-panel>
+        </mat-accordion>
+
+        <!-- AO Head_office -->
+
+        <mat-accordion class="eeSuggestionsForm" *ngIf="aoPannel && this.paramsValue.asBeRbe == 'AS-RBE'">
+            <mat-expansion-panel class="expansion-panel" [expanded]="true" (opened)="panelOpenState = true"
+                (closed)="panelOpenState = false">
+                <mat-expansion-panel-header>
+                    <h4 style="font-size: 20px; font-weight: 600;">AO - Remarks</h4>
+                </mat-expansion-panel-header>
+                <div class="suggestionForm" [formGroup]="suggestionForm">
+                    <div>
+                        <label>Remarks : </label>
+                        <textarea class="form-control" formControlName="aoRemarksRBE" rows="4" cols="50"
+                            *ngIf="!mode"></textarea>
+                        <textarea class="form-control" formControlName="aoRemarksRBE" rows="4" cols="50" *ngIf="mode"
+                            readonly></textarea>
+                    </div>
+                    <div>
+                        <label>Name : </label>
+                        <input type="text" class="form-control" formControlName="aoSignatureRBE" *ngIf="!mode">
+                        <input type="text" class="form-control" formControlName="aoSignatureRBE" *ngIf="mode" readonly>
+                    </div>
+                    <div>
+                        <label>Date : </label>
+                        <input type="input" class="form-control" formControlName="aoDateRBE"
+                            *ngIf="aoFormStatus == 'Active' || aoFormStatus == 'Approved'" readonly>
+                        <input type="date" class="form-control" formControlName="aoDateRBE"
+                            *ngIf="!mode && (aoFormStatus == '' || aoFormStatus == 'Draft')">
+                        <input type="date" class="form-control" formControlName="aoDateRBE"
+                            *ngIf="mode && (aoFormStatus == '' || aoFormStatus == 'Draft')" readonly>
+                    </div>
+                </div>
+
+            </mat-expansion-panel>
+        </mat-accordion>
+
+        <!-- DCAO Head_office -->
+
+        <mat-accordion class="eeSuggestionsForm" *ngIf="dcaoPannel && this.paramsValue.asBeRbe == 'AS-RBE'">
+            <mat-expansion-panel class="expansion-panel" [expanded]="true" (opened)="panelOpenState = true"
+                (closed)="panelOpenState = false">
+                <mat-expansion-panel-header>
+                    <h4 style="font-size: 20px; font-weight: 600;">DCAO - Remarks</h4>
+                </mat-expansion-panel-header>
+                <div class="suggestionForm" [formGroup]="suggestionForm">
+                    <div>
+                        <label>Remarks : </label>
+                        <textarea class="form-control" formControlName="dcaoRemarksRBE" rows="4" cols="50"
+                            *ngIf="!mode"></textarea>
+                        <textarea class="form-control" formControlName="dcaoRemarksRBE" rows="4" cols="50" *ngIf="mode"
+                            readonly></textarea>
+                    </div>
+                    <div>
+                        <label>Name : </label>
+                        <input type="text" class="form-control" formControlName="dcaoSignatureRBE" *ngIf="!mode">
+                        <input type="text" class="form-control" formControlName="dcaoSignatureRBE" *ngIf="mode"
+                            readonly>
+                    </div>
+                    <div>
+                        <label>Date : </label>
+                        <input type="input" class="form-control" formControlName="dcaoDateRBE"
+                            *ngIf="dcaoFormStatus == 'Active' || dcaoFormStatus == 'Approved'" readonly>
+                        <input type="date" class="form-control" formControlName="dcaoDateRBE"
+                            *ngIf="!mode && (dcaoFormStatus == '' || dcaoFormStatus == 'Draft')">
+                        <input type="date" class="form-control" formControlName="dcaoDateRBE"
+                            *ngIf="mode && (dcaoFormStatus == '' || dcaoFormStatus == 'Draft')" readonly>
+                    </div>
+                </div>
+
+            </mat-expansion-panel>
+        </mat-accordion>
+
+        <!-- FA Head_office -->
+
+        <mat-accordion class="eeSuggestionsForm" *ngIf="faPannel && this.paramsValue.asBeRbe == 'AS-RBE'">
+            <mat-expansion-panel class="expansion-panel" [expanded]="true" (opened)="panelOpenState = true"
+                (closed)="panelOpenState = false">
+                <mat-expansion-panel-header>
+                    <h4 style="font-size: 20px; font-weight: 600;">FA - Remarks</h4>
+                </mat-expansion-panel-header>
+                <div class="suggestionForm" [formGroup]="suggestionForm">
+                    <div>
+                        <label>Remarks : </label>
+                        <textarea class="form-control" formControlName="faRemarksRBE" rows="4" cols="50"
+                            *ngIf="!mode"></textarea>
+                        <textarea class="form-control" formControlName="faRemarksRBE" rows="4" cols="50" *ngIf="mode"
+                            readonly></textarea>
+                    </div>
+                    <div>
+                        <label>Name : </label>
+                        <input type="text" class="form-control" formControlName="faSignatureRBE" *ngIf="!mode">
+                        <input type="text" class="form-control" formControlName="faSignatureRBE" *ngIf="mode" readonly>
+                    </div>
+                    <div>
+                        <label>Date : </label>
+                        <input type="input" class="form-control" formControlName="faDateRBE"
+                            *ngIf="faFormStatus == 'Active' || faFormStatus == 'Approved'" readonly>
+                        <input type="date" class="form-control" formControlName="faDateRBE"
+                            *ngIf="!mode && (faFormStatus == '' || faFormStatus == 'Draft')">
+                        <input type="date" class="form-control" formControlName="faDateRBE"
+                            *ngIf="mode && (faFormStatus == '' || faFormStatus == 'Draft')" readonly>
+                    </div>
+                </div>
+
+            </mat-expansion-panel>
+        </mat-accordion>
+
+        <div class="submitButtons">
+            <button class="btn btn-danger m-2"
+                *ngIf="paramsValue.asBeRbe == 'AS-BE' && paramsValue.action == 'edit' && loginDivision != 'Head_office' && searchValue == '' && StatusASBE == 'Active'"
+                (click)="draftAsBe()">Draft</button>
+            <button class="btn btn-danger m-2"
+                *ngIf="paramsValue.asBeRbe == 'AS-RBE' && paramsValue.action == 'edit' && loginDivision != 'Head_office' && searchValue == '' && StatusASRBE == 'Active'"
+                (click)="draftAsRbe()">Draft</button>
+            <button class="btn btn-danger m-2"
+                *ngIf="paramsValue.asBeRbe == 'AS-BE' && paramsValue.action == 'edit' && (loginDivision == 'Head_office' && divisionLength == paramsValue.dataCount) && searchValue == '' && StatusASBE == 'Active'"
+                (click)="draftAsBe()">Draft</button>
+            <button class="btn btn-danger m-2"
+                *ngIf="paramsValue.asBeRbe == 'AS-RBE' && paramsValue.action == 'edit' && (loginDivision == 'Head_office' && divisionLength == paramsValue.dataCount) && searchValue == ''&& StatusASRBE == 'Active'"
+                (click)="draftAsRbe()">Draft</button>
+            <button class="btn btn-secondary m-2" (click)="backButton()">Back</button>
+            <button class="btn btn-success m-2"
+                *ngIf="paramsValue.asBeRbe == 'AS-BE' && paramsValue.action == 'edit' && loginDivision != 'Head_office' && searchValue == '' && StatusASBE == 'Active'"
+                (click)="updateAsBe()">{{buttonNameValue}}</button>
+            <button class="btn btn-success m-2"
+                *ngIf="paramsValue.asBeRbe == 'AS-RBE' && paramsValue.action == 'edit' && loginDivision != 'Head_office' && searchValue == ''&& StatusASRBE == 'Active'"
+                (click)="updateAsRbe()">{{buttonNameValue}}</button>
+            <button class="btn btn-success m-2"
+                *ngIf="paramsValue.asBeRbe == 'AS-BE' && paramsValue.action == 'edit' && (loginDivision == 'Head_office' && selectedDivisionValue == 'All' && divisionLength == paramsValue.dataCount) && searchValue == '' && StatusASBE == 'Active'"
+                (click)="updateAsBe()">{{buttonNameValue}}</button>
+            <button class="btn btn-success m-2"
+                *ngIf="paramsValue.asBeRbe == 'AS-RBE' && paramsValue.action == 'edit' && (loginDivision == 'Head_office' && selectedDivisionValue == 'All' && divisionLength == paramsValue.dataCount) && searchValue == ''&& StatusASRBE == 'Active'"
+                (click)="updateAsRbe()">{{buttonNameValue}}</button>
+        </div>
+
+    </div>
+
+</section>

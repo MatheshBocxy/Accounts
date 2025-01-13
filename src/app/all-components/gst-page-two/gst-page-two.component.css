@@ -1,0 +1,16 @@
+.tableBorder{
+    color: aliceblue;
+    border: 1px solid black ;
+}
+.tableBorder th{
+    background-color:  #3544ce !important;    
+    color: aliceblue;
+    border: 1px solid black ;
+}
+.tBodyBorder{
+    border: 1px solid black ;
+}
+.table th, .table td {
+    border: 1px solid rgb(0, 0, 0);
+    padding: 8px;
+}

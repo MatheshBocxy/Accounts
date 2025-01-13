@@ -1,0 +1,127 @@
+.main-section {
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.main-table {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fff;
+    margin-top: 10px;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.tableHeadings {
+    background-color: #4A90E2;
+    color: white;
+    font-weight: bold;
+    text-align: center;
+}
+
+.tableHeadings th {
+    padding: 12px;
+    font-size: 14px;
+    border: 1px solid #ddd;
+}
+
+th {
+    padding: 10px;
+    font-size: 13px;
+    text-align: center;
+    color: #333;
+}
+
+.tableDatas {
+    text-align: center;
+    padding: 10px;
+    border: 1px solid #ddd;
+}
+
+.tableValueInput {
+    width: 90%;
+    padding: 8px;
+    margin: 5px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    transition: border-color 0.3s ease;
+}
+
+.tableValueInput:focus,
+.subCodeNameInput:focus {
+    border-color: #4A90E2;
+    outline: none;
+}
+
+.subCodeNameInput {
+    width: 90%;
+    padding: 8px;
+    margin: 5px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    transition: border-color 0.3s ease;
+}
+
+tbody tr:hover {
+    background-color: #f0f8ff;
+}
+
+@media (max-width: 768px) {
+
+    th,
+    .tableDatas {
+        font-size: 12px;
+        padding: 8px;
+    }
+}
+
+.sumbitButton {
+    display: flex;
+    justify-content: center;
+}
+
+.sumbitButtonSubmit {
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.sumbitButtonBack {
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.buttonsBottom {
+    display: flex;
+    justify-content: center;
+}
+
+.subCodeForm th {
+    font-size: 14px;
+    font-weight: 500;
+    /* border: 1px solid#2E6583; */
+    border: 1px solid#c2c3c5;
+    /* background-color: #2E6583; */
+    background-color: #032D54;
+    color: #ffffff;
+    margin-left: 20px;
+    width: auto;
+    text-align: center;
+}
+
+th[rowspan="3"] {
+    vertical-align: middle;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}

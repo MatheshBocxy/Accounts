@@ -1,0 +1,183 @@
+<section class="main-content">
+    <div class="header-row">
+        <h3 class="sub-heading mx-auto">PAYMENT</h3>
+    </div>
+
+    <div class="filter-row mb-2">
+        <div>
+            <div class="search-container">
+                <div>
+                    <input matInput #input type="text" id="search-input" class="search-input" placeholder="Search...">
+                    <div class="search-icon">
+                        <mat-icon>search</mat-icon>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-5"></div>
+        <div class="col-3">
+            <button class="btn btn-light add-dataBtn" routerLink="/famodule/home/create-payment"
+                >
+                <span><svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-plus"
+                        viewBox="0 0 16 16">
+                        <path
+                            d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
+                    </svg></span>New Bill</button>
+        </div>
+        <div>
+            <button class="btn btn-light excelBtn me-1">
+                <span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        class="bi bi-file-earmark-arrow-down-fill biExcel-btn" viewBox="0 0 16 16">
+                        <path
+                            d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0M9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1m-1 4v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 0 1 .708-.708L7.5 11.293V7.5a.5.5 0 0 1 1 0" />
+                    </svg></span>Excel</button>
+        </div>
+        <div>
+            <button class="btn btn-light pdfBtn">
+                <span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        class="bi bi-file-earmark-arrow-down-fill biPdf-btn" viewBox="0 0 16 16">
+                        <path
+                            d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0M9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1m-1 4v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 0 1 .708-.708L7.5 11.293V7.5a.5.5 0 0 1 1 0" />
+                    </svg></span>PDF</button>
+        </div>
+    </div>
+
+    <!-- <div>
+        <table mat-table [dataSource]="saPaymentDataSource" matSort class="schemes-table">
+
+            <ng-container matColumnDef="S.No">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header class="thFirst"> S.No. </th>
+                <td mat-cell *matCellDef="let payment; let i=index"> {{i+1}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="payment">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Division </th>
+                <td mat-cell *matCellDef="let payment"> {{payment.division}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="head">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Date </th>
+                <td mat-cell *matCellDef="let payment"> {{payment.billDate}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="group">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Account Code </th>
+                <td mat-cell *matCellDef="let payment"> {{payment.paymentArrays[0].debitCode}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="payment1">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Bill No</th>
+                <td mat-cell *matCellDef="let payment"> {{payment.billNumber}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="payment2">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Debit </th>
+                <td mat-cell *matCellDef="let payment"> {{payment.totalAmount}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="status">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
+                <td mat-cell *matCellDef="let payment">
+                    <p class="approvelStatusBlue" *ngIf="payment.daStatus == 'Active'">{{payment.saStatus}}</p>
+                    <p class="approvelStatusRed" *ngIf="payment.daStatus == 'Revert'">{{payment.saStatus}}</p>
+                    <p class="approvelStatusGreen" *ngIf="payment.daStatus == 'Approved'">{{payment.saStatus}}</p>
+                    <p class="approvelStatusBlue" *ngIf="payment.daStatus == 'Pending'">{{payment.saStatus}}</p>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="ACTION">
+                <th mat-header-cell *matHeaderCellDef class="thBottom"> Action </th>
+                <td mat-cell *matCellDef="let payment" class="p-0">
+                    <div class="d-flex">
+                        <a routerLink="/famodule/home/payment-payment" (click)="viewMethod('view',payment.id)"
+                            style="color: #161F6D;"><span class="material-symbols-rounded">visibility</span>
+                        </a>
+                        <a routerLink="/famodule/home/payment-payment" (click)="editMethod('edit',payment.id)"
+                            style="color: #161F6D "><span class="material-symbols-rounded">edit</span>
+                        </a>
+                    </div>
+                </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="sapaymentTableColumns"></tr>
+            <tr mat-row *matRowDef="let payment; columns: dapaymentTableColumns;"></tr>
+
+            <tr class="mat-row" *matNoDataRow>
+                <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
+            </tr>
+        </table>
+    </div> -->
+
+ 
+
+
+
+
+    <!-- ARO -->
+    <div class="mt-3" >
+        <table mat-table [dataSource]="aroPaymentDataSource" matSort class="schemes-table">
+      
+          <ng-container matColumnDef="S.No">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="thFirst"> S.No. </th>
+            <td mat-cell *matCellDef="let payment; let i = index"> {{ i + 1 }} </td>
+          </ng-container>
+      
+          <ng-container matColumnDef="payment">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Division </th>
+            <td mat-cell *matCellDef="let payment"> {{ payment.division }} </td>
+          </ng-container>
+      
+          <ng-container matColumnDef="head">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Date </th>
+            <td mat-cell *matCellDef="let payment"> {{ payment.billDate }} </td>
+          </ng-container>
+      
+          <ng-container matColumnDef="group">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Account Code </th>
+            <td mat-cell *matCellDef="let payment"> {{ payment.paymentArrayDTO[0]?.debitCode }} </td>
+          </ng-container>
+      
+          <ng-container matColumnDef="payment1">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Bill No </th>
+            <td mat-cell *matCellDef="let payment"> {{ payment.billNumber }} </td>
+          </ng-container>
+      
+          <ng-container matColumnDef="payment2">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Debit </th>
+            <td mat-cell *matCellDef="let payment"> {{ payment.totalAmount }} </td>
+          </ng-container>
+      
+          <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
+            <td mat-cell *matCellDef="let payment">
+              <p class="approvelStatusBlue">{{ payment.assDivStatus }}</p>
+              <!-- <p class="approvelStatusRed">{{ payment.assDivStatus }}</p>
+              <p class="approvelStatusGreen">{{ payment.assDivStatus }}</p>
+              <p class="approvelStatusBlue">{{ payment.assDivStatus }}</p> -->
+            </td>
+          </ng-container>
+      
+          <ng-container matColumnDef="ACTION">
+            <th mat-header-cell *matHeaderCellDef class="thBottom"> Action </th>
+            <td mat-cell *matCellDef="let payment" class="p-0">
+              <div class="d-flex">
+                <a routerLink="/famodule/home/payment-payment" (click)="viewMethod('view', payment.id)" style="color: #161F6D;">
+                  <span class="material-symbols-rounded">visibility</span>
+                </a>
+                <a style="color: #161F6D; cursor: pointer;" (click)="editMethod('edit', payment.id)">
+                    <span class="material-symbols-rounded">edit</span>
+                  </a>
+              </div>
+            </td>
+          </ng-container>
+      
+          <tr mat-header-row *matHeaderRowDef="aroPaymentTableColumns"></tr>
+          <tr mat-row *matRowDef="let payment; columns: aroPaymentTableColumns;"></tr>
+      
+          <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" colspan="8">No data matching the filter "{{ input.value }}"</td>
+          </tr>
+        </table>
+      </div>
+      </section>
+
+      

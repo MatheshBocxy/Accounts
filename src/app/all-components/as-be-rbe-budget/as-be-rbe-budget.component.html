@@ -1,0 +1,252 @@
+<section class="main-table">
+    <div *ngIf="isLoading" class="loader-overlay">
+        <div class="spinner"></div>
+    </div>
+    <h3 class="Headding" *ngIf="asBeRbe=='AS-BE'">Addition Sanction Budget Estimate For The Year
+        {{asBeRbeYear}}</h3>
+    <h3 class="Headding" *ngIf="asBeRbe=='AS-RBE'">Addition Sanction Revised Budget Estimate For The Year
+        {{asBeRbeYear}}
+    </h3>
+
+    <div class="topBackButton">
+        <a (click)="backButton()" style="cursor: pointer; font-size: 16px; font-weight: 700;"><svg
+                xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                class="bi bi-arrow-bar-left" viewBox="0 0 16 16">
+                <path fill-rule="evenodd"
+                    d="M12.5 15a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5M10 8a.5.5 0 0 1-.5.5H3.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L3.707 7.5H9.5a.5.5 0 0 1 .5.5" />
+            </svg>Back</a>
+        <h2>Rs in LAKH</h2>
+    </div>
+
+    <div class="col-3">
+        <div class="search-container">
+            <div class="position">
+                <input type="text" id="search-input" class="search-input" (keyup)="searchFilter($event)"
+                    placeholder="Search...">
+                <mat-icon class="search-icon">search</mat-icon>
+            </div>
+        </div>
+    </div>
+
+    <div class="dataTable">
+        <div *ngIf="asBeRbe == 'AS-BE'">
+            <form>
+                <table class="table table-primary">
+                    <thead>
+                        <tr>
+                            <th rowspan="2">Sch No</th>
+                            <th rowspan="2">Code No</th>
+                            <th rowspan="2">Description</th>
+                            <th> BE Fixed</th>
+                            <th>Proposed</th>
+                            <th>Fixed</th>
+                            <th>Remarks</th>
+                        </tr>
+                        <tr>
+                            <th>{{asBeRbeYear}}</th>
+                            <th>{{asBeRbeYear}}</th>
+                            <th>{{asBeRbeYear}}</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let items of getCodeBudgetAsBE; let i = index;">
+                            <td style="text-align: center; width: 40px;">{{items.schedule.scheduleNo}}</td>
+                            <td style="text-align: center; width: 40px;">{{items.codeNumber}}</td>
+                            <td style="text-align: left;">
+                                <div class="subCodeButton">
+                                    <p>{{items.codeName}}</p>
+                                    <svg *ngIf="getCodeBudgetAsBE[i].status == 'Yes'" xmlns="http://www.w3.org/2000/svg"
+                                        (click)="openSubGroupAsBeRbe(i,getCodeBudgetAsBE[i],'AS-BE','create')"
+                                        width="16" height="16" fill="currentColor"
+                                        class="bi bi-caret-down-square-fill dropdownButton" viewBox="0 0 16 16">
+                                        <path
+                                            d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm4 4a.5.5 0 0 0-.374.832l4 4.5a.5.5 0 0 0 .748 0l4-4.5A.5.5 0 0 0 12 6z" />
+                                    </svg>
+                                </div>
+                            </td>
+                            <td style="text-align: right;">{{(items.beLastFixed || 0).toFixed(2)}}</td>
+                            <td style="text-align: center;">
+                                <input type="number" [(ngModel)]="items.asProposedBE"
+                                    [ngModelOptions]="{standalone: true}"
+                                    (input)="calculateTotalsBE(); fiveDigitsWarning($event)"
+                                    (blur)="formatAmountOnBlur($event)"
+                                    [disabled]="getCodeBudgetAsBE[i].status == 'Yes'"
+                                    style="width: 100px; text-align: right;" placeholder="0.00">
+                            </td>
+                            <td style="text-align: center; text-align: right;">
+                                <input type="number" [(ngModel)]="items.asFixedBE" [ngModelOptions]="{standalone: true}"
+                                    (input)="calculateTotalsBE(); fiveDigitsWarning($event)"
+                                    (blur)="formatAmountOnBlur($event)"
+                                    [disabled]="getCodeBudgetAsBE[i].status == 'Yes'"
+                                    style="width: 100px; text-align: right;" placeholder="0.00"
+                                    [disabled]="loginDivision !== 'Head_office'">
+                            </td>
+                            <td style="text-align: center;">
+                                <input type="text" [(ngModel)]="items.asReferanceBE"
+                                    [ngModelOptions]="{standalone: true}" [disabled]=" getCodeBudgetAsBE[i].status=='Yes' &&
+                                    !(getCodeBudgetAsBE[i].asProposedBE && getCodeBudgetAsBE[i].asFixedBE)"
+                                    (input)="input()">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" style="text-align: center;font-size: 16px;font-weight: 600;">TOTAL</td>
+                            <td style="text-align: right;">{{(beLastFixedTotal || 0).toFixed(2)}}</td>
+                            <td style="text-align: right; padding-right: 20px;">{{(asProposedTotalBE || 0).toFixed(2)}}
+                            </td>
+                            <td style="text-align: right;">{{(asFixedTotalBE || 0).toFixed(2)}}</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </form>
+        </div>
+
+        <div *ngIf="asBeRbe == 'AS-RBE'">
+            <form>
+                <table class="table table-primary">
+                    <thead>
+                        <tr>
+                            <th rowspan="2">Sch No</th>
+                            <th rowspan="2">Code No</th>
+                            <th rowspan="2">Description</th>
+                            <th>RBE Fixed</th>
+                            <th>Proposed</th>
+                            <th>Fixed</th>
+                            <th>Remarks</th>
+                        </tr>
+                        <tr>
+                            <th>{{asBeRbeYear}}</th>
+                            <th>{{asBeRbeYear}}</th>
+                            <th>{{asBeRbeYear}}</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr *ngFor="let items of getCodeBudgetAsRBE; let i = index;">
+                            <td style="text-align: center; width: 40px;">{{items.schedule.scheduleNo}}</td>
+                            <td style="text-align: center; width: 40px;">{{items.codeNumber}}</td>
+                            <td style="text-align: left;">
+                                <div class="subCodeButton">
+                                    <p>{{items.codeName}}</p>
+                                    <svg *ngIf="getCodeBudgetAsRBE[i].status == 'Yes'"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        (click)="openSubGroupAsBeRbe(i,getCodeBudgetAsRBE[i],'AS-RBE','create')"
+                                        width="16" height="16" fill="currentColor"
+                                        class="bi bi-caret-down-square-fill dropdownButton" viewBox="0 0 16 16">
+                                        <path
+                                            d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm4 4a.5.5 0 0 0-.374.832l4 4.5a.5.5 0 0 0 .748 0l4-4.5A.5.5 0 0 0 12 6z" />
+                                    </svg>
+                                </div>
+                            </td>
+                            <td style="text-align: right;">{{(items.rbeFixed || 0).toFixed(2)}}</td>
+                            <td style="text-align: center;">
+                                <input type="number" [(ngModel)]="items.asProposedRBE"
+                                    [ngModelOptions]="{standalone: true}"
+                                    (input)="calculateTotalsRBE(); fiveDigitsWarning($event)"
+                                    (blur)="formatAmountOnBlur($event)" style="width: 100px; text-align: right;"
+                                    [disabled]="getCodeBudgetAsRBE[i].status == 'Yes'" placeholder="0.00">
+                            </td>
+                            <td style="text-align: center; text-align: right;">
+                                <input type="number" [(ngModel)]="items.asFixedRBE"
+                                    [ngModelOptions]="{standalone: true}"
+                                    (input)="calculateTotalsRBE(); fiveDigitsWarning($event)"
+                                    (blur)="formatAmountOnBlur($event)" style="width: 100px; text-align: right;"
+                                    [disabled]="getCodeBudgetAsRBE[i].status == 'Yes'" placeholder="0.00"
+                                    [disabled]="loginDivision !== 'Head_office'">
+                            </td>
+                            <td style="text-align: center;">
+                                <input type="text" [(ngModel)]="items.asRemarksRBE"
+                                    [ngModelOptions]="{standalone: true}" [disabled]="getCodeBudgetAsRBE[i].status == 'Yes' &&
+                                    !(getCodeBudgetAsRBE[i].asProposedRBE && getCodeBudgetAsRBE[i].asFixedRBE)"
+                                    (input)="inputRBE()">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" style="text-align: center;">TOTAL</td>
+                            <td>{{(rbeLastFixedTotal || 0).toFixed(2)}}</td>
+                            <td style="text-align: right; padding-right: 30px;">{{(asProposedTotalRBE || 0).toFixed(2)}}
+                            </td>
+                            <td style="text-align: right;">{{(asFixedTotalRBE || 0).toFixed(2)}}</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+
+                </table>
+            </form>
+        </div>
+    </div>
+    <!-- EE_Division -->
+    <mat-accordion class="eeSuggestionsForm" *ngIf="loginRole == 'EE_Division'">
+        <mat-expansion-panel [expanded]="true" (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+            <mat-expansion-panel-header>
+                <h4 style="font-size: 20px; font-weight: 600;">EE - Remarks</h4>
+            </mat-expansion-panel-header>
+            <div class="suggestionForm" [formGroup]="suggestionForm">
+                <div>
+                    <label>Remarks : </label>
+                    <textarea class="form-control" formControlName="eeRemarksBE" rows="4" cols="50"
+                        *ngIf="asBeRbe == 'AS-BE'"></textarea>
+                    <textarea class="form-control" formControlName="eeRemarksRBE" rows="4" cols="50"
+                        *ngIf="asBeRbe == 'AS-RBE'"></textarea>
+                </div>
+                <div>
+                    <label>Name : </label>
+                    <input type="text" class="form-control" formControlName="eeSignatureBE" *ngIf="asBeRbe == 'AS-BE'">
+                    <input type="text" class="form-control" formControlName="eeSignatureRBE"
+                        *ngIf="asBeRbe == 'AS-RBE'">
+                </div>
+                <div>
+                    <label>Date : </label>
+                    <input type="date" class="form-control" formControlName="eeDateBE" *ngIf="asBeRbe == 'AS-BE'">
+                    <input type="date" class="form-control" formControlName="eeDateRBE" *ngIf="asBeRbe == 'AS-RBE'">
+                </div>
+            </div>
+
+        </mat-expansion-panel>
+    </mat-accordion>
+    <!-- AO -->
+    <mat-accordion class="eeSuggestionsForm" *ngIf="loginRole == 'AO'">
+        <mat-expansion-panel [expanded]="true" (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+            <mat-expansion-panel-header>
+                <h4 style="font-size: 20px; font-weight: 600;">AO - Remarks</h4>
+            </mat-expansion-panel-header>
+            <div class="suggestionForm" [formGroup]="suggestionForm">
+                <div>
+                    <label>Remarks : </label>
+                    <textarea class="form-control" formControlName="aoRemarksBE" rows="4" cols="50"
+                        *ngIf="asBeRbe == 'AS-BE'"></textarea>
+                    <textarea class="form-control" formControlName="aoRemarksRBE" rows="4" cols="50"
+                        *ngIf="asBeRbe == 'AS-RBE'"></textarea>
+                </div>
+                <div>
+                    <label>Name : </label>
+                    <input type="text" class="form-control" formControlName="aoSignatureBE" *ngIf="asBeRbe == 'AS-BE'">
+                    <input type="text" class="form-control" formControlName="aoSignatureRBE"
+                        *ngIf="asBeRbe == 'AS-RBE'">
+                </div>
+                <div>
+                    <label>Date : </label>
+                    <input type="date" class="form-control" formControlName="aoDateBE" *ngIf="asBeRbe == 'AS-BE'">
+                    <input type="date" class="form-control" formControlName="aoDateRBE" *ngIf="asBeRbe == 'AS-RBE'">
+                </div>
+            </div>
+
+        </mat-expansion-panel>
+    </mat-accordion>
+
+    <div class="submitButtons">
+        <button class="btn btn-danger m-2" *ngIf="asBeRbe == 'AS-BE'" (click)="asBeDraft()">Draft</button>
+        <button class="btn btn-danger m-2" *ngIf="asBeRbe == 'AS-RBE'" (click)="asRbeDraft()">Draft</button>
+
+        <button class="btn btn-secondary m-2" (click)="backButton()">Back</button>
+
+        <button class="btn btn-success m-2" *ngIf="asBeRbe == 'AS-BE' && loginRole == 'EE_Division'"
+            (click)="asBeSave()">{{buttonNameValue}}</button>
+        <button class="btn btn-success m-2" *ngIf="asBeRbe == 'AS-RBE' && loginRole == 'EE_Division'"
+            (click)="asRbeSave()">{{buttonNameValue}}</button>
+    </div>
+
+
+</section>

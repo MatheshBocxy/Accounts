@@ -1,0 +1,49 @@
+.main-Section {
+    padding: 1rem;
+    background-color: #f0f8ff;
+    /* Lighter background for contrast */
+    height: auto;
+    width: 100%;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    /* Subtle shadow for depth */
+    margin-bottom: 1rem;
+}
+
+.table th,
+.table td {
+    padding: 12px;
+    text-align: center;
+    border: 1px solid #ddd;
+    font-size: 0.9rem;
+}
+
+.table th {
+    background-color: #827dbd;
+    /* Light green for headers */
+    font-weight: 600;
+    color: #ffffff;
+}
+
+.table td {
+    background-color: #f9f9f9;
+    color: #000000;
+}
+
+th[rowspan="3"] {
+    vertical-align: middle;
+}
+
+.schDetils {
+    display: flex;
+    justify-content: center;
+}
+
+/* .table tbody tr:nth-child(even) td {
+    background-color: #827dbd;
+} */

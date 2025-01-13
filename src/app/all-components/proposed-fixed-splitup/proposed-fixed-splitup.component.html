@@ -1,0 +1,269 @@
+<section class="main-Section">
+    <a [mat-dialog-close]="true" class="iconBack"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+            fill="currentColor" class="bi bi-x-square-fill iconColor" viewBox="0 0 16 16">
+            <path
+                d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm3.354 4.646L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 1 1 .708-.708" />
+        </svg></a>
+
+    <div class="topHeadding">
+        <h1 *ngIf="data.type == 'proposed' && data.beRbe=='BE'">{{data.beRbe}} - PROPOSED For
+            {{revenueValue?.beLastYear}}
+        </h1>
+        <h1 *ngIf="data.type == 'fixed' && data.beRbe=='BE'">{{data.beRbe}} - FIXED For {{revenueValue?.beLastYear}}
+        </h1>
+        <h1 *ngIf="data.type == 'proposed' && data.beRbe == 'RBE'">{{data.beRbe}} - PROPOSED For
+            {{revenueValue?.rbeYear}}
+        </h1>
+        <h1 *ngIf="data.type == 'fixed' && data.beRbe == 'RBE'">{{data.beRbe}} - FIXED For {{revenueValue?.rbeYear}}
+        </h1>
+    </div>
+
+    <!-- Division -->
+    <div class="main-boxOfBudget" *ngIf="data.beRbe == 'BE' && loginDivision != 'Head_office'">
+
+        <div class="boxOfBudget" [mat-dialog-close]="true"
+            (click)="goToviewPage('be',this.data.response.beLastYear,'Revenue')">
+            <h3 class="boxHeading">Revenue Budget</h3>
+            <div class="boxValue" *ngIf="data.type == 'proposed'">
+                <p>{{(revenueValue?.beLastYearProposedCreatorTotal || 0).toFixed(2)}}</p>
+            </div>
+            <div class="boxValue" *ngIf="data.type == 'fixed'">
+                <p>{{(revenueValue?.beLastYearFixedCreatorTotal || 0).toFixed(2)}}</p>
+            </div>
+            <p class="roleStatus">ARO_{{loginDivision}}: <span
+                    [ngClass]="{'draft':revenueValue?.aroDivisionStatus == 'Draft','active':revenueValue?.aroDivisionStatus == 'Active','approved':revenueValue?.aroDivisionStatus == 'Approved','proccessing':revenueValue?.aroDivisionStatus == ''}">{{revenueValue?.aroDivisionStatus
+                    || 'Proccessing'}}</span>
+            </p>
+            <p class="roleStatus">MMS_{{loginDivision}}: <span
+                    [ngClass]="{'draft':revenueValue?.mmsDivisionStatus == 'Draft','active':revenueValue?.mmsDivisionStatus == 'Active','approved':revenueValue?.mmsDivisionStatus == 'Approved','proccessing':revenueValue?.mmsDivisionStatus == ''}">{{revenueValue?.mmsDivisionStatus
+                    || 'Proccessing'}}</span>
+            </p>
+        </div>
+
+        <div class="boxOfBudget" [mat-dialog-close]="true"
+            (click)="goToviewPage('be',this.data.response.beLastYear,'Work')">
+            <h3 class="boxHeading">Work Budget</h3>
+            <div class="boxValue" *ngIf="data.type == 'proposed'">
+                <p>{{(workValue?.beLastYearProposedCreatorTotal || 0).toFixed(2)}}</p>
+            </div>
+            <div class="boxValue" *ngIf="data.type == 'fixed'">
+                <p>{{(workValue?.beLastYearFixedCreatorTotal || 0).toFixed(2)}}</p>
+            </div>
+            <p class="roleStatus">AEE_{{loginDivision}}: <span
+                    [ngClass]="{'draft':workValue?.aeeDivisionStatus == 'Draft','active':workValue?.aeeDivisionStatus == 'Active','approved':workValue?.aeeDivisionStatus == 'Approved','proccessing':workValue?.aeeDivisionStatus == ''}">{{workValue?.aeeDivisionStatus
+                    || 'Proccessing'}}</span>
+            </p>
+            <p class="roleStatus">AE_Plan_{{loginDivision}}: <span
+                    [ngClass]="{'draft':workValue?.aePlanDivisionStatus == 'Draft','active':workValue?.aePlanDivisionStatus == 'Active','approved':workValue?.aePlanDivisionStatus == 'Approved','proccessing':workValue?.aePlanDivisionStatus == ''}">{{workValue?.aePlanDivisionStatus
+                    || 'Proccessing'}}</span>
+            </p>
+        </div>
+
+        <div class="boxOfBudget" [mat-dialog-close]="true"
+            (click)="goToviewPage('be',this.data.response.beLastYear,'Admin')">
+            <h3 class="boxHeading">Admin Budget</h3>
+            <div class="boxValue" *ngIf="data.type == 'proposed'">
+                <p>{{(adminValue?.beLastYearProposedCreatorTotal || 0).toFixed(2)}}</p>
+            </div>
+            <div class="boxValue" *ngIf="data.type == 'fixed'">
+                <p>{{(adminValue?.beLastYearFixedCreatorTotal || 0).toFixed(2)}}</p>
+            </div>
+            <p class="roleStatus">ACC_Clerk_{{loginDivision}} : <span
+                    [ngClass]="{'draft':adminValue?.accClerkStatus == 'Draft','active':adminValue?.accClerkStatus == 'Active','approved':adminValue?.accClerkStatus == 'Approved','proccessing':adminValue?.accClerkStatus == ''}">{{adminValue?.accClerkStatus
+                    || 'Proccessing'}}</span>
+            </p>
+        </div>
+
+    </div>
+
+    <div class="main-boxOfBudget" *ngIf="data.beRbe == 'RBE' && loginDivision != 'Head_office'">
+
+        <div class="boxOfBudget" [mat-dialog-close]="true"
+            (click)="goToviewPage('rbe',this.data.response.rbeYear,'Revenue')">
+            <h3 class="boxHeading">Revenue Budget</h3>
+            <div class="boxValue" *ngIf="data.type == 'proposed'">
+                <p>{{(revenueValue?.lastRbeProposedCreatorTotal || 0).toFixed(2)}}</p>
+            </div>
+            <div class="boxValue" *ngIf="data.type == 'fixed'">
+                <p>{{(revenueValue?.lastRbeFixedCreatorTotal || 0).toFixed(2)}}</p>
+            </div>
+            <p class="roleStatus">ARO_{{loginDivision}}: <span
+                    [ngClass]="{'draft':revenueValue?.aroDivisionStatusRbe == 'Draft','active':revenueValue?.aroDivisionStatusRbe == 'Active','approved':revenueValue?.aroDivisionStatusRbe == 'Approved','proccessing':revenueValue?.aroDivisionStatusRbe == ''}">{{revenueValue?.aroDivisionStatusRbe
+                    || 'Proccessing'}}</span>
+            </p>
+            <p class="roleStatus">MMS_{{loginDivision}}: <span
+                    [ngClass]="{'draft':revenueValue?.mmsDivisionStatusRbe == 'Draft','active':revenueValue?.mmsDivisionStatusRbe == 'Active','approved':revenueValue?.mmsDivisionStatusRbe == 'Approved','proccessing':revenueValue?.mmsDivisionStatusRbe == ''}">{{revenueValue?.mmsDivisionStatusRbe
+                    || 'Proccessing'}}</span>
+            </p>
+        </div>
+
+        <div class="boxOfBudget" [mat-dialog-close]="true"
+            (click)="goToviewPage('rbe',this.data.response.rbeYear,'Work')">
+            <h3 class="boxHeading">Work Budget</h3>
+            <div class="boxValue" *ngIf="data.type == 'proposed'">
+                <p>{{(workValue?.lastRbeProposedCreatorTotal || 0).toFixed(2)}}</p>
+            </div>
+            <div class="boxValue" *ngIf="data.type == 'fixed'">
+                <p>{{(workValue?.lastRbeFixedCreatorTotal || 0).toFixed(2)}}</p>
+            </div>
+            <p class="roleStatus">AEE_{{loginDivision}}: <span
+                    [ngClass]="{'draft':workValue?.aeeDivisionStatusRbe == 'Draft','active':workValue?.aeeDivisionStatusRbe == 'Active','approved':workValue?.aeeDivisionStatusRbe == 'Approved','proccessing':workValue?.aeeDivisionStatusRbe == ''}">{{workValue?.aeeDivisionStatusRbe
+                    || 'Proccessing'}}</span>
+            </p>
+            <p class="roleStatus">AE_Plan_{{loginDivision}}: <span
+                    [ngClass]="{'draft':workValue?.aePlanDivisionStatusRbe == 'Draft','active':workValue?.aePlanDivisionStatusRbe == 'Active','approved':workValue?.aePlanDivisionStatusRbe == 'Approved','proccessing':workValue?.aePlanDivisionStatusRbe == ''}">{{workValue?.aePlanDivisionStatusRbe
+                    || 'Proccessing'}}</span>
+            </p>
+        </div>
+
+        <div class="boxOfBudget" [mat-dialog-close]="true"
+            (click)="goToviewPage('rbe',this.data.response.rbeYear,'Admin')">
+            <h3 class="boxHeading">Admin Budget</h3>
+            <div class="boxValue" *ngIf="data.type == 'proposed'">
+                <p>{{(adminValue?.lastRbeProposedCreatorTotal || 0).toFixed(2)}}</p>
+            </div>
+            <div class="boxValue" *ngIf="data.type == 'fixed'">
+                <p>{{(adminValue?.lastRbeFixedCreatorTotal || 0).toFixed(2)}}</p>
+            </div>
+            <p class="roleStatus">ACC_Clerk_{{loginDivision}} : <span
+                    [ngClass]="{'draft':adminValue?.accClerkStatusRbe == 'Draft','active':adminValue?.accClerkStatusRbe == 'Active','approved':adminValue?.accClerkStatusRbe == 'Approved','proccessing':adminValue?.accClerkStatusRbe == ''}">{{adminValue?.accClerkStatusRbe
+                    || 'Proccessing'}}</span>
+            </p>
+        </div>
+
+    </div>
+
+    <!-- Head_Office -->
+    <div class="main-boxOfBudget" [mat-dialog-close]="true"
+        *ngIf="data.beRbe == 'BE' && loginDivision == 'Head_office'">
+
+        <div class="boxOfBudget" [mat-dialog-close]="true"
+            (click)="goToviewPage('be',this.data.response.beLastYear,'Revenue')">
+            <h3 class="boxHeading">Revenue Budget</h3>
+            <div class="boxValue" *ngIf="data.type == 'proposed'">
+                <p>{{(revenueValue?.beLastYearProposedCreatorTotal || 0).toFixed(2)}}</p>
+            </div>
+            <div class="boxValue" *ngIf="data.type == 'fixed'">
+                <p>{{(revenueValue?.beLastYearFixedCreatorTotal || 0).toFixed(2)}}</p>
+            </div>
+            <p class="roleStatus">RO_{{loginDivision}}: <span
+                    [ngClass]="{'draft':revenueValue?.roStatus == 'Draft','active':revenueValue?.roStatus == 'Active','approved':revenueValue?.roStatus == 'Approved','proccessing':revenueValue?.roStatus == ''}">{{revenueValue?.roStatus
+                    || 'Proccessing'}}</span>
+            </p>
+            <p class="roleStatus">CRO_{{loginDivision}}: <span
+                    [ngClass]="{'draft':revenueValue?.croStatus == 'Draft','active':revenueValue?.croStatus == 'Active','approved':revenueValue?.croStatus == 'Approved','proccessing':revenueValue?.croStatus == ''}">{{revenueValue?.croStatus
+                    || 'Proccessing'}}</span>
+            </p>
+        </div>
+
+        <div class="boxOfBudget" [mat-dialog-close]="true"
+            (click)="goToviewPage('be',this.data.response.beLastYear,'Work')">
+            <h3 class="boxHeading">Work Budget</h3>
+            <div class="boxValue" *ngIf="data.type == 'proposed'">
+                <p>{{(workValue?.beLastYearProposedCreatorTotal || 0).toFixed(2)}}</p>
+            </div>
+            <div class="boxValue" *ngIf="data.type == 'fixed'">
+                <p>{{(workValue?.beLastYearFixedCreatorTotal || 0).toFixed(2)}}</p>
+            </div>
+            <p class="roleStatus">EE_T_CELL_{{loginDivision}}: <span
+                    [ngClass]="{'draft':workValue?.eeTCellStatus == 'Draft','active':workValue?.eeTCellStatus == 'Active','approved':workValue?.eeTCellStatus == 'Approved','proccessing':workValue?.eeTCellStatus == ''}">{{workValue?.eeTCellStatus
+                    || 'Proccessing'}}</span>
+            </p>
+            <p class="roleStatus">SE_{{loginDivision}}: <span
+                    [ngClass]="{'draft':workValue?.seStatus == 'Draft','active':workValue?.seStatus == 'Active','approved':workValue?.seStatus == 'Approved','proccessing':workValue?.seStatus == ''}">{{workValue?.seStatus
+                    || 'Proccessing'}}</span>
+            </p>
+            <p class="roleStatus">CE_{{loginDivision}}: <span
+                    [ngClass]="{'draft':workValue?.ceStatus == 'Draft','active':workValue?.ceStatus == 'Active','approved':workValue?.ceStatus == 'Approved','proccessing':workValue?.ceStatus == ''}">{{workValue?.ceStatus
+                    || 'Proccessing'}}</span>
+            </p>
+        </div>
+
+        <div class="boxOfBudget" [mat-dialog-close]="true"
+            (click)="goToviewPage('be',this.data.response.beLastYear,'Admin')">
+            <h3 class="boxHeading">Admin Budget</h3>
+            <div class="boxValue" *ngIf="data.type == 'proposed'">
+                <p>{{(adminValue?.beLastYearProposedCreatorTotal || 0).toFixed(2)}}</p>
+            </div>
+            <div class="boxValue" *ngIf="data.type == 'fixed'">
+                <p>{{(adminValue?.beLastYearFixedCreatorTotal || 0).toFixed(2)}}</p>
+            </div>
+            <p class="roleStatus">AO_{{loginDivision}} : <span
+                    [ngClass]="{'draft':adminValue?.aoStatus == 'Draft','active':adminValue?.aoStatus == 'Active','approved':adminValue?.aoStatus == 'Approved','proccessing':adminValue?.aoStatus == ''}">{{adminValue?.aoStatus
+                    || 'Proccessing'}}</span>
+            </p>
+            <!-- <p *ngIf="loginRole == 'FA'" class="roleStatus">DCAO_{{loginDivision}} : <span
+                    [ngClass]="{'draft':adminValue?.dcAoStatus == 'Draft','active':adminValue?.dcAoStatus == 'Active','approved':adminValue?.dcAoStatus == 'Approved','proccessing':adminValue?.dcAoStatus == ''}">{{adminValue?.dcAoStatus
+                    || 'Proccessing'}}</span>
+            </p> -->
+            <!-- <p class="roleStatus">FA_{{loginDivision}} : <span
+                    [ngClass]="{'draft':adminValue?.faStatus == 'Draft','active':adminValue?.faStatus == 'Active','approved':adminValue?.faStatus == 'Approved','proccessing':adminValue?.faStatus == ''}">{{adminValue?.faStatus
+                    || 'Proccessing'}}</span>
+            </p> -->
+        </div>
+
+    </div>
+
+    <div class="main-boxOfBudget" [mat-dialog-close]="true"
+        *ngIf="data.beRbe == 'RBE' && loginDivision == 'Head_office'">
+
+        <div class="boxOfBudget" [mat-dialog-close]="true"
+            (click)="goToviewPage('rbe',this.data.response.rbeYear,'Revenue')">
+            <h3 class="boxHeading">Revenue Budget</h3>
+            <div class="boxValue" *ngIf="data.type == 'proposed'">
+                <p>{{(revenueValue?.lastRbeProposedCreatorTotal || 0).toFixed(2)}}</p>
+            </div>
+            <div class="boxValue" *ngIf="data.type == 'fixed'">
+                <p>{{(revenueValue?.lastRbeFixedCreatorTotal || 0).toFixed(2)}}</p>
+            </div>
+            <p class="roleStatus">RO_{{loginDivision}}: <span
+                    [ngClass]="{'draft':revenueValue?.roStatusRbe == 'Draft','active':revenueValue?.roStatusRbe == 'Active','approved':revenueValue?.roStatusRbe == 'Approved','proccessing':revenueValue?.roStatusRbe == ''}">{{revenueValue?.roStatusRbe
+                    || 'Proccessing'}}</span>
+            </p>
+            <p class="roleStatus">CRO_{{loginDivision}}: <span
+                    [ngClass]="{'draft':revenueValue?.croStatusRbe == 'Draft','active':revenueValue?.croStatusRbe == 'Active','approved':revenueValue?.croStatusRbe == 'Approved','proccessing':revenueValue?.croStatusRbe == ''}">{{revenueValue?.croStatusRbe
+                    || 'Proccessing'}}</span>
+            </p>
+        </div>
+
+        <div class="boxOfBudget" [mat-dialog-close]="true"
+            (click)="goToviewPage('rbe',this.data.response.rbeYear,'Work')">
+            <h3 class="boxHeading">Work Budget</h3>
+            <div class="boxValue" *ngIf="data.type == 'proposed'">
+                <p>{{(workValue?.lastRbeProposedCreatorTotal || 0).toFixed(2)}}</p>
+            </div>
+            <div class="boxValue" *ngIf="data.type == 'fixed'">
+                <p>{{(workValue?.lastRbeFixedCreatorTotal || 0).toFixed(2)}}</p>
+            </div>
+            <p class="roleStatus">EE_T_CELL_{{loginDivision}}: <span
+                    [ngClass]="{'draft':workValue?.eeTCellStatusRbe == 'Draft','active':workValue?.eeTCellStatusRbe == 'Active','approved':workValue?.eeTCellStatusRbe == 'Approved','proccessing':workValue?.eeTCellStatusRbe == ''}">{{workValue?.eeTCellStatusRbe
+                    || 'Proccessing'}}</span>
+            </p>
+            <p class="roleStatus">SE_{{loginDivision}}: <span
+                    [ngClass]="{'draft':workValue?.seStatusRbe == 'Draft','active':workValue?.seStatusRbe == 'Active','approved':workValue?.seStatusRbe == 'Approved','proccessing':workValue?.seStatusRbe == ''}">{{workValue?.seStatusRbe
+                    || 'Proccessing'}}</span>
+            </p>
+            <p class="roleStatus">CE_{{loginDivision}}: <span
+                    [ngClass]="{'draft':workValue?.ceStatusRbe == 'Draft','active':workValue?.ceStatusRbe == 'Active','approved':workValue?.ceStatusRbe == 'Approved','proccessing':workValue?.ceStatusRbe == ''}">{{workValue?.ceStatusRbe
+                    || 'Proccessing'}}</span>
+            </p>
+        </div>
+
+        <div class="boxOfBudget" [mat-dialog-close]="true"
+            (click)="goToviewPage('rbe',this.data.response.rbeYear,'Admin')">
+            <h3 class="boxHeading">Admin Budget</h3>
+            <div class="boxValue" *ngIf="data.type == 'proposed'">
+                <p>{{(adminValue?.lastRbeProposedCreatorTotal || 0).toFixed(2)}}</p>
+            </div>
+            <div class="boxValue" *ngIf="data.type == 'fixed'">
+                <p>{{(adminValue?.lastRbeFixedCreatorTotal || 0).toFixed(2)}}</p>
+            </div>
+            <p class="roleStatus">AO_{{loginDivision}} : <span
+                    [ngClass]="{'draft':adminValue?.aoStatusRbe == 'Draft','active':adminValue?.aoStatusRbe == 'Active','approved':adminValue?.aoStatusRbe == 'Approved','proccessing':adminValue?.aoStatusRbe == ''}">{{adminValue?.aoStatusRbe
+                    || 'Proccessing'}}</span>
+            </p>
+        </div>
+
+    </div>
+
+</section>

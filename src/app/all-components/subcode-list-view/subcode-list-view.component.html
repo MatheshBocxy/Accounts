@@ -1,0 +1,123 @@
+<div class="main-content section-background" style="min-height: 91vh">
+  <section class="main-content">
+    <h2 class="heading" *ngIf="!viewMode">UPDATE SUB-CODE</h2>
+    <h2 class="heading" *ngIf="viewMode">VIEW SUB-CODE</h2>
+
+    <form [formGroup]="codeFormGroup">
+      <div class="row">
+        <div class="col-3">
+          <label for="subCode">SubCode No</label>
+          <input class="form-control" type="text" id="subCode" formControlName="subCode" required maxlength="6"
+            *ngIf="!viewMode" />
+          <input class="form-control view" type="text" id="subCode" maxlength="6" formControlName="subCode" readonly
+            *ngIf="viewMode" />
+        </div>
+        <div class="col-3">
+          <label for="subCodeDescription">SubCode Description</label>
+          <input class="form-control" type="text" id="subCodeDescription" formControlName="subCodeDescription" required
+            *ngIf="!viewMode" />
+          <input class="form-control view" type="text" id="subCodeDescription" formControlName="subCodeDescription"
+            readonly *ngIf="viewMode" />
+        </div>
+        <div class="col-3">
+          <mat-label style="font-weight: bold;">Divisions</mat-label>
+          <mat-select multiple [(value)]="selectedDivisions" multiple formControlName="division"
+            (selectionChange)="onDivisionSelectionChange($event)" *ngIf="!viewMode">
+            <mat-option [value]="'All'" checked="isAllSelected">All</mat-option>
+            <mat-option *ngFor="let items of divisionDropDown" [value]="items">{{ items }}</mat-option>
+          </mat-select>
+
+          <input class="form-control view" type="text" id="division" formControlName="division" readonly
+            *ngIf="viewMode" />
+        </div>
+
+        <!-- <div class="col-3">
+            <label for="v_SCHEDULE_NAME">Schedule No</label>
+            <select
+              class="form-select"
+              type="text"
+              id="v_SCHEDULE_NAME"
+              formControlName="scheduleName"
+              required
+              *ngIf="!viewMode"
+              (change)="setScheduleNumber()"
+            >
+              
+              <option value="">Select</option>
+  
+              <option
+                *ngFor="let items of arrayScheduleDropDown"
+                [value]="items.scheduleName"
+              >
+                {{ items.scheduleName }}
+              </option>
+            </select>
+            <input
+              type="text"
+              class="v_SCHEDULE_NAME form-control view"
+              formControlName="scheduleName"
+              readonly
+              *ngIf="viewMode"
+            />
+          </div> -->
+        <!-- <div class="col-1">
+              <label for="">Sch No</label>
+              <input type="text" class="form-control scheduleNo" formControlName="scheduleNo">
+          </div> -->
+
+        <!-- <div class="col-3">
+            <label for="v_BUDGET_GROUP">Budget Head</label>
+            <select
+              class="form-select"
+              type="text"
+              id="v_BUDGET_GROUP"
+              formControlName="budgetHead"
+              required
+              *ngIf="!viewMode"
+            >
+              <option value="" selected>Select an option</option>
+              <option
+                value="{{ mainGroupDropdown }}"
+                *ngFor="let mainGroupDropdown of allGroupDropDownSave"
+              >
+                {{ mainGroupDropdown }}
+              </option>
+            </select>
+            <input
+              type="text"
+              class="v_BUDGET_GROUP form-control view"
+              formControlName="budgetHead"
+              readonly
+              *ngIf="viewMode"
+            />
+          </div> -->
+
+        <!-- <div class="col-2">
+            <label for="codeUser">User</label>
+            <select
+              class="form-select"
+              type="text"
+              id="codeUser"
+              formControlName="codeUser"
+              required
+            >
+              <option value="" selected disabled>Select an option</option>
+  
+              <option *ngFor="let data of allUserData" [value]="data">
+                {{ data }}
+              </option>
+            </select>
+          </div> -->
+      </div>
+
+      <div class="submitButton">
+        <button class="btn btn-primary" routerLink="/famodule/home/subcode">
+          Back
+        </button>
+        <button class="btn btn-success" (click)="postUpdateCode()" *ngIf="!viewMode">
+          Update
+        </button>
+      </div>
+    </form>
+  </section>
+</div>

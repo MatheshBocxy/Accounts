@@ -1,0 +1,244 @@
+<section class="main-Section">
+    <a [mat-dialog-close]="true" style="cursor: pointer; font-size: 16px; font-weight: 700;"><svg
+            xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-bar-left"
+            viewBox="0 0 16 16">
+            <path fill-rule="evenodd"
+                d="M12.5 15a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5M10 8a.5.5 0 0 1-.5.5H3.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L3.707 7.5H9.5a.5.5 0 0 1 .5.5" />
+        </svg>Back</a>
+
+    <div class="schDetils">
+        <p style="font-size: 18px; font-weight: 600;">BUDGET HEAD : {{budgetHead}}</p>
+    </div>
+
+    <!-- BE -->
+    <table class="table table-warning tableBorder" *ngIf="data.beRbe == 'BE'">
+        <thead class=" tableHead">
+            <tr>
+                <th rowspan="3" style="text-align: center; width: 40px;">Sch.No</th>
+                <th rowspan="3" style="text-align: center; width: 80px;">Code No</th>
+                <th rowspan="3" colspan="3" style="text-align: center; width: 150px;">Particulars</th>
+                <th style="text-align: center;">Actuals</th>
+                <th style="text-align: center;">RBE</th>
+                <th style="text-align: center;">Actuals Up To</th>
+                <th colspan="2" style="text-align: center;">BE</th>
+            </tr>
+            <tr>
+                <th style="text-align: center;width: 100px;">{{actualyear}}</th>
+                <th style="text-align: center;width: 100px;">{{beRbeYear}}</th>
+                <th style="text-align: center;width: 100px;">{{actualUpToYear}}</th>
+                <th style="text-align: center;width: 100px;" colspan="2">{{beRbeLastYear}}</th>
+            </tr>
+            <tr>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th style="text-align: center;width: 100px;">Proposed</th>
+                <th style="text-align: center;width: 100px;">Fixed</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr *ngFor="let items of data.splitUp; let i=index">
+                <td>{{items.code.schedule.scheduleNo}}</td>
+                <td>{{items.code.codeNumber}}</td>
+                <td colspan="3" style="text-align: left;">
+                    <div class="subCode">
+                        <p>{{items.code.codeName}}</p>
+                        <svg *ngIf="items.code.status == 'Yes'" (click)="subCodePopUp(items,'BE')"
+                            xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-caret-down-square-fill dropdownButton" viewBox="0 0 16 16">
+                            <path
+                                d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm4 4a.5.5 0 0 0-.374.832l4 4.5a.5.5 0 0 0 .748 0l4-4.5A.5.5 0 0 0 12 6z" />
+                        </svg>
+                    </div>
+                </td>
+                <td style="text-align: right;">{{(items.actuals || 0).toFixed(2)}}</td>
+                <td style="text-align: right;">{{(items.rbe || 0).toFixed(2)}}</td>
+                <td style="text-align: right;">{{(items.actualsUpTo || 0).toFixed(2)}}</td>
+                <td style="text-align: right;">{{(items.beLastYearProposed || 0).toFixed(2)}}</td>
+                <td style="text-align: right;">{{(items.beLastYearFixed || 0).toFixed(2)}}</td>
+            </tr>
+            <tr class="totalstd">
+                <td colspan="5" style="text-align: center; font-weight: 600; font-size: medium;">TOTAL</td>
+                <td style="text-align: right; font-weight: 600; font-size: medium;">{{(actualTotal).toFixed(2)}}</td>
+                <td style="text-align: right; font-weight: 600; font-size: medium;">{{(beRbeTotal).toFixed(2)}}</td>
+                <td style="text-align: right; font-weight: 600; font-size: medium;">{{(actualUpToTotal).toFixed(2)}}
+                </td>
+                <td style="text-align: right; font-weight: 600; font-size: medium;">{{(proposedTotal).toFixed(2)}}</td>
+                <td style="text-align: right; font-weight: 600; font-size: medium;">{{(fixedTotal).toFixed(2)}}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- RBE -->
+    <table class="table table-warning tableBorder" *ngIf="data.beRbe == 'RBE'">
+        <thead class=" tableHead">
+            <tr>
+                <th rowspan="3" style="text-align: center; width: 40px;">Sch.No</th>
+                <th rowspan="3" style="text-align: center; width: 80px;">Code No</th>
+                <th rowspan="3" colspan="3" style="text-align: center; width: 150px;">Particulars</th>
+                <th style="text-align: center;">Actuals</th>
+                <th style="text-align: center;">BE</th>
+                <th style="text-align: center;">Actuals Up To</th>
+                <th colspan="2" style="text-align: center;">RBE</th>
+            </tr>
+            <tr>
+                <th style="text-align: center;width: 100px;">{{actualyear}}</th>
+                <th style="text-align: center;width: 100px;">{{beRbeYear}}</th>
+                <th style="text-align: center;width: 100px;">{{actualUpToYear}}</th>
+                <th style="text-align: center;width: 100px;" colspan="2">{{beRbeLastYear}}</th>
+            </tr>
+            <tr>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th style="text-align: center;width: 100px;">Proposed</th>
+                <th style="text-align: center;width: 100px;">Fixed</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr *ngFor="let items of this.data.splitUp">
+                <td>{{items.code.schedule.scheduleNo}}</td>
+                <td>{{items.code.codeNumber}}</td>
+                <td colspan="3" style="text-align: left;">
+                    <div class="subCode">
+                        <p>{{items.code.codeName}}</p>
+                        <svg *ngIf="items.code.status == 'Yes'" (click)="subCodePopUp(items,'RBE')"
+                            xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-caret-down-square-fill dropdownButton" viewBox="0 0 16 16">
+                            <path
+                                d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm4 4a.5.5 0 0 0-.374.832l4 4.5a.5.5 0 0 0 .748 0l4-4.5A.5.5 0 0 0 12 6z" />
+                        </svg>
+                    </div>
+                </td>
+                <td style="text-align: right;">{{(items.actualsRbe || 0).toFixed(2)}}</td>
+                <td style="text-align: right;">{{(items.beRbe || 0).toFixed(2)}}</td>
+                <td style="text-align: right;">{{(items.actualsUpToRbe || 0).toFixed(2)}}</td>
+                <td style="text-align: right;">{{(items.lastRbeProposed || 0).toFixed(2)}}</td>
+                <td style="text-align: right;">{{(items.lastRbeFixed || 0).toFixed(2)}}</td>
+            </tr>
+            <tr class="totalstd">
+                <td colspan="5" style="text-align: center; font-weight: 600; font-size: medium;">TOTAL</td>
+                <td style="text-align: right; font-weight: 600; font-size: medium;">{{(actualTotal).toFixed(2)}}</td>
+                <td style="text-align: right; font-weight: 600; font-size: medium;">{{(beRbeTotal).toFixed(2)}}</td>
+                <td style="text-align: right; font-weight: 600; font-size: medium;">{{(actualUpToTotal).toFixed(2)}}
+                </td>
+                <td style="text-align: right; font-weight: 600; font-size: medium;">{{(proposedTotal).toFixed(2)}}</td>
+                <td style="text-align: right; font-weight: 600; font-size: medium;">{{(fixedTotal).toFixed(2)}}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- AS-BE -->
+    <table class="table table-warning tableBorder" *ngIf="data.beRbe == 'AS-BE'">
+        <thead class=" tableHead">
+            <tr>
+                <th rowspan="3" style="text-align: center; width: 40px;">Sch.No</th>
+                <th rowspan="3" style="text-align: center; width: 80px;">Code No</th>
+                <th rowspan="3" colspan="3" style="text-align: center; width: 150px;">Particulars</th>
+                <th style="text-align: center;">BE Fixed</th>
+                <th style="text-align: center;">AS Proposed</th>
+                <th style="text-align: center;">AS Fixed</th>
+                <th style="text-align: center;">BE Fixed + AS Fixed</th>
+            </tr>
+            <tr>
+                <th style="text-align: center;width: 100px;">{{beRbeLastYear}}</th>
+                <th style="text-align: center;width: 100px;">{{beRbeLastYear}}</th>
+                <th style="text-align: center;width: 100px;">{{beRbeLastYear}}</th>
+                <th style="text-align: center;width: 100px;">{{beRbeLastYear}}</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr *ngFor="let items of data.splitUp; let i=index">
+                <td>{{items.code.schedule.scheduleNo}}</td>
+                <td>{{items.code.codeNumber}}</td>
+                <td colspan="3" style="text-align: left;">
+                    <div class="subCode">
+                        <p>{{items.code.codeName}}</p>
+                        <svg *ngIf="items.code.status == 'Yes'" (click)="subCodePopUp(items,'AS-BE')"
+                            xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-caret-down-square-fill dropdownButton" viewBox="0 0 16 16">
+                            <path
+                                d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm4 4a.5.5 0 0 0-.374.832l4 4.5a.5.5 0 0 0 .748 0l4-4.5A.5.5 0 0 0 12 6z" />
+                        </svg>
+                    </div>
+                </td>
+                <td style="text-align: right;">{{(items.beLastFixed || 0).toFixed(2)}}</td>
+                <td style="text-align: right;">{{(items.asBeProposed || 0).toFixed(2)}}</td>
+                <td style="text-align: right;">{{(items.asBeFixed || 0).toFixed(2)}}</td>
+                <td style="text-align: right;">{{(items.beLastFixed+items.asBeFixed || 0).toFixed(2)}}</td>
+            </tr>
+            <tr class="totalstd">
+                <td colspan="5" style="text-align: center; font-weight: 600; font-size: medium;">TOTAL</td>
+                <td style="text-align: right; font-weight: 600; font-size: medium;">{{(beFixed).toFixed(2)}}</td>
+                <td style="text-align: right; font-weight: 600; font-size: medium;">{{(asBeProposed).toFixed(2)}}</td>
+                <td style="text-align: right; font-weight: 600; font-size: medium;">{{(asBeFixed).toFixed(2)}}</td>
+                <td style="text-align: right; font-weight: 600; font-size: medium;">{{(totalFixed).toFixed(2)}}</td>
+            </tr>
+        </tbody>
+
+    </table>
+
+    <!-- AS-RBE -->
+    <table class="table table-warning tableBorder" *ngIf="data.beRbe == 'AS-RBE'">
+        <thead class=" tableHead">
+            <tr>
+                <th rowspan="3" style="text-align: center; width: 40px;">Sch.No</th>
+                <th rowspan="3" style="text-align: center; width: 80px;">Code No</th>
+                <th rowspan="3" colspan="3" style="text-align: center; width: 150px;">Particulars</th>
+                <th style="text-align: center;">RBE Fixed</th>
+                <th style="text-align: center;">AS Proposed</th>
+                <th style="text-align: center;">AS Fixed</th>
+                <th style="text-align: center;">RBE Fixed + AS Fixed</th>
+            </tr>
+            <tr>
+                <th style="text-align: center;width: 100px;">{{beRbeLastYear}}</th>
+                <th style="text-align: center;width: 100px;">{{beRbeLastYear}}</th>
+                <th style="text-align: center;width: 100px;">{{beRbeLastYear}}</th>
+                <th style="text-align: center;width: 100px;">{{beRbeLastYear}}</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr *ngFor="let items of this.data.splitUp">
+                <td>{{items.code.schedule.scheduleNo}}</td>
+                <td>{{items.code.codeNumber}}</td>
+                <td colspan="3" style="text-align: left;">
+                    <div class="subCode">
+                        <p>{{items.code.codeName}}</p>
+                        <svg *ngIf="items.code.status == 'Yes'" (click)="subCodePopUp(items,'AS-RBE')"
+                            xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-caret-down-square-fill dropdownButton" viewBox="0 0 16 16">
+                            <path
+                                d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm4 4a.5.5 0 0 0-.374.832l4 4.5a.5.5 0 0 0 .748 0l4-4.5A.5.5 0 0 0 12 6z" />
+                        </svg>
+                    </div>
+                </td>
+                <td style="text-align: right;">{{(items.rbeLastFixed || 0).toFixed(2)}}</td>
+                <td style="text-align: right;">{{(items.asRbeProposed || 0).toFixed(2)}}</td>
+                <td style="text-align: right;">{{(items.asRbeFixed || 0).toFixed(2)}}</td>
+                <td style="text-align: right;">{{(items.rbeLastFixed+items.asRbeFixed || 0).toFixed(2)}}</td>
+            </tr>
+            <tr class="totalstd">
+                <td colspan="5" style="text-align: center; font-weight: 600; font-size: medium;">TOTAL</td>
+                <td style="text-align: right; font-weight: 600; font-size: medium;">{{(beFixed).toFixed(2)}}</td>
+                <td style="text-align: right; font-weight: 600; font-size: medium;">{{(asBeProposed).toFixed(2)}}</td>
+                <td style="text-align: right; font-weight: 600; font-size: medium;">{{(asBeFixed).toFixed(2)}}
+                </td>
+                <td style="text-align: right; font-weight: 600; font-size: medium;">{{(totalFixed).toFixed(2)}}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="schDetils">
+        <a [mat-dialog-close]="true" style="cursor: pointer; font-size: 16px; font-weight: 700;"><svg
+                xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                class="bi bi-arrow-bar-left" viewBox="0 0 16 16">
+                <path fill-rule="evenodd"
+                    d="M12.5 15a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5M10 8a.5.5 0 0 1-.5.5H3.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L3.707 7.5H9.5a.5.5 0 0 1 .5.5" />
+            </svg>Back</a>
+    </div>
+
+</section>

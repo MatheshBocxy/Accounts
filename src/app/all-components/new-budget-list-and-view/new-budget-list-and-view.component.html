@@ -1,0 +1,2956 @@
+<section class="main-table">
+  <div *ngIf="isLoading" class="loader-overlay">
+    <div class="spinner"></div>
+  </div>
+  <div>
+    <h1 class="viewHeading" *ngIf="!viewMode && beRbe == 'be'">
+      Budget Estimate For The Year - {{ id }}
+    </h1>
+    <h1 class="editHeading" *ngIf="viewMode && beRbe == 'be'">
+      Budget Estimate For The Year - {{ id }}
+    </h1>
+    <h1 class="viewHeading" *ngIf="!viewMode && beRbe == 'rbe'">
+      Revised Budget Estimate For The Year - {{ id }}
+    </h1>
+    <h1 class="editHeading" *ngIf="viewMode && beRbe == 'rbe'">
+      Revised Budget Estimate For The Year - {{ id }}
+    </h1>
+    <h1 class="editHeading" *ngIf="viewMode && beRbe == 'consolidationBE'">
+      Consolidation Budget Estimate For The Year - {{ id }}
+    </h1>
+    <h1 class="editHeading" *ngIf="viewMode && beRbe == 'consolidationRBE'">
+      Consolidation Revised Budget Estimate For The Year - {{ id }}
+    </h1>
+  </div>
+
+  <div class="topBackButton">
+    <a (click)="backButtonClick()" style="cursor: pointer; font-size: 16px; font-weight: 700;"><svg
+        xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-bar-left"
+        viewBox="0 0 16 16">
+        <path fill-rule="evenodd"
+          d="M12.5 15a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5M10 8a.5.5 0 0 1-.5.5H3.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L3.707 7.5H9.5a.5.5 0 0 1 .5.5" />
+      </svg>Back</a>
+    <h2>Rs in LAKH</h2>
+  </div>
+
+  <!---------------------------------- BE ------------------------------------->
+
+  <div class="filterSelected">
+
+    <div class="col-3">
+      <div class="search-container">
+        <label style="font-size: 16px; font-weight:500;">Search : </label>
+        <div class="position">
+          <input matInput #input (keyup)="searchFilters($event)" type="text" id="search-input" class="search-input"
+            placeholder="Search...">
+          <mat-icon class="search-icon">search</mat-icon>
+        </div>
+      </div>
+    </div>
+
+    <div class="d-flex">
+      <div>
+        <label *ngIf="userDivision === 'Head_office'" style="font-size: 16px; font-weight:500;">Select Division :
+        </label>
+        <select class="form-select me-1" [(ngModel)]="divisionNameSelect" (change)="getAllByDivision($event, 'BE')"
+          *ngIf="userDivision === 'Head_office' && beRbe == 'be'" style="width: 200px">
+          <option value="all">All</option>
+          <option *ngFor="let items of divisionDropDown" value="{{ items }}">
+            {{ items }}
+          </option>
+        </select>
+        <select class="form-select me-1" [(ngModel)]="divisionNameSelect" (change)="getAllByDivision($event, 'RBE')"
+          *ngIf="userDivision === 'Head_office' && beRbe == 'rbe'" style="width: 200px">
+          <option value="all">All</option>
+          <option *ngFor="let items of divisionDropDown" value="{{ items }}">
+            {{ items }}
+          </option>
+        </select>
+      </div>
+
+      <div
+        *ngIf="(roleName == 'DA_Division' || roleName == 'EE_Division'|| roleName == 'AO'|| roleName == 'DCAO'|| roleName == 'FA') && budgetTypeOrNumber">
+        <label style="font-size: 16px; font-weight:500;">Budget Type :</label>
+        <!-- division -->
+        <select class="form-select me-1" style="width: 200px" (change)="flowFilter($event)"
+          *ngIf="roleName == 'DA_Division' || roleName == 'EE_Division'">
+          <option value="All">All</option>
+          <option value="ARO_Division">Revenue</option>
+          <option value="AEE_Division">Work</option>
+          <option value="ACC_Clerk">Accounts</option>
+        </select>
+        <!-- head office -->
+        <select class="form-select me-1" style="width: 200px" (change)="flowFilter($event)"
+          *ngIf="roleName == 'AO' || roleName == 'DCAO' || roleName == 'FA'">
+          <option value="All">All</option>
+          <option value="RO">Revenue</option>
+          <option value="EE_T_CELL">Work</option>
+          <option value="AO">Accounts</option>
+        </select>
+      </div>
+
+    </div>
+  </div>
+
+
+
+  <div *ngIf="beRbe == 'be'">
+    <form [formGroup]="yearMonthFormBE">
+      <table class="table mt-2">
+        <thead class="first_heading">
+          <tr>
+            <th style="text-align:center; width:40px;" rowspan="3" class="stickyTop">Sch No</th>
+            <th style="text-align:center; width:40px;" rowspan="3" class="stickyTop">Code No</th>
+            <th rowspan="3" class="stickyTop">
+              <div style="width: 350px;text-align:center">Description</div>
+            </th>
+            <th style="text-align:center; width: 100px;" class="table-heading" class="stickyTop">Actuals</th>
+            <th style="text-align:center; width: 100px;" class="table-heading" class="stickyTop">RBE</th>
+            <th style="text-align:center; width: 100px;" class="table-heading" class="stickyTop">Actuals upto</th>
+            <th colspan="2" style="text-align:center; width: 100px;" class="table-headingBe" class="stickyTop">BE</th>
+          </tr>
+
+          <tr>
+            <th class="table-heading stickyTopYear">
+              <input type="text" class="form-control readonly" formControlName="actualsYear" readonly
+                style="width: 100px;" />
+            </th>
+
+            <th class="table-heading stickyTopYear">
+              <input type="text" class="form-control readonly" formControlName="rbeYear" readonly
+                style="width: 100px;" />
+            </th>
+
+            <th class="table-heading stickyTopYear">
+              <input type="text" class="form-control" formControlName="actualsUpToYear" readonly
+                style="width: 100px;" />
+            </th>
+
+            <th colspan="2" class="table-heading stickyTopYear">
+              <input type="text" class="form-control mx-auto readonly" formControlName="beLastYear" style="width: 100px"
+                readonly />
+            </th>
+          </tr>
+
+          <tr>
+            <th colspan="2" class="stickyTopMonth"></th>
+            <th class="table-heading stickyTopMonth" scope="col">
+              <input type="text" class="form-control" formControlName="actualsUpToMonths" readonly
+                style="width:100px;" />
+            </th>
+            <th *ngIf="proposedTab" style="text-align: center; padding-bottom: 20px; width:100px;"
+              class="stickyTopMonth">
+              Proposed
+            </th>
+            <th style="text-align: center; padding-bottom: 20px; width:100px;" class="stickyTopMonth">
+              Fixed
+            </th>
+          </tr>
+        </thead>
+
+        <tbody *ngIf="!viewMode">
+          <tr *ngFor="let item of getYearData let i = index">
+            <td>
+              <input type="number" [(ngModel)]="item.code.schedule.scheduleNo" [ngModelOptions]="{ standalone: true }"
+                readonly style="width: 40px; text-align:center;" />
+            </td>
+            <td>
+              <input type="number" [(ngModel)]="item.code.codeNumber" [ngModelOptions]="{ standalone: true }" readonly
+                style="width: 40px;  text-align:center;" />
+            </td>
+            <td>
+              <div class="d-flex">
+                <input type="text" style="text-align: left" [(ngModel)]="item.code.codeName"
+                  [ngModelOptions]="{ standalone: true }" readonly />
+                <svg *ngIf="getYearData[i].code.status == 'Yes'"
+                  (click)="openPanelSubCode(getYearData[i],i,'edit','be')" xmlns="http://www.w3.org/2000/svg" width="16"
+                  height="16" fill="currentColor" class="bi bi-caret-down-square-fill dropdownButton"
+                  viewBox="0 0 16 16">
+                  <path
+                    d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm4 4a.5.5 0 0 0-.374.832l4 4.5a.5.5 0 0 0 .748 0l4-4.5A.5.5 0 0 0 12 6z" />
+                </svg>
+              </div>
+            </td>
+            <td style="text-align: right;">
+              <input type="number" style="text-align: right; width: 100px;" [(ngModel)]="item.actuals"
+                [ngModelOptions]="{standalone: true}" (input)="this.calculateTotals(); fiveDigitsWarning($event)"
+                (blur)="formatAmountOnBlur(item.actuals,$event)" [disabled]="getYearData[i].code.status == 'Yes'"
+                placeholder="0.00" />
+            </td>
+            <td style="text-align: right;">
+              <input type="number" style="text-align: right; width: 100px;" [(ngModel)]="item.rbe"
+                [ngModelOptions]="{ standalone: true }" (input)="this.calculateTotals(); fiveDigitsWarning($event)"
+                (blur)="formatAmountOnBlur(item.rbe,$event)" [disabled]="getYearData[i].code.status == 'Yes'"
+                placeholder="0.00" />
+            </td>
+            <td style="text-align: right;">
+              <input type="number" style="text-align: right; width: 100px;" [(ngModel)]="item.actualsUpTo"
+                [ngModelOptions]="{ standalone: true }" (input)="this.calculateTotals(); fiveDigitsWarning($event)"
+                (blur)="formatAmountOnBlur(item.actualsUpTo,$event)" [disabled]="getYearData[i].code.status == 'Yes'"
+                placeholder="0.00" />
+            </td>
+            <td style="text-align: right;">
+              <input type="number" style="text-align: right; width: 100px;" [(ngModel)]="item.beLastYearProposed"
+                [ngModelOptions]="{ standalone: true }" (input)="this.calculateTotals(); fiveDigitsWarning($event)"
+                (blur)="formatAmountOnBlur(item.beLastYearProposed,$event)"
+                [disabled]="getYearData[i].code.status == 'Yes'" placeholder="0.00" />
+            </td>
+            <td style="text-align: right;">
+              <input type="number" style="text-align: right; width: 100px;" [(ngModel)]="item.beLastYearFixed"
+                [ngModelOptions]="{ standalone: true }" (input)="this.calculateTotals(); fiveDigitsWarning($event)"
+                (blur)="formatAmountOnBlur(item.beLastYearFixed,$event)"
+                [disabled]="userDivision != 'Head_office' || getYearData[i].code.status == 'Yes'" placeholder="0.00" />
+            </td>
+          </tr>
+
+          <tr>
+            <th colspan="3" style="text-align: center;">TOTAL</th>
+            <td>
+              <input type="text" style="background-color: rgb(236, 231, 231); text-align: right"
+                formControlName="actualstotal" readonly />
+            </td>
+            <td>
+              <input style="background-color: rgb(236, 231, 231); text-align: right" type="text"
+                formControlName="rbeTotal" readonly />
+            </td>
+            <td>
+              <input style="background-color: rgb(236, 231, 231); text-align: right" type="text"
+                formControlName="actualsUpToTotal" readonly />
+            </td>
+            <td>
+              <input style="background-color: rgb(236, 231, 231); text-align: right" type="text"
+                formControlName="beLastYearProposedTotal" readonly />
+            </td>
+            <td>
+              <input style="background-color: rgb(236, 231, 231); text-align: right" type="text"
+                formControlName="beLastYearFixedTotal" readonly />
+            </td>
+          </tr>
+        </tbody>
+
+        <tbody *ngIf="viewMode">
+          <tr *ngFor="let item of getYearData let i = index">
+            <td>
+              <input type="number" [(ngModel)]="item.code.schedule.scheduleNo" [ngModelOptions]="{ standalone: true }"
+                readonly style="width: 40px; text-align:center;" />
+            </td>
+            <td>
+              <input type="number" [(ngModel)]="item.code.codeNumber" [ngModelOptions]="{ standalone: true }" readonly
+                style="width: 40px; text-align:center;" />
+            </td>
+            <td>
+              <div class="d-flex">
+                <input type="text" style="text-align: left" [(ngModel)]="item.code.codeName"
+                  [ngModelOptions]="{ standalone: true }" readonly />
+                <svg *ngIf="getYearData[i].code.status == 'Yes'"
+                  (click)="openPanelSubCode(getYearData[i],i,'view','be')" xmlns="http://www.w3.org/2000/svg" width="16"
+                  height="16" fill="currentColor" class="bi bi-caret-down-square-fill dropdownButton"
+                  viewBox="0 0 16 16">
+                  <path
+                    d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm4 4a.5.5 0 0 0-.374.832l4 4.5a.5.5 0 0 0 .748 0l4-4.5A.5.5 0 0 0 12 6z" />
+                </svg>
+              </div>
+            </td>
+            <td>
+              <h3 style="text-align: right;">{{(item.actuals || 0).toFixed(2)}}</h3>
+            </td>
+            <td>
+              <h3 style="text-align: right;">{{(item.rbe || 0).toFixed(2)}}</h3>
+            </td>
+            <td>
+              <h3 style="text-align: right;">{{(item.actualsUpTo || 0).toFixed(2)}}</h3>
+            </td>
+            <td *ngIf="proposedTab">
+              <h3 style="text-align: right;">{{(item.beLastYearProposed || 0).toFixed(2)}}</h3>
+            </td>
+            <td>
+              <h3 style="text-align: right;">{{(item.beLastYearFixed || 0).toFixed(2)}}</h3>
+            </td>
+          </tr>
+
+          <tr>
+            <th colspan="3" style="text-align: center;">TOTAL</th>
+            <td>
+              <input type="text" style="background-color: rgb(236, 231, 231); text-align: right"
+                formControlName="actualstotal" readonly />
+            </td>
+            <td>
+              <input style="background-color: rgb(236, 231, 231); text-align: right" type="text"
+                formControlName="rbeTotal" readonly />
+            </td>
+            <td>
+              <input style="background-color: rgb(236, 231, 231); text-align: right" type="text"
+                formControlName="actualsUpToTotal" readonly />
+            </td>
+            <td *ngIf="proposedTab">
+              <input style="background-color: rgb(236, 231, 231); text-align: right" type="text"
+                formControlName="beLastYearProposedTotal" readonly />
+            </td>
+            <td>
+              <input style="background-color: rgb(236, 231, 231); text-align: right" type="text"
+                formControlName="beLastYearFixedTotal" readonly />
+            </td>
+          </tr>
+        </tbody>
+
+      </table>
+    </form>
+  </div>
+
+  <!--------------------------------------RBE---------------------------------->
+
+  <div *ngIf="beRbe == 'rbe'">
+    <form [formGroup]="yearMonthRbeForm">
+      <table class="table mt-2">
+        <thead class="first_heading">
+          <tr>
+            <th rowspan="3" class="stickyTop" style="text-align:center; width:40px;">Sch No</th>
+            <th rowspan="3" class="stickyTop" style="text-align:center; width:40px;">Code No</th>
+            <th rowspan="3" class="stickyTop">
+              <div style="width: 350px; text-align:center;">Description</div>
+            </th>
+            <th class="table-heading stickyTop" style="width:100px; text-align:center;">Actuals</th>
+            <th class="table-heading stickyTop" style="width:100px; text-align:center;">BE</th>
+            <th class="table-heading stickyTop" style="width:100px; text-align:center;">Actuals upto</th>
+            <th colspan="2" class="table-headingBe stickyTop" style="width:100px; text-align:center;">RBE</th>
+          </tr>
+
+          <tr>
+            <th class="table-heading stickyTopYear">
+              <input type="text" class="form-control" formControlName="actualsYearRbe" readonly style="width: 100px;" />
+            </th>
+
+            <th class="table-heading stickyTopYear">
+              <input type="text" class="form-control" formControlName="beYearRbe" readonly style="width: 100px;" />
+            </th>
+
+            <th class="table-heading stickyTopYear">
+              <input type="text" class="form-control" formControlName="actualsUpToYearRbe" readonly
+                style="width: 100px;" />
+            </th>
+
+            <th colspan="2" class="table-heading stickyTopYear">
+              <input type="text" class="form-control mx-auto" style="width: 100px" formControlName="lastRbeYear"
+                readonly />
+            </th>
+          </tr>
+
+          <tr>
+            <th colspan="2" class="stickyTopMonth"></th>
+            <th class="table-heading stickyTopMonth">
+              <input type="text" class="form-control" formControlName="actualsUpToMonthRbe" readonly
+                style="width:100px" />
+            </th>
+            <th style="text-align: center; padding-bottom: 20px; width:100px" class="stickyTopMonth">
+              Proposed
+            </th>
+            <th style="text-align: center; padding-bottom: 20px; width:100px" class="stickyTopMonth">
+              Fixed
+            </th>
+          </tr>
+        </thead>
+
+        <tbody *ngIf="!viewMode">
+          <tr *ngFor="let item of getYearDataRBE let  i = index">
+
+            <td>
+              <input type="number" [(ngModel)]="item.code.schedule.scheduleNo" [ngModelOptions]="{ standalone: true }"
+                readonly style="width: 40px; text-align:center;" />
+            </td>
+            <td>
+              <input type="number" [(ngModel)]="item.code.codeNumber" [ngModelOptions]="{ standalone: true }" readonly
+                style="width: 40px; text-align:center;" />
+            </td>
+            <td>
+              <div class="d-flex">
+                <input type="text" style="text-align: left" [(ngModel)]="item.code.codeName"
+                  [ngModelOptions]="{ standalone: true }" readonly />
+                <svg *ngIf="getYearDataRBE[i].code.status == 'Yes'"
+                  (click)="openPanelSubCode(getYearDataRBE[i],i,'edit','rbe')" xmlns="http://www.w3.org/2000/svg"
+                  width="16" height="16" fill="currentColor" class="bi bi-caret-down-square-fill dropdownButton"
+                  viewBox="0 0 16 16">
+                  <path
+                    d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm4 4a.5.5 0 0 0-.374.832l4 4.5a.5.5 0 0 0 .748 0l4-4.5A.5.5 0 0 0 12 6z" />
+                </svg>
+              </div>
+            </td>
+            <td style="text-align: right;">
+              <input type="number" [(ngModel)]="item.actualsRbe" [ngModelOptions]="{ standalone: true }"
+                (input)="this.calculateTotalsRBE(); fiveDigitsWarning($event)"
+                (blur)="formatAmountOnBlur(item.actualsRbe,$event)" style="text-align: right; width:100px;"
+                [disabled]="getYearDataRBE[i].code.status == 'Yes'" placeholder="0.00" />
+            </td>
+            <td style="text-align: right;">
+              <input type="number" [(ngModel)]="item.beRbe" [ngModelOptions]="{ standalone: true }"
+                (input)="this.calculateTotalsRBE(); fiveDigitsWarning($event)"
+                (blur)="formatAmountOnBlur(item.beRbe,$event)" style="text-align: right; width:100px;"
+                [disabled]="getYearDataRBE[i].code.status == 'Yes'" placeholder="0.00" />
+            </td>
+            <td style="text-align: right;">
+              <input type="number" [(ngModel)]="item.actualsUpToRbe" [ngModelOptions]="{ standalone: true }"
+                (input)="this.calculateTotalsRBE(); fiveDigitsWarning($event)"
+                (blur)="formatAmountOnBlur(item.actualsUpToRbe,$event)" style="text-align: right; width:100px;"
+                [disabled]="getYearDataRBE[i].code.status == 'Yes'" placeholder="0.00" />
+            </td>
+            <td style="text-align: right;">
+              <input type="number" [(ngModel)]="item.lastRbeProposed" [ngModelOptions]="{ standalone: true }"
+                (input)="this.calculateTotalsRBE(); fiveDigitsWarning($event)"
+                (blur)="formatAmountOnBlur(item.lastRbeProposed,$event)" style="text-align: right; width:100px;"
+                [disabled]="getYearDataRBE[i].code.status == 'Yes'" placeholder="0.00" />
+            </td>
+            <td style="text-align: right;">
+              <input type="number" [(ngModel)]="item.lastRbeFixed" [ngModelOptions]="{ standalone: true }"
+                (input)="this.calculateTotalsRBE(); fiveDigitsWarning($event)"
+                (blur)="formatAmountOnBlur(item.lastRbeFixed,$event)"
+                [disabled]="userDivision != 'Head_office' || getYearDataRBE[i].code.status == 'Yes' "
+                style="text-align: right; width:100px;" placeholder="0.00" />
+            </td>
+          </tr>
+
+          <tr>
+            <th colspan="3" style="text-align: center;">TOTAL</th>
+            <th>
+              <input style="background-color: rgb(236, 231, 231); text-align: right" type="text"
+                formControlName="actualTotalRbe" readonly />
+            </th>
+            <th>
+              <input style="background-color: rgb(236, 231, 231); text-align: right" type="text"
+                formControlName="beTotalRbe" readonly />
+            </th>
+            <th>
+              <input style="background-color: rgb(236, 231, 231); text-align: right" type="text"
+                formControlName="actualsUpToTotalRbe" readonly />
+            </th>
+            <th>
+              <input style="background-color: rgb(236, 231, 231); text-align: right" type="text"
+                formControlName="lastRbeProposedTotal" readonly />
+            </th>
+            <th>
+              <input style="background-color: rgb(236, 231, 231); text-align: right" type="text"
+                formControlName="lastRbeFixedTotal" readonly />
+            </th>
+          </tr>
+        </tbody>
+
+        <tbody *ngIf="viewMode">
+          <tr *ngFor="let item of getYearDataRBE let  i = index">
+
+            <td>
+              <input type="text" [(ngModel)]="item.code.schedule.scheduleNo" [ngModelOptions]="{ standalone: true }"
+                readonly style="width:40px; text-align:center;" />
+            </td>
+            <td>
+              <input type="text" [(ngModel)]="item.code.codeNumber" [ngModelOptions]="{ standalone: true }" readonly
+                style="width:40px; text-align:center;" />
+            </td>
+            <td>
+              <div class="d-flex">
+                <input type="text" style="text-align: left" [(ngModel)]="item.code.codeName"
+                  [ngModelOptions]="{ standalone: true }" readonly />
+                <svg *ngIf="getYearDataRBE[i].code.status == 'Yes'"
+                  (click)="openPanelSubCode(getYearDataRBE[i],i,'view','rbe')" xmlns="http://www.w3.org/2000/svg"
+                  width="16" height="16" fill="currentColor" class="bi bi-caret-down-square-fill dropdownButton"
+                  viewBox="0 0 16 16">
+                  <path
+                    d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm4 4a.5.5 0 0 0-.374.832l4 4.5a.5.5 0 0 0 .748 0l4-4.5A.5.5 0 0 0 12 6z" />
+                </svg>
+              </div>
+            </td>
+            <td>
+              <h3 style="text-align: right;">{{(item.actualsRbe || 0).toFixed(2)}}</h3>
+            </td>
+            <td>
+              <h3 style="text-align: right;">{{(item.beRbe || 0).toFixed(2)}}</h3>
+            </td>
+            <td>
+              <h3 style="text-align: right;">{{(item.actualsUpToRbe || 0).toFixed(2)}}</h3>
+            </td>
+            <td>
+              <h3 style="text-align: right;">{{(item.lastRbeProposed || 0).toFixed(2)}}</h3>
+            </td>
+            <td>
+              <h3 style="text-align: right;">{{(item.lastRbeFixed || 0).toFixed(2)}}</h3>
+            </td>
+          </tr>
+
+          <tr>
+            <th colspan="3" style="text-align: center;">TOTAL</th>
+            <th>
+              <input style="background-color: rgb(236, 231, 231); text-align: right" type="text"
+                formControlName="actualTotalRbe" readonly />
+            </th>
+            <th>
+              <input style="background-color: rgb(236, 231, 231); text-align: right" type="text"
+                formControlName="beTotalRbe" readonly />
+            </th>
+            <th>
+              <input style="background-color: rgb(236, 231, 231); text-align: right" type="text"
+                formControlName="actualsUpToTotalRbe" readonly />
+            </th>
+            <th>
+              <input style="background-color: rgb(236, 231, 231); text-align: right" type="text"
+                formControlName="lastRbeProposedTotal" readonly />
+            </th>
+            <th>
+              <input style="background-color: rgb(236, 231, 231); text-align: right" type="text"
+                formControlName="lastRbeFixedTotal" readonly />
+            </th>
+          </tr>
+        </tbody>
+
+      </table>
+    </form>
+  </div>
+
+  <!----------------------------------BE REMARKS-------------------------------->
+
+  <!--ARO-->
+
+  <mat-accordion *ngIf="aroPanel && beRbe == 'be'">
+    <mat-expansion-panel [expanded]="true" (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+      <mat-expansion-panel-header style="color: #643843; font-size: 20px">
+        ARO
+      </mat-expansion-panel-header>
+      <div class="remarksForm card" [formGroup]="AROremarksForm">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="m-2">
+              <label class="label-name" style="margin-bottom: 10px">
+                <h2>Remarks :</h2>
+              </label>
+              <textarea name="remarks" class="remarksField form-control mt-3" rows="5" id="sign" style="width: 100%"
+                formControlName="aroDivisionRemarks"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6">
+            <div class="m-2">
+              <label class="label-name">
+                <h2>Name :</h2>
+              </label>
+              <input style="border: 2px solid" id="sign" type="text" class="form-control mt-3"
+                formControlName="aroDivisionSignature" />
+            </div>
+          </div>
+
+          <div class="col-md-6" *ngIf="
+              roleName != 'DA_Division' &&
+              roleName != 'EE_Division' &&
+              roleName != 'MMS_Division' &&
+              roleName != 'RO' &&
+              roleName != 'CRO' &&
+              roleName != 'EE_T_CELL' &&
+              roleName != 'AO' &&
+              roleName != 'DCAO' && roleName != 'FA'
+              && roleName != 'MD'
+            ">
+            <div class="m-2" *ngIf="viewMode">
+              <label class="label-name">
+                <h2>Date :</h2>
+              </label>
+              <input style="border: 2px solid" class="form-control mt-3" formControlName="aroDivisionDate" />
+            </div>
+            <div class="m-2" *ngIf="!viewMode">
+              <label class="label-name">
+                <h2>Date :</h2>
+              </label>
+              <input type="date" style="border: 2px solid" class="form-control mt-3"
+                formControlName="aroDivisionDate" />
+            </div>
+          </div>
+
+          <div class="col-md-6" *ngIf="
+              roleName == 'DA_Division' ||
+              roleName == 'EE_Division' ||
+              roleName == 'MMS_Division' ||
+              roleName == 'RO' ||
+              roleName == 'EE_T_CELL' || 
+              roleName == 'CRO' || roleName == 'AO' || roleName == 'DCAO' || roleName == 'FA'|| roleName == 'MD'
+            ">
+            <div class="m-2">
+              <label class="label-name">
+                <h2>Date :</h2>
+              </label>
+              <input style="border: 2px solid" class="form-control mt-3" formControlName="aroDivisionDate" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion><br *ngIf="aroPanel && beRbe == 'be'">
+
+  <!-- MMS -->
+
+  <mat-accordion *ngIf="mmsPanel && beRbe == 'be'">
+    <mat-expansion-panel [expanded]="true" (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+      <mat-expansion-panel-header style="color: #643843; font-size: 20px">
+        MMS
+      </mat-expansion-panel-header>
+      <div class="remarksForm card" [formGroup]="MMSremarksForm">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="m-2">
+              <label class="label-name" style="margin-bottom: 10px">
+                <h2>Remarks :</h2>
+              </label>
+              <textarea name="remarks" class="remarksField form-control mt-3" rows="5" id="sign" style="width: 100%"
+                formControlName="mmsDivisionRemarks"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6">
+            <div class="m-2">
+              <label class="label-name">
+                <h2>Name :</h2>
+              </label>
+              <input style="border: 2px solid" id="sign" type="text" class="form-control mt-3"
+                formControlName="mmsDivisionSignature" />
+            </div>
+          </div>
+
+          <div class="col-md-6" *ngIf="
+              roleName != 'DA_Division' &&
+              roleName != 'EE_Division' &&
+              roleName != 'RO' &&
+              roleName != 'CRO' &&
+              roleName != 'EE_T_CELL' &&
+              roleName != 'AO' &&
+              roleName != 'DCAO' && roleName != 'FA' && roleName != 'MD'
+            ">
+            <div class="m-2" *ngIf="viewMode">
+              <label class="label-name">
+                <h2>Date :</h2>
+              </label>
+              <input style="border: 2px solid" class="form-control mt-3" formControlName="mmsDivisionDate" />
+            </div>
+            <div class="m-2" *ngIf="!viewMode">
+              <label class="label-name">
+                <h2>Date :</h2>
+              </label>
+              <input type="date" style="border: 2px solid" class="form-control mt-3"
+                formControlName="mmsDivisionDate" />
+            </div>
+          </div>
+
+          <div class="col-md-6" *ngIf="
+              roleName == 'DA_Division' ||
+              roleName == 'EE_Division' ||
+              roleName == 'RO' ||
+              roleName == 'CRO' ||
+              roleName == 'EE_T_CELL' || roleName == 'AO' || roleName == 'DCAO' || roleName == 'FA' || roleName == 'MD'
+            ">
+            <div class="m-2">
+              <label class="label-name">
+                <h2>Date :</h2>
+              </label>
+              <input style="border: 2px solid" class="form-control mt-3" formControlName="mmsDivisionDate" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-expansion-panel> </mat-accordion><br *ngIf="mmsPanel && beRbe == 'be'">
+
+  <!-- AEE -->
+
+  <mat-accordion *ngIf="aeePanel && beRbe == 'be'">
+    <mat-expansion-panel [expanded]="true" (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+      <mat-expansion-panel-header style="color: #643843; font-size: 20px">
+        AEE
+      </mat-expansion-panel-header>
+      <div class="remarksForm card" [formGroup]="AEEremarksForm">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="m-2">
+              <label class="label-name" style="margin-bottom: 10px">
+                <h2>Remarks :</h2>
+              </label>
+              <textarea name="remarks" class="remarksField form-control mt-3" rows="5" id="sign" style="width: 100%"
+                formControlName="aeeDivisionRemarks"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6">
+            <div class="m-2">
+              <label class="label-name">
+                <h2>Name :</h2>
+              </label>
+              <input style="border: 2px solid" id="sign" type="text" class="form-control mt-3"
+                formControlName="aeeDivisionSignature" />
+            </div>
+          </div>
+
+          <div class="col-md-6" *ngIf="
+              roleName != 'DA_Division' &&
+              roleName != 'EE_Division' &&
+              roleName != 'MMS_Division' &&
+              roleName != 'AE_Planning' &&
+              roleName != 'RO' &&
+              roleName != 'CRO' &&
+              roleName != 'EE_T_CELL' && roleName != 'SE' &&
+              roleName != 'CE' &&
+              roleName != 'AO' &&
+              roleName != 'DCAO' && roleName != 'FA' && roleName != 'MD'
+            ">
+            <div class="m-2" *ngIf="viewMode">
+              <label class="label-name">
+                <h2>Date :</h2>
+              </label>
+              <input style="border: 2px solid" class="form-control mt-3" formControlName="aeeDivisionDate" />
+            </div>
+            <div class="m-2" *ngIf="!viewMode">
+              <label class="label-name">
+                <h2>Date :</h2>
+              </label>
+              <input type="date" style="border: 2px solid" class="form-control mt-3"
+                formControlName="aeeDivisionDate" />
+            </div>
+          </div>
+
+          <div class="col-md-6" *ngIf="
+              roleName == 'DA_Division' ||
+              roleName == 'EE_Division' ||
+              roleName == 'AE_Planning' ||
+              roleName == 'MMS_Division' ||
+              roleName == 'RO' ||
+              roleName == 'CRO' || roleName == 'AO' || roleName == 'DCAO' ||
+              roleName == 'EE_T_CELL' || roleName == 'SE' || roleName == 'CE' || roleName == 'FA' || roleName == 'MD'
+            ">
+            <div class="m-2">
+              <label class="label-name">
+                <h2>Date :</h2>
+              </label>
+              <input style="border: 2px solid" class="form-control mt-3" formControlName="aeeDivisionDate" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-expansion-panel> </mat-accordion><br *ngIf="aeePanel && beRbe == 'be'">
+
+  <!-- AE PLAN -->
+
+  <mat-accordion *ngIf="aePlanPanel && beRbe == 'be'">
+    <mat-expansion-panel [expanded]="true" (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+      <mat-expansion-panel-header style="color: #643843; font-size: 20px">
+        BE - AE PLAN
+      </mat-expansion-panel-header>
+      <div class="remarksForm card" [formGroup]="AE_PLANremarksForm">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="m-2">
+              <label class="label-name" style="margin-bottom: 10px">
+                <h2>Remarks :</h2>
+              </label>
+              <textarea name="remarks" class="remarksField form-control mt-3" rows="5" id="sign" style="width: 100%"
+                formControlName="aePlanDivisionRemarks"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6">
+            <div class="m-2">
+              <label class="label-name">
+                <h2>Name :</h2>
+              </label>
+              <input style="border: 2px solid" id="sign" type="text" class="form-control mt-3"
+                formControlName="aePlanDivisionSignature" />
+            </div>
+          </div>
+          <!-- <div class="col-md-6">
+            <div class="m-2">
+              <label class="label-name"><h2>Date :</h2></label>
+              <input
+                style="border: 2px solid"
+                class="form-control mt-3"
+                formControlName="aePlanDivisionDate"
+                type="date"
+              />
+            </div>
+          </div> -->
+
+          <div class="col-md-6" *ngIf="
+              roleName != 'DA_Division' &&
+              roleName != 'EE_Division' &&
+              roleName != 'RO' &&
+              roleName != 'CRO' &&
+              roleName != 'EE_T_CELL' && roleName != 'SE' &&
+              roleName != 'CE' &&
+              roleName != 'AO' &&
+              roleName != 'DCAO' && roleName != 'FA' && roleName != 'MD'
+            ">
+            <div class="m-2" *ngIf="viewMode">
+              <label class="label-name">
+                <h2>Date :</h2>
+              </label>
+              <input style="border: 2px solid" class="form-control mt-3" formControlName="aePlanDivisionDate" />
+            </div>
+            <div class="m-2" *ngIf="!viewMode">
+              <label class="label-name">
+                <h2>Date :</h2>
+              </label>
+              <input type="date" style="border: 2px solid" class="form-control mt-3"
+                formControlName="aePlanDivisionDate" />
+            </div>
+          </div>
+
+          <div class="col-md-6" *ngIf="
+              roleName == 'DA_Division' ||
+              roleName == 'EE_Division' ||
+              roleName == 'RO' ||
+              roleName == 'CRO' || roleName == 'FA' ||
+              roleName == 'EE_T_CELL' || roleName == 'SE' || roleName == 'CE' || roleName == 'AO' || roleName == 'DCAO' || roleName == 'MD'
+            ">
+            <div class="m-2">
+              <label class="label-name">
+                <h2>Date :</h2>
+              </label>
+              <input style="border: 2px solid" class="form-control mt-3" formControlName="aePlanDivisionDate" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-expansion-panel> </mat-accordion><br *ngIf="aePlanPanel && beRbe == 'be'">
+
+  <!-- ACC -->
+
+  <mat-accordion *ngIf="accClerkPanel && beRbe == 'be'">
+    <mat-expansion-panel [expanded]="true" (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+      <mat-expansion-panel-header style="color: #643843; font-size: 20px">
+        ACC CLERK
+      </mat-expansion-panel-header>
+      <div class="remarksForm card" [formGroup]="ACCremarksForm">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="m-2">
+              <label class="label-name" style="margin-bottom: 10px">
+                <h2>Remarks :</h2>
+              </label>
+              <textarea name="remarks" class="remarksField form-control mt-3" rows="5" id="sign" style="width: 100%"
+                formControlName="accClerkRemarks" readonly></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6">
+            <div class="m-2">
+              <label class="label-name">
+                <h2>Name :</h2>
+              </label>
+              <input style="border: 2px solid" id="sign" type="text" class="form-control mt-3"
+                formControlName="accDivisionSignature" readonly />
+            </div>
+          </div>
+
+          <div class="col-md-6" *ngIf="
+              roleName != 'DA_Division' &&
+              roleName != 'EE_Division' &&
+              roleName != 'MMS_Division' &&
+              roleName != 'AE_Planning' &&
+              roleName != 'RO' &&
+              roleName != 'CRO' &&
+              roleName != 'EE_T_CELL' &&
+              roleName != 'AO' &&
+              roleName != 'DCAO' && roleName != 'FA' && roleName != 'MD'
+            ">
+            <div class="m-2" *ngIf="viewMode">
+              <label class="label-name">
+                <h2>Date :</h2>
+              </label>
+              <input style="border: 2px solid" class="form-control mt-3" formControlName="accDivisionDate" readonly />
+            </div>
+
+            <div class="m-2" *ngIf="!viewMode">
+              <label class="label-name">
+                <h2>Date :</h2>
+              </label>
+              <input type="date" style="border: 2px solid" class="form-control mt-3"
+                formControlName="accDivisionDate" />
+            </div>
+          </div>
+
+          <div class="col-md-6" *ngIf="
+              roleName == 'DA_Division' ||
+              roleName == 'EE_Division' ||
+              roleName == 'MMS_Division' ||
+              roleName == 'AE_Planning' ||
+              roleName == 'RO' ||
+              roleName == 'CRO' || roleName == 'FA' ||
+              roleName == 'EE_T_CELL' || roleName == 'AO' || roleName == 'DCAO' || roleName == 'MD'
+            ">
+            <div class="m-2">
+              <label class="label-name">
+                <h2>Date :</h2>
+              </label>
+              <input style="border: 2px solid" class="form-control mt-3" formControlName="accDivisionDate" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-expansion-panel> </mat-accordion><br *ngIf="accClerkPanel && beRbe == 'be'">
+
+  <!--DA-->
+
+  <mat-accordion *ngIf="daPanel && beRbe == 'be'">
+    <mat-expansion-panel [expanded]="true" (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+      <mat-expansion-panel-header style="color: #643843; font-size: 20px">
+        DA
+      </mat-expansion-panel-header>
+      <div class="remarksForm card" [formGroup]="DAremarksForm">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="m-2">
+              <label class="label-name" style="margin-bottom: 10px">
+                <h2>Remarks :</h2>
+              </label>
+              <textarea name="remarks" class="remarksField form-control mt-3" rows="5" id="sign" style="width: 100%"
+                formControlName="daDivisionRemarks"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6">
+            <div class="m-2">
+              <label class="label-name">
+                <h2>Name :</h2>
+              </label>
+              <input style="border: 2px solid" id="sign" type="text" class="form-control mt-3"
+                formControlName="daDivisionSignature" />
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="m-2" *ngIf="
+                !viewMode &&
+                roleName != 'EE_Division' &&
+                roleName != 'RO' &&
+                roleName != 'CRO' &&
+                roleName != 'EE_T_CELL' && roleName != 'SE' &&
+                roleName != 'CE' &&
+                roleName != 'AO' &&
+                roleName != 'DCAO' && roleName != 'FA' && roleName != 'MD'
+              ">
+              <label class="label-name">
+                <h2>Date :</h2>
+              </label>
+              <input type="date" style="border: 2px solid" class="form-control mt-3" formControlName="daDivisionDate" />
+            </div>
+            <div class="m-2" *ngIf="
+                viewMode &&
+                roleName != 'EE_Division' &&
+                roleName != 'RO' &&
+                roleName != 'CRO' &&
+                roleName != 'EE_T_CELL' && roleName != 'SE' &&
+                roleName != 'CE' &&
+                roleName != 'AO' &&
+                roleName != 'DCAO' && roleName != 'FA' && roleName != 'MD'
+              ">
+              <label class="label-name">
+                <h2>Date :</h2>
+              </label>
+              <input style="border: 2px solid" class="form-control mt-3" formControlName="daDivisionDate" readonly />
+            </div>
+
+            <div class="m-2" *ngIf="
+                roleName == 'EE_Division' ||
+                roleName == 'RO' ||
+                roleName == 'CRO' || roleName == 'FA' ||
+                roleName == 'EE_T_CELL' || roleName == 'SE' || roleName == 'CE' || roleName == 'AO' || roleName == 'DCAO' || roleName == 'MD'
+              ">
+              <label class="label-name">
+                <h2>Date :</h2>
+              </label>
+              <input style="border: 2px solid" class="form-control mt-3" formControlName="daDivisionDate" readonly />
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-expansion-panel> </mat-accordion><br *ngIf="daPanel && beRbe == 'be'">
+
+  <!--EE-->
+
+  <mat-accordion *ngIf="eePanel && beRbe == 'be'">
+    <mat-expansion-panel [expanded]="true" (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+      <mat-expansion-panel-header style="color: #643843; font-size: 20px">
+        EE
+      </mat-expansion-panel-header>
+      <div class="remarksForm card" [formGroup]="EEremarksForm">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="m-2">
+              <label class="label-name" style="margin-bottom: 10px">
+                <h2>Remarks :</h2>
+              </label>
+              <textarea name="remarks" class="remarksField form-control mt-3" rows="5" id="sign" style="width: 100%"
+                formControlName="eeDivisionRemarks"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6">
+            <div class="m-2">
+              <label class="label-name">
+                <h2>Name :</h2>
+              </label>
+              <input style="border: 2px solid" id="sign" type="text" class="form-control mt-3"
+                formControlName="eeDivisionSignature" />
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="m-2" *ngIf="
+                !viewMode &&
+                roleName != 'DA_Division' &&
+                roleName != 'RO' &&
+                roleName != 'CRO' &&
+                roleName != 'EE_T_CELL' && roleName != 'SE' &&
+                roleName != 'CE' &&
+                roleName != 'AO' &&
+                roleName != 'DCAO' && roleName != 'FA' && roleName != 'MD'
+              ">
+              <label class="label-name">
+                <h2>Date :</h2>
+              </label>
+              <input type="date" style="border: 2px solid" class="form-control mt-3" formControlName="eeDivisionDate" />
+            </div>
+            <div class="m-2" *ngIf="
+                viewMode &&
+                roleName != 'DA_Division' &&
+                roleName != 'RO' &&
+                roleName != 'CRO' &&
+                roleName != 'EE_T_CELL' && roleName != 'SE' &&
+                roleName != 'CE' &&
+                roleName != 'AO' &&
+                roleName != 'DCAO' && roleName != 'FA' && roleName != 'MD'
+              ">
+              <label class="label-name">
+                <h2>Date :</h2>
+              </label>
+              <input style="border: 2px solid" class="form-control mt-3" formControlName="eeDivisionDate" readonly />
+            </div>
+
+            <div class="m-2" *ngIf="
+                roleName == 'DA_Division' ||
+                roleName == 'RO' ||
+                roleName == 'CRO' || roleName == 'FA' ||
+                roleName == 'EE_T_CELL' || roleName == 'SE' || roleName == 'CE' || roleName == 'AO' || roleName == 'DCAO' || roleName == 'MD'
+              ">
+              <label class="label-name">
+                <h2>Date :</h2>
+              </label>
+              <input style="border: 2px solid" class="form-control mt-3" formControlName="eeDivisionDate" readonly />
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-expansion-panel> </mat-accordion><br *ngIf="eePanel && beRbe == 'be'">
+
+  <!-- RO -->
+
+  <mat-accordion *ngIf="roPanel && beRbe == 'be'">
+    <mat-expansion-panel [expanded]="true" (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+      <mat-expansion-panel-header style="color: #643843; font-size: 20px">
+        RO
+      </mat-expansion-panel-header>
+      <div class="remarksForm card" [formGroup]="ROremarksForm">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="m-2">
+              <label class="label-name" style="margin-bottom: 10px">
+                <h2>Remarks :</h2>
+              </label>
+              <textarea name="remarks" class="remarksField form-control mt-3" rows="5" id="sign" style="width: 100%"
+                formControlName="roRemarks"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6">
+            <div class="m-2">
+              <label class="label-name">
+                <h2>Name :</h2>
+              </label>
+              <input style="border: 2px solid" id="sign" type="text" class="form-control mt-3"
+                formControlName="roSignature" />
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="m-2" *ngIf="
+                !viewMode &&
+                roleName != 'DA_Division' &&
+                roleName != 'EE_Division' &&
+                roleName != 'CRO' &&
+                roleName != 'EE_T_CELL' &&
+                roleName != 'AO' &&
+                roleName != 'DCAO' && roleName != 'FA' && roleName != 'MD'
+              ">
+              <label class="label-name">
+                <h2>Date :</h2>
+              </label>
+              <input type="date" style="border: 2px solid" class="form-control mt-3" formControlName="roDate" />
+            </div>
+            <div class="m-2" *ngIf="
+                viewMode &&
+                roleName != 'DA_Division' &&
+                roleName != 'EE_Division' &&
+                roleName != 'CRO' &&
+                roleName != 'EE_T_CELL' &&
+                roleName != 'AO' &&
+                roleName != 'DCAO' && roleName != 'FA' && roleName != 'MD'
+              ">
+              <label class="label-name">
+                <h2>Date :</h2>
+              </label>
+              <input style="border: 2px solid" class="form-control mt-3" formControlName="roDate" readonly />
+            </div>
+
+            <div class="m-2" *ngIf="
+                roleName == 'DA_Division' ||
+                roleName == 'EE_Division' ||
+                roleName == 'CRO' ||
+                roleName == 'EE_T_CELL' || roleName == 'AO' || roleName == 'DCAO' || roleName == 'FA' || roleName == 'MD'
+              ">
+              <label class="label-name">
+                <h2>Date :</h2>
+              </label>
+              <input style="border: 2px solid" class="form-control mt-3" formControlName="roDate" readonly />
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-expansion-panel> </mat-accordion><br *ngIf="roPanel && beRbe == 'be'">
+  <!-- CRO -->
+
+  <mat-accordion *ngIf="croPanel && beRbe == 'be'">
+    <mat-expansion-panel [expanded]="true" (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+      <mat-expansion-panel-header style="color: #643843; font-size: 20px">
+        CRO
+      </mat-expansion-panel-header>
+      <div class="remarksForm card" [formGroup]="CROremarksForm">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="m-2">
+              <label class="label-name" style="margin-bottom: 10px">
+                <h2>Remarks :</h2>
+              </label>
+              <textarea name="remarks" class="remarksField form-control mt-3" rows="5" id="sign" style="width: 100%"
+                formControlName="croRemarks"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6">
+            <div class="m-2">
+              <label class="label-name">
+                <h2>Name :</h2>
+              </label>
+              <input style="border: 2px solid" id="sign" type="text" class="form-control mt-3"
+                formControlName="croSignature" />
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="m-2" *ngIf="
+                !viewMode &&
+                roleName != 'DA_Division' &&
+                roleName != 'EE_Division' &&
+                roleName != 'RO' &&
+                roleName != 'EE_T_CELL' &&
+                roleName != 'AO' &&
+                roleName != 'DCAO' && roleName != 'FA' && roleName != 'MD'
+              ">
+              <label class="label-name">
+                <h2>Date :</h2>
+              </label>
+              <input type="date" style="border: 2px solid" class="form-control mt-3" formControlName="croDate" />
+            </div>
+            <div class="m-2" *ngIf="
+                viewMode &&
+                roleName != 'DA_Division' &&
+                roleName != 'EE_Division' &&
+                roleName != 'RO' &&
+                roleName != 'EE_T_CELL' &&
+                roleName != 'AO' &&
+                roleName != 'DCAO' && roleName != 'FA' && roleName != 'MD'
+              ">
+              <label class="label-name">
+                <h2>Date :</h2>
+              </label>
+              <input style="border: 2px solid" class="form-control mt-3" formControlName="croDate" readonly />
+            </div>
+
+            <div class="m-2" *ngIf="
+                roleName == 'DA_Division' ||
+                roleName == 'EE_Division' ||
+                roleName == 'RO' ||
+                roleName == 'EE_T_CELL' || roleName == 'AO' || roleName =='DCAO' || roleName == 'FA' || roleName == 'MD'
+              ">
+              <label class="label-name">
+                <h2>Date :</h2>
+              </label>
+              <input style="border: 2px solid" class="form-control mt-3" formControlName="croDate" readonly />
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-expansion-panel> </mat-accordion><br *ngIf="croPanel && beRbe == 'be'">
+
+  <!-- EE_T_CELL -->
+
+  <mat-accordion *ngIf="eeTcellPanel && beRbe == 'be'">
+    <mat-expansion-panel [expanded]="true" (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+      <mat-expansion-panel-header style="color: #643843; font-size: 20px">
+        EET CELL
+      </mat-expansion-panel-header>
+      <div class="remarksForm card" [formGroup]="eeTcellremarksForm">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="m-2">
+              <label class="label-name" style="margin-bottom: 10px">
+                <h2>Remarks :</h2>
+              </label>
+              <textarea name="remarks" class="remarksField form-control mt-3" rows="5" id="sign" style="width: 100%"
+                formControlName="eeTCellRemarks"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6">
+            <div class="m-2">
+              <label class="label-name">
+                <h2>Name :</h2>
+              </label>
+              <input style="border: 2px solid" id="sign" type="text" class="form-control mt-3"
+                formControlName="eeTCellSignature" />
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="m-2" *ngIf="
+                !viewMode &&
+                roleName != 'DA_Division' &&
+                roleName != 'EE_Division' &&
+                roleName != 'RO' &&
+                roleName != 'CRO' && roleName != 'SE' &&
+                roleName != 'CE' &&
+                roleName != 'AO' &&
+                roleName != 'DCAO' && roleName != 'FA' && roleName != 'MD'
+              ">
+              <label class="label-name">
+                <h2>Date :</h2>
+              </label>
+              <input type="date" style="border: 2px solid" class="form-control mt-3" formControlName="eeTCellDate" />
+            </div>
+            <div class="m-2" *ngIf="
+                viewMode &&
+                roleName != 'DA_Division' &&
+                roleName != 'EE_Division' &&
+                roleName != 'RO' &&
+                roleName != 'CRO' && roleName != 'SE' &&
+                roleName != 'CE' &&
+                roleName != 'AO' &&
+                roleName != 'DCAO' && roleName != 'FA' && roleName != 'MD'
+              ">
+              <label class="label-name">
+                <h2>Date :</h2>
+              </label>
+              <input style="border: 2px solid" class="form-control mt-3" formControlName="eeTCellDate" readonly />
+            </div>
+
+            <div class="m-2" *ngIf="
+                roleName == 'DA_Division' ||
+                roleName == 'EE_Division' ||
+                roleName == 'RO' || roleName == 'FA' ||
+                roleName == 'CRO' || roleName == 'SE' || roleName == 'CE' || roleName == 'AO' || roleName == 'DCAO' || roleName == 'MD'
+              ">
+              <label class="label-name">
+                <h2>Date :</h2>
+              </label>
+              <input style="border: 2px solid" class="form-control mt-3" formControlName="eeTCellDate" readonly />
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-expansion-panel> </mat-accordion><br *ngIf="eeTcellPanel && beRbe == 'be'">
+
+  <!-- SE -->
+
+  <mat-accordion *ngIf="sePanel && beRbe == 'be'">
+    <mat-expansion-panel [expanded]="true" (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+      <mat-expansion-panel-header style="color: #643843; font-size: 20px">
+        BE - SE
+      </mat-expansion-panel-header>
+      <div class="remarksForm card" [formGroup]="seremarksForm">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="m-2">
+              <label class="label-name" style="margin-bottom: 10px">
+                <h2>Remarks :</h2>
+              </label>
+              <textarea name="remarks" class="remarksField form-control mt-3" rows="5" id="sign" style="width: 100%"
+                formControlName="seRemarks"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6">
+            <div class="m-2">
+              <label class="label-name">
+                <h2>Name :</h2>
+              </label>
+              <input style="border: 2px solid" id="sign" type="text" class="form-control mt-3"
+                formControlName="seSignature" />
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="m-2" *ngIf="
+                !viewMode &&
+                roleName != 'DA_Division' &&
+                roleName != 'EE_Division' &&
+                roleName != 'RO' &&
+                roleName != 'CRO' &&
+                roleName != 'CE' &&
+                roleName != 'AO' &&
+                roleName != 'DCAO' && roleName != 'FA' && roleName != 'MD'
+              ">
+              <label class="label-name">
+                <h2>Date :</h2>
+              </label>
+              <input type="date" style="border: 2px solid" class="form-control mt-3" formControlName="seDate" />
+            </div>
+            <div class="m-2" *ngIf="
+                viewMode &&
+                roleName != 'DA_Division' &&
+                roleName != 'EE_Division' &&
+                roleName != 'RO' &&
+                roleName != 'CRO' &&
+                roleName != 'CE' &&
+                roleName != 'AO' &&
+                roleName != 'DCAO' && roleName != 'FA' && roleName != 'MD'
+              ">
+              <label class="label-name">
+                <h2>Date :</h2>
+              </label>
+              <input style="border: 2px solid" class="form-control mt-3" formControlName="seDate" readonly />
+            </div>
+
+            <div class="m-2" *ngIf="
+                roleName == 'DA_Division' ||
+                roleName == 'EE_Division' ||
+                roleName == 'RO' ||
+                roleName == 'CRO' || roleName == 'CE' || roleName == 'AO' || roleName == 'DCAO' || roleName == 'FA' || roleName == 'MD'
+              ">
+              <label class="label-name">
+                <h2>Date :</h2>
+              </label>
+              <input style="border: 2px solid" class="form-control mt-3" formControlName="seDate" readonly />
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-expansion-panel> </mat-accordion><br *ngIf="sePanel && beRbe == 'be'">
+
+  <!-- CE -->
+
+  <mat-accordion *ngIf="cePanel && beRbe == 'be'">
+    <mat-expansion-panel [expanded]="true" (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+      <mat-expansion-panel-header style="color: #643843; font-size: 20px">
+        BE - CE
+      </mat-expansion-panel-header>
+      <div class="remarksForm card" [formGroup]="CEremarksForm">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="m-2">
+              <label class="label-name" style="margin-bottom: 10px">
+                <h2>Remarks :</h2>
+              </label>
+              <textarea name="remarks" class="remarksField form-control mt-3" rows="5" id="sign" style="width: 100%"
+                formControlName="ceRemarks"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6">
+            <div class="m-2">
+              <label class="label-name">
+                <h2>Name :</h2>
+              </label>
+              <input style="border: 2px solid" id="sign" type="text" class="form-control mt-3"
+                formControlName="ceSignature" />
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="m-2" *ngIf="
+                !viewMode &&
+                roleName != 'DA_Division' &&
+                roleName != 'EE_Division' &&
+                roleName != 'RO' &&
+                roleName != 'CRO' &&
+                roleName != 'AO' &&
+                roleName != 'DCAO' && roleName != 'FA' && roleName != 'MD'
+              ">
+              <label class="label-name">
+                <h2>Date :</h2>
+              </label>
+              <input type="date" style="border: 2px solid" class="form-control mt-3" formControlName="ceDate" />
+            </div>
+            <div class="m-2" *ngIf="
+                viewMode &&
+                roleName != 'DA_Division' &&
+                roleName != 'EE_Division' &&
+                roleName != 'RO' &&
+                roleName != 'CRO' &&
+                roleName != 'AO' &&
+                roleName != 'DCAO'  && roleName != 'FA' && roleName != 'MD'
+              ">
+              <label class="label-name">
+                <h2>Date :</h2>
+              </label>
+              <input style="border: 2px solid" class="form-control mt-3" formControlName="ceDate" readonly />
+            </div>
+
+            <div class="m-2" *ngIf="
+                roleName == 'DA_Division' ||
+                roleName == 'EE_Division' ||
+                roleName == 'RO' ||
+                roleName == 'CRO' || roleName == 'AO' || roleName == 'DCAO' || roleName == 'FA' || roleName == 'MD'
+              ">
+              <label class="label-name">
+                <h2>Date :</h2>
+              </label>
+              <input style="border: 2px solid" class="form-control mt-3" formControlName="ceDate" readonly />
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-expansion-panel> </mat-accordion><br *ngIf="cePanel && beRbe == 'be'">
+
+  <!-- AO -->
+
+  <mat-accordion *ngIf="aoPanel && beRbe == 'be'">
+    <mat-expansion-panel [expanded]="true" (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+      <mat-expansion-panel-header style="color: #643843; font-size: 20px">
+        BE - AO
+      </mat-expansion-panel-header>
+      <div class="remarksForm card" [formGroup]="AOremarksForm">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="m-2">
+              <label class="label-name" style="margin-bottom: 10px">
+                <h2>Remarks :</h2>
+              </label>
+              <textarea name="remarks" class="remarksField form-control mt-3" rows="5" id="sign" style="width: 100%"
+                formControlName="aoRemarks"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6">
+            <div class="m-2">
+              <label class="label-name">
+                <h2>Name :</h2>
+              </label>
+              <input style="border: 2px solid" id="sign" type="text" class="form-control mt-3"
+                formControlName="aoSignature" />
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="m-2" *ngIf="
+                !viewMode &&
+                roleName != 'DA_Division' &&
+                roleName != 'EE_Division' &&
+                roleName != 'RO' &&
+                roleName != 'CRO' &&
+                roleName != 'DCAO' && roleName != 'FA' && roleName != 'MD'
+              ">
+              <label class="label-name">
+                <h2>Date :</h2>
+              </label>
+              <input type="date" style="border: 2px solid" class="form-control mt-3" formControlName="aoDate" />
+            </div>
+            <div class="m-2" *ngIf="
+                viewMode &&
+                roleName != 'DA_Division' &&
+                roleName != 'EE_Division' &&
+                roleName != 'RO' &&
+                roleName != 'CRO' &&
+                roleName != 'DCAO' && roleName != 'FA' && roleName != 'MD'
+              ">
+              <label class="label-name">
+                <h2>Date :</h2>
+              </label>
+              <input style="border: 2px solid" class="form-control mt-3" formControlName="aoDate" readonly />
+            </div>
+
+            <div class="m-2" *ngIf="
+                roleName == 'DA_Division' ||
+                roleName == 'EE_Division' ||
+                roleName == 'RO' ||
+                roleName == 'CRO' || roleName == 'DCAO' || roleName == 'FA' || roleName == 'MD'
+              ">
+              <label class="label-name">
+                <h2>Date :</h2>
+              </label>
+              <input style="border: 2px solid" class="form-control mt-3" formControlName="aoDate" readonly />
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-expansion-panel> </mat-accordion><br *ngIf="aoPanel && beRbe == 'be'">
+
+  <!-- DCAO -->
+
+  <mat-accordion *ngIf="dcaoPanel && beRbe == 'be'">
+    <mat-expansion-panel [expanded]="true" (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+      <mat-expansion-panel-header style="color: #643843; font-size: 20px">
+        BE - DCAO
+      </mat-expansion-panel-header>
+      <div class="remarksForm card" [formGroup]="DCAOremarksForm">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="m-2">
+              <label class="label-name" style="margin-bottom: 10px">
+                <h2>Remarks :</h2>
+              </label>
+              <textarea name="remarks" class="remarksField form-control mt-3" rows="5" id="sign" style="width: 100%"
+                formControlName="dcAoRemarks"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6">
+            <div class="m-2">
+              <label class="label-name">
+                <h2>Name :</h2>
+              </label>
+              <input style="border: 2px solid" id="sign" type="text" class="form-control mt-3"
+                formControlName="dcAoSignature" />
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="m-2" *ngIf="
+                !viewMode &&
+                roleName != 'DA_Division' &&
+                roleName != 'EE_Division' &&
+                roleName != 'RO' &&
+                roleName != 'CRO' && roleName != 'FA' && roleName != 'MD'
+              ">
+              <label class="label-name">
+                <h2>Date :</h2>
+              </label>
+              <input type="date" style="border: 2px solid" class="form-control mt-3" formControlName="dcAoDate" />
+            </div>
+            <div class="m-2" *ngIf="
+                viewMode &&
+                roleName != 'DA_Division' &&
+                roleName != 'EE_Division' &&
+                roleName != 'RO' &&
+                roleName != 'CRO' && roleName != 'FA' && roleName != 'MD'
+              ">
+              <label class="label-name">
+                <h2>Date :</h2>
+              </label>
+              <input style="border: 2px solid" class="form-control mt-3" formControlName="dcAoDate" readonly />
+            </div>
+
+            <div class="m-2" *ngIf="
+                roleName == 'DA_Division' ||
+                roleName == 'EE_Division' ||
+                roleName == 'RO' ||
+                roleName == 'CRO' || roleName == 'FA' || roleName == 'MD'
+              ">
+              <label class="label-name">
+                <h2>Date :</h2>
+              </label>
+              <input style="border: 2px solid" class="form-control mt-3" formControlName="dcAoDate" readonly />
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-expansion-panel> </mat-accordion><br *ngIf="dcaoPanel && beRbe == 'be'">
+
+  <!-- FA -->
+
+  <mat-accordion *ngIf="faPanel && beRbe == 'be'">
+    <mat-expansion-panel [expanded]="true" (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+      <mat-expansion-panel-header style="color: #643843; font-size: 20px">
+        BE - FA
+      </mat-expansion-panel-header>
+      <div class="remarksForm card" [formGroup]="FAremarksForm">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="m-2">
+              <label class="label-name" style="margin-bottom: 10px">
+                <h2>Remarks :</h2>
+              </label>
+              <textarea name="remarks" class="remarksField form-control mt-3" rows="5" id="sign" style="width: 100%"
+                formControlName="faRemarks"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6">
+            <div class="m-2">
+              <label class="label-name">
+                <h2>Name :</h2>
+              </label>
+              <input style="border: 2px solid" id="sign" type="text" class="form-control mt-3"
+                formControlName="faSignature" />
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="m-2" *ngIf="
+                !viewMode &&
+                roleName != 'DA_Division' &&
+                roleName != 'EE_Division' &&
+                roleName != 'RO' &&
+                roleName != 'CRO' && roleName != 'MD'
+              ">
+              <label class="label-name">
+                <h2>Date :</h2>
+              </label>
+              <input type="date" style="border: 2px solid" class="form-control mt-3" formControlName="faDate" />
+            </div>
+            <div class="m-2" *ngIf="
+                viewMode &&
+                roleName != 'DA_Division' &&
+                roleName != 'EE_Division' &&
+                roleName != 'RO' &&
+                roleName != 'CRO' && roleName != 'MD'
+              ">
+              <label class="label-name">
+                <h2>Date :</h2>
+              </label>
+              <input style="border: 2px solid" class="form-control mt-3" formControlName="faDate" readonly />
+            </div>
+
+            <div class="m-2" *ngIf="
+                roleName == 'DA_Division' ||
+                roleName == 'EE_Division' ||
+                roleName == 'RO' ||
+                roleName == 'CRO' || roleName == 'MD'
+              ">
+              <label class="label-name">
+                <h2>Date :</h2>
+              </label>
+              <input style="border: 2px solid" class="form-control mt-3" formControlName="faDate" readonly />
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-expansion-panel> </mat-accordion><br *ngIf="faPanel && beRbe == 'be'">
+
+  <!-- MD -->
+
+  <!-- <mat-accordion *ngIf="mdPanel && beRbe == 'be'">
+    <mat-expansion-panel [expanded]="true" (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+      <mat-expansion-panel-header style="color: #643843; font-size: 20px">
+        BE - MD
+      </mat-expansion-panel-header>
+      <div class="remarksForm card" [formGroup]="MDremarksForm">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="m-2">
+              <label class="label-name" style="margin-bottom: 10px">
+                <h2>Remarks :</h2>
+              </label>
+              <textarea name="remarks" class="remarksField form-control mt-3" rows="5" id="sign" style="width: 100%"
+                formControlName="mdRemarks"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6">
+            <div class="m-2">
+              <label class="label-name">
+                <h2>Name :</h2>
+              </label>
+              <input style="border: 2px solid" id="sign" type="text" class="form-control mt-3"
+                formControlName="mdSignature" />
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="m-2" *ngIf="
+              !viewMode &&
+              roleName != 'DA_Division' &&
+              roleName != 'EE_Division' &&
+              roleName != 'RO' &&
+              roleName != 'CRO'
+            ">
+              <label class="label-name">
+                <h2>Date :</h2>
+              </label>
+              <input type="date" style="border: 2px solid" class="form-control mt-3" formControlName="mdDate" />
+            </div>
+            <div class="m-2" *ngIf="
+              viewMode &&
+              roleName != 'DA_Division' &&
+              roleName != 'EE_Division' &&
+              roleName != 'RO' &&
+              roleName != 'CRO'
+            ">
+              <label class="label-name">
+                <h2>Date :</h2>
+              </label>
+              <input style="border: 2px solid" class="form-control mt-3" formControlName="mdDate" readonly />
+            </div>
+
+            <div class="m-2" *ngIf="
+              roleName == 'DA_Division' ||
+              roleName == 'EE_Division' ||
+              roleName == 'RO' ||
+              roleName == 'CRO'
+            ">
+              <label class="label-name">
+                <h2>Date :</h2>
+              </label>
+              <input style="border: 2px solid" class="form-control mt-3" formControlName="mdDate" readonly />
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-expansion-panel> </mat-accordion><br *ngIf="mdPanel && beRbe == 'be'"> -->
+
+  <!-------------------------------------------RBE REMARKS------------------------------------------------------>
+
+  <!--ARO-->
+
+  <mat-accordion *ngIf="aroPanelRbe && beRbe == 'rbe'">
+    <mat-expansion-panel [expanded]="true" (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+      <mat-expansion-panel-header style="color: #643843; font-size: 20px">
+        RBE - ARO
+      </mat-expansion-panel-header>
+      <div class="remarksForm card" [formGroup]="AROremarksFormRbe">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="m-2">
+              <label class="label-name" style="margin-bottom: 10px">
+                <h2>Remarks :</h2>
+              </label>
+              <textarea name="remarks" class="remarksField form-control mt-3" rows="5" id="sign" style="width: 100%"
+                formControlName="aroDivisionRemarksRbe"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6">
+            <div class="m-2">
+              <label class="label-name">
+                <h2>Name :</h2>
+              </label>
+              <input style="border: 2px solid" id="sign" type="text" class="form-control mt-3"
+                formControlName="aroDivisionSignatureRbe" />
+            </div>
+          </div>
+
+          <div class="col-md-6" *ngIf="
+              roleName != 'DA_Division' &&
+              roleName != 'EE_Division' &&
+              roleName != 'MMS_Division' &&
+              roleName != 'RO'  && roleName != 'AO' &&
+              roleName != 'DCAO' && roleName != 'FA' && roleName != 'MD'
+            ">
+            <div class="m-2" *ngIf="viewMode">
+              <label class="label-name">
+                <h2>Date :</h2>
+              </label>
+              <input style="border: 2px solid" class="form-control mt-3" formControlName="aroDivisionDateRbe" />
+            </div>
+            <div class="m-2" *ngIf="!viewMode">
+              <label class="label-name">
+                <h2>Date :</h2>
+              </label>
+              <input type="date" style="border: 2px solid" class="form-control mt-3"
+                formControlName="aroDivisionDateRbe" />
+            </div>
+          </div>
+
+          <div class="col-md-6" *ngIf="
+              roleName == 'DA_Division' ||
+              roleName == 'EE_Division' ||
+              roleName == 'MMS_Division' ||
+              roleName == 'RO' || roleName == 'AO' || roleName == 'DCAO' || roleName == 'FA' || roleName == 'MD'
+            ">
+            <div class="m-2">
+              <label class="label-name">
+                <h2>Date :</h2>
+              </label>
+              <input style="border: 2px solid" class="form-control mt-3" formControlName="aroDivisionDateRbe" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion><br *ngIf="aroPanelRbe && beRbe == 'rbe'">
+
+  <!--MMS-->
+
+  <mat-accordion *ngIf="mmsPanelRbe && beRbe == 'rbe'">
+    <mat-expansion-panel [expanded]="true" (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+      <mat-expansion-panel-header style="color: #643843; font-size: 20px">
+        RBE - MMS
+      </mat-expansion-panel-header>
+      <div class="remarksForm card" [formGroup]="MMSremarksFormRbe">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="m-2">
+              <label class="label-name" style="margin-bottom: 10px">
+                <h2>Remarks :</h2>
+              </label>
+              <textarea name="remarks" class="remarksField form-control mt-3" rows="5" id="sign" style="width: 100%"
+                formControlName="mmsDivisionRemarksRbe"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6">
+            <div class="m-2">
+              <label class="label-name">
+                <h2>Name :</h2>
+              </label>
+              <input style="border: 2px solid" id="sign" type="text" class="form-control mt-3"
+                formControlName="mmsDivisionSignatureRbe" />
+            </div>
+          </div>
+
+          <div class="col-md-6" *ngIf="
+              roleName != 'DA_Division' &&
+              roleName != 'EE_Division' &&
+              roleName != 'EE_T_CELL' &&
+              roleName != 'RO' && roleName != 'AO' && roleName != 'DCAO' && roleName != 'FA' && roleName != 'MD'
+            ">
+            <div class="m-2" *ngIf="viewMode">
+              <label class="label-name">
+                <h2>Date :</h2>
+              </label>
+              <input style="border: 2px solid" class="form-control mt-3" formControlName="mmsDivisionDateRbe" />
+            </div>
+            <div class="m-2" *ngIf="!viewMode">
+              <label class="label-name">
+                <h2>Date :</h2>
+              </label>
+              <input type="date" style="border: 2px solid" class="form-control mt-3"
+                formControlName="mmsDivisionDateRbe" />
+            </div>
+          </div>
+
+          <div class="col-md-6" *ngIf="
+              roleName == 'DA_Division' ||
+              roleName == 'EE_Division' || roleName == 'FA' ||
+              roleName == 'EE_T_CELL' || roleName == 'RO' || roleName == 'AO' || roleName == 'DCAO' || roleName == 'MD'
+            ">
+            <div class="m-2">
+              <label class="label-name">
+                <h2>Date :</h2>
+              </label>
+              <input style="border: 2px solid" class="form-control mt-3" formControlName="mmsDivisionDateRbe" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-expansion-panel> </mat-accordion><br *ngIf="mmsPanelRbe && beRbe == 'rbe'">
+
+  <!-- AEE -->
+
+  <mat-accordion *ngIf="aeePanelRbe && beRbe == 'rbe'">
+    <mat-expansion-panel [expanded]="true" (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+      <mat-expansion-panel-header style="color: #643843; font-size: 20px">
+        RBE - AEE
+      </mat-expansion-panel-header>
+      <div class="remarksForm card" [formGroup]="AEEremarksFormRbe">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="m-2">
+              <label class="label-name" style="margin-bottom: 10px">
+                <h2>Remarks :</h2>
+              </label>
+              <textarea name="remarks" class="remarksField form-control mt-3" rows="5" id="sign" style="width: 100%"
+                formControlName="aeeDivisionRemarksRbe"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6">
+            <div class="m-2">
+              <label class="label-name">
+                <h2>Name :</h2>
+              </label>
+              <input style="border: 2px solid" id="sign" type="text" class="form-control mt-3"
+                formControlName="aeeDivisionSignatureRbe" />
+            </div>
+          </div>
+          <div class="col-md-6" *ngIf="
+              roleName != 'DA_Division' &&
+              roleName != 'EE_Division' &&
+              roleName != 'AE_Planning' &&
+              roleName != 'EE_T_CELL' && roleName != 'SE' &&
+              roleName != 'CE' && roleName != 'AO' && roleName != 'DCAO' && roleName != 'FA' && roleName != 'MD'
+            ">
+            <div class="m-2" *ngIf="viewMode">
+              <label class="label-name">
+                <h2>Date :</h2>
+              </label>
+              <input style="border: 2px solid" class="form-control mt-3" formControlName="aeeDivisionDateRbe" />
+            </div>
+            <div class="m-2" *ngIf="!viewMode">
+              <label class="label-name">
+                <h2>Date :</h2>
+              </label>
+              <input type="date" style="border: 2px solid" class="form-control mt-3"
+                formControlName="aeeDivisionDateRbe" />
+            </div>
+          </div>
+
+          <div class="col-md-6" *ngIf="
+              roleName == 'DA_Division' ||
+              roleName == 'EE_Division' ||
+              roleName == 'AE_Planning' || roleName == 'FA' ||
+              roleName == 'EE_T_CELL' || roleName == 'SE' || roleName == 'CE' || roleName == 'AO' || roleName == 'DCAO' || roleName == 'MD'
+            ">
+            <div class="m-2">
+              <label class="label-name">
+                <h2>Date :</h2>
+              </label>
+              <input style="border: 2px solid" class="form-control mt-3" formControlName="aeeDivisionDateRbe" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion><br *ngIf="aeePanelRbe && beRbe == 'rbe'">
+
+  <!-- AE PLAN-->
+
+  <mat-accordion *ngIf="aePlanPanelRbe && beRbe == 'rbe'">
+    <mat-expansion-panel [expanded]="true" (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+      <mat-expansion-panel-header style="color: #643843; font-size: 20px">
+        RBE - AE PLAN
+      </mat-expansion-panel-header>
+      <div class="remarksForm card" [formGroup]="AE_PLANremarksFormRbe">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="m-2">
+              <label class="label-name" style="margin-bottom: 10px">
+                <h2>Remarks :</h2>
+              </label>
+              <textarea name="remarks" class="remarksField form-control mt-3" rows="5" id="sign" style="width: 100%"
+                formControlName="aePlanDivisionRemarksRbe"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6">
+            <div class="m-2">
+              <label class="label-name">
+                <h2>Name :</h2>
+              </label>
+              <input style="border: 2px solid" id="sign" type="text" class="form-control mt-3"
+                formControlName="aePlanDivisionSignatureRbe" />
+            </div>
+          </div>
+          <div class="col-md-6" *ngIf="
+              roleName != 'DA_Division' &&
+              roleName != 'EE_Division' &&
+              roleName != 'RO ' &&
+              roleName != 'CRO' &&
+              roleName != 'EE_T_CELL' && roleName != 'SE' &&
+              roleName != 'CE' && roleName != 'AO' && roleName != 'DCAO' && roleName != 'FA' && roleName != 'MD'
+            ">
+            <div class="m-2" *ngIf="viewMode">
+              <label class="label-name">
+                <h2>Date :</h2>
+              </label>
+              <input style="border: 2px solid" class="form-control mt-3" formControlName="aePlanDivisionDateRbe" />
+            </div>
+            <div class="m-2" *ngIf="!viewMode">
+              <label class="label-name">
+                <h2>Date :</h2>
+              </label>
+              <input type="date" style="border: 2px solid" class="form-control mt-3"
+                formControlName="aePlanDivisionDateRbe" />
+            </div>
+          </div>
+
+          <div class="col-md-6" *ngIf="
+              roleName == 'DA_Division' ||
+              roleName == 'EE_Division' ||
+              roleName == 'RO' ||
+              roleName == 'CRO' || roleName == 'FA' ||
+              roleName == 'EE_T_CELL' || roleName == 'SE' || roleName == 'CE' || roleName == 'AO' || roleName == 'DCAO' || roleName == 'MD'
+            ">
+            <div class="m-2">
+              <label class="label-name">
+                <h2>Date :</h2>
+              </label>
+              <input style="border: 2px solid" class="form-control mt-3" formControlName="aePlanDivisionDateRbe" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-expansion-panel> </mat-accordion><br *ngIf="aePlanPanelRbe && beRbe == 'rbe'">
+
+  <!-- ACC -->
+
+  <mat-accordion *ngIf="accClerkPanelRbe && beRbe == 'rbe'">
+    <mat-expansion-panel [expanded]="true" (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+      <mat-expansion-panel-header style="color: #643843; font-size: 20px">
+        RBE - ACC CLERK
+      </mat-expansion-panel-header>
+      <div class="remarksForm card" [formGroup]="ACCremarksFormRbe">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="m-2">
+              <label class="label-name" style="margin-bottom: 10px">
+                <h2>Remarks :</h2>
+              </label>
+              <textarea name="remarks" class="remarksField form-control mt-3" rows="5" id="sign" style="width: 100%"
+                formControlName="accClerkRemarksRbe"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6">
+            <div class="m-2">
+              <label class="label-name">
+                <h2>Name :</h2>
+              </label>
+              <input style="border: 2px solid" id="sign" type="text" class="form-control mt-3"
+                formControlName="accDivisionSignatureRbe" />
+            </div>
+          </div>
+
+          <div class="col-md-6" *ngIf="
+              roleName != 'DA_Division' &&
+              roleName != 'EE_Division' &&
+              roleName != 'EE_T_CELL' && roleName != 'AO' && roleName != 'DCAO' && roleName != 'FA' && roleName != 'MD'
+            ">
+            <div class="m-2" *ngIf="viewMode">
+              <label class="label-name">
+                <h2>Date :</h2>
+              </label>
+              <input style="border: 2px solid" class="form-control mt-3" formControlName="accDivisionDateRbe" />
+            </div>
+            <div class="m-2" *ngIf="!viewMode">
+              <label class="label-name">
+                <h2>Date :</h2>
+              </label>
+              <input type="date" style="border: 2px solid" class="form-control mt-3"
+                formControlName="accDivisionDateRbe" />
+            </div>
+          </div>
+
+          <div class="col-md-6" *ngIf="
+              roleName == 'DA_Division' ||
+              roleName == 'EE_Division' || roleName == 'FA' ||
+              roleName == 'EE_T_CELL' || roleName == 'AO' || roleName == 'DCAO' || roleName == 'MD'
+            ">
+            <div class="m-2">
+              <label class="label-name">
+                <h2>Date :</h2>
+              </label>
+              <input style="border: 2px solid" class="form-control mt-3" formControlName="accDivisionDateRbe" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-expansion-panel> </mat-accordion><br *ngIf="accClerkPanelRbe && beRbe == 'rbe'">
+
+  <!--DA-->
+
+  <mat-accordion *ngIf="daPanelRbe && beRbe == 'rbe'">
+    <mat-expansion-panel [expanded]="true" (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+      <mat-expansion-panel-header style="color: #643843; font-size: 20px">
+        RBE - DA
+      </mat-expansion-panel-header>
+      <div class="remarksForm card" [formGroup]="DAremarksFormRbe">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="m-2">
+              <label class="label-name" style="margin-bottom: 10px">
+                <h2>Remarks :</h2>
+              </label>
+              <textarea name="remarks" class="remarksField form-control mt-3" rows="5" id="sign" style="width: 100%"
+                formControlName="daDivisionRemarksRbe"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6">
+            <div class="m-2">
+              <label class="label-name">
+                <h2>Name :</h2>
+              </label>
+              <input style="border: 2px solid" id="sign" type="text" class="form-control mt-3"
+                formControlName="daDivisionSignatureRbe" />
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="m-2" *ngIf="
+                !viewMode &&
+                roleName != 'EE_Division' &&
+                roleName != 'RO' &&
+                roleName != 'EE_T_CELL' && roleName != 'SE' &&
+                roleName != 'CE' && roleName != 'AO' && roleName != 'DCAO' && roleName != 'FA' && roleName != 'MD'
+              ">
+              <label class="label-name">
+                <h2>Date :</h2>
+              </label>
+              <input type="date" style="border: 2px solid" class="form-control mt-3"
+                formControlName="daDivisionDateRbe" />
+            </div>
+            <div class="m-2" *ngIf="
+                viewMode &&
+                roleName != 'EE_Division' &&
+                roleName != 'RO' &&
+                roleName != 'EE_T_CELL' && roleName != 'SE' &&
+                roleName != 'CE' && roleName != 'AO' && roleName != 'DCAO' && roleName != 'FA' && roleName != 'MD'
+              ">
+              <label class="label-name">
+                <h2>Date :</h2>
+              </label>
+              <input style="border: 2px solid" class="form-control mt-3" formControlName="daDivisionDateRbe" readonly />
+            </div>
+
+            <div class="m-2" *ngIf="
+                roleName == 'EE_Division' ||
+                roleName == 'RO' || roleName == 'FA' ||
+                roleName == 'EE_T_CELL' || roleName == 'SE' || roleName == 'CE' || roleName == 'AO' || roleName == 'DCAO' || roleName == 'MD'
+              ">
+              <label class="label-name">
+                <h2>Date :</h2>
+              </label>
+              <input style="border: 2px solid" class="form-control mt-3" formControlName="daDivisionDateRbe" readonly />
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-expansion-panel> </mat-accordion><br *ngIf="daPanelRbe && beRbe == 'rbe'">
+
+  <!--EE-->
+
+  <mat-accordion *ngIf="eePanelRbe && beRbe == 'rbe'">
+    <mat-expansion-panel [expanded]="true" (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+      <mat-expansion-panel-header style="color: #643843; font-size: 20px">
+        RBE - EE
+      </mat-expansion-panel-header>
+      <div class="remarksForm card" [formGroup]="EEremarksFormRbe">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="m-2">
+              <label class="label-name" style="margin-bottom: 10px">
+                <h2>Remarks :</h2>
+              </label>
+              <textarea name="remarks" class="remarksField form-control mt-3" rows="5" id="sign" style="width: 100%"
+                formControlName="eeDivisionRemarksRbe"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6">
+            <div class="m-2">
+              <label class="label-name">
+                <h2>Name :</h2>
+              </label>
+              <input style="border: 2px solid" id="sign" type="text" class="form-control mt-3"
+                formControlName="eeDivisionSignatureRbe" />
+            </div>
+          </div>
+
+          <!-- <div class="col-md-6">
+            <div class="m-2">
+              <label class="label-name"><h2>Date :</h2></label>
+              <input
+                style="border: 2px solid"
+                class="form-control mt-3"
+                formControlName="eeDivisionDateRbe"
+                readonly
+              />
+            </div>
+          </div> -->
+
+          <div class="col-md-6">
+            <div class="m-2" *ngIf="
+                !viewMode &&
+                roleName != 'DA_Division' &&
+                roleName != 'RO' &&
+                roleName != 'CRO' &&
+                roleName != 'EE_T_CELL' && roleName != 'SE' && 
+                roleName != 'CE' && roleName != 'AO' && roleName != 'DCAO' && roleName != 'FA' && roleName != 'MD'
+              ">
+              <label class="label-name">
+                <h2>Date :</h2>
+              </label>
+              <input type="date" style="border: 2px solid" class="form-control mt-3"
+                formControlName="eeDivisionDateRbe" />
+            </div>
+            <div class="m-2" *ngIf="
+                viewMode &&
+                roleName != 'DA_Division' &&
+                roleName != 'RO' &&
+                roleName != 'CRO' &&
+                roleName != 'EE_T_CELL' && roleName != 'SE' &&
+                roleName != 'CE' && roleName != 'AO' && roleName != 'DCAO' && roleName != 'FA' && roleName != 'MD'
+              ">
+              <label class="label-name">
+                <h2>Date :</h2>
+              </label>
+              <input style="border: 2px solid" class="form-control mt-3" formControlName="eeDivisionDateRbe" readonly />
+            </div>
+
+            <div class="m-2" *ngIf="
+                roleName == 'DA_Division' ||
+                roleName == 'RO' ||
+                roleName == 'CRO' || roleName == 'FA' ||
+                roleName == 'EE_T_CELL' || roleName == 'SE' || roleName == 'CE' || roleName == 'AO' || roleName == 'DCAO' || roleName == 'MD'
+              ">
+              <label class="label-name">
+                <h2>Date :</h2>
+              </label>
+              <input style="border: 2px solid" class="form-control mt-3" formControlName="eeDivisionDateRbe" readonly />
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-expansion-panel> </mat-accordion><br *ngIf="eePanelRbe && beRbe == 'rbe'">
+
+  <!-- RO -->
+
+  <mat-accordion *ngIf="roPanelRbe && beRbe == 'rbe'">
+    <mat-expansion-panel [expanded]="true" (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+      <mat-expansion-panel-header style="color: #643843; font-size: 20px">
+        RBE - RO
+      </mat-expansion-panel-header>
+      <div class="remarksForm card" [formGroup]="ROremarksFormRbe">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="m-2">
+              <label class="label-name" style="margin-bottom: 10px">
+                <h2>Remarks :</h2>
+              </label>
+              <textarea name="remarks" class="remarksField form-control mt-3" rows="5" id="sign" style="width: 100%"
+                formControlName="roRemarksRbe"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6">
+            <div class="m-2">
+              <label class="label-name">
+                <h2>Name :</h2>
+              </label>
+              <input style="border: 2px solid" id="sign" type="text" class="form-control mt-3"
+                formControlName="roSignatureRbe" />
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="m-2" *ngIf="
+                !viewMode &&
+                roleName != 'DA_Division' &&
+                roleName != 'EE_Division' &&
+                roleName != 'CRO' &&
+                roleName != 'EE_T_CELL' && roleName != 'AO' && roleName != 'DCAO' && roleName != 'FA' && roleName != 'MD'
+              ">
+              <label class="label-name">
+                <h2>Date :</h2>
+              </label>
+              <input type="date" style="border: 2px solid" class="form-control mt-3" formControlName="roDateRbe" />
+            </div>
+            <div class="m-2" *ngIf="
+                viewMode &&
+                roleName != 'DA_Division' &&
+                roleName != 'EE_Division' &&
+                roleName != 'CRO' &&
+                roleName != 'EE_T_CELL' && roleName != 'AO' && roleName != 'DCAO' && roleName != 'FA' && roleName != 'MD'
+              ">
+              <label class="label-name">
+                <h2>Date :</h2>
+              </label>
+              <input style="border: 2px solid" class="form-control mt-3" formControlName="roDateRbe" readonly />
+            </div>
+            <div class="m-2" *ngIf="
+                roleName == 'DA_Division' ||
+                roleName == 'EE_Division' ||
+                roleName == 'CRO' || roleName == 'FA' ||
+                roleName == 'EE_T_CELL' || roleName == 'AO' || roleName == 'DCAO' || roleName == 'MD'
+              ">
+              <label class="label-name">
+                <h2>Date :</h2>
+              </label>
+              <input style="border: 2px solid" class="form-control mt-3" formControlName="roDateRbe" readonly />
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-expansion-panel> </mat-accordion><br *ngIf="roPanelRbe && beRbe == 'rbe'">
+
+  <!-- CRO -->
+
+  <mat-accordion *ngIf="croPanelRbe && beRbe == 'rbe'">
+    <mat-expansion-panel [expanded]="true" (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+      <mat-expansion-panel-header style="color: #643843; font-size: 20px">
+        RBE - CRO
+      </mat-expansion-panel-header>
+      <div class="remarksForm card" [formGroup]="CROremarksFormRbe">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="m-2">
+              <label class="label-name" style="margin-bottom: 10px">
+                <h2>Remarks :</h2>
+              </label>
+              <textarea name="remarks" class="remarksField form-control mt-3" rows="5" id="sign" style="width: 100%"
+                formControlName="croRemarksRbe"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6">
+            <div class="m-2">
+              <label class="label-name">
+                <h2>Name :</h2>
+              </label>
+              <input style="border: 2px solid" id="sign" type="text" class="form-control mt-3"
+                formControlName="croSignatureRbe" />
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="m-2" *ngIf="
+                !viewMode &&
+                roleName != 'DA_Division' &&
+                roleName != 'EE_Division' &&
+                roleName != 'RO' &&  
+                roleName != 'EE_T_CELL' && roleName != 'AO' && roleName != 'DCAO' && roleName != 'FA' && roleName != 'MD'
+              ">
+              <label class="label-name">
+                <h2>Date :</h2>
+              </label>
+              <input type="date" style="border: 2px solid" class="form-control mt-3" formControlName="croDateRbe" />
+            </div>
+            <div class="m-2" *ngIf="
+                viewMode &&
+                roleName != 'DA_Division' &&
+                roleName != 'EE_Division' &&
+                roleName != 'RO' &&
+                roleName != 'EE_T_CELL' && roleName != 'AO' && roleName != 'DCAO' && roleName != 'FA' && roleName != 'MD'
+              ">
+              <label class="label-name">
+                <h2>Date :</h2>
+              </label>
+              <input style="border: 2px solid" class="form-control mt-3" formControlName="croDateRbe" readonly />
+            </div>
+
+            <div class="m-2" *ngIf="
+                roleName == 'DA_Division' ||
+                roleName == 'EE_Division' ||
+                roleName == 'RO' ||
+                roleName == 'EE_T_CELL' || roleName == 'AO' || roleName == 'DCAO' || roleName == 'FA' || roleName == 'MD'
+              ">
+              <label class="label-name">
+                <h2>Date :</h2>
+              </label>
+              <input style="border: 2px solid" class="form-control mt-3" formControlName="croDateRbe" readonly />
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-expansion-panel> </mat-accordion><br *ngIf="croPanelRbe && beRbe == 'rbe'">
+
+  <!-- EE_T_CELL -->
+
+  <mat-accordion *ngIf="eeTcellPanelRbe && beRbe == 'rbe'">
+    <mat-expansion-panel [expanded]="true" (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+      <mat-expansion-panel-header style="color: #643843; font-size: 20px">
+        RBE - EET CELL
+      </mat-expansion-panel-header>
+      <div class="remarksForm card" [formGroup]="eeTcellremarksFormRbe">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="m-2">
+              <label class="label-name" style="margin-bottom: 10px">
+                <h2>Remarks :</h2>
+              </label>
+              <textarea name="remarks" class="remarksField form-control mt-3" rows="5" id="sign" style="width: 100%"
+                formControlName="eeTCellRemarksRbe"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6">
+            <div class="m-2">
+              <label class="label-name">
+                <h2>Name :</h2>
+              </label>
+              <input style="border: 2px solid" id="sign" type="text" class="form-control mt-3"
+                formControlName="eeTCellSignatureRbe" />
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="m-2" *ngIf="
+                !viewMode &&
+                roleName != 'DA_Division' &&
+                roleName != 'EE_Division' &&
+                roleName != 'RO' &&
+                roleName != 'CRO' && roleName != 'SE' &&
+                roleName != 'CE' && roleName != 'AO' && roleName != 'DCAO' && roleName != 'FA' && roleName != 'MD'
+              ">
+              <label class="label-name">
+                <h2>Date :</h2>
+              </label>
+              <input type="date" style="border: 2px solid" class="form-control mt-3" formControlName="eeTCellDateRbe" />
+            </div>
+            <div class="m-2" *ngIf="
+                viewMode &&
+                roleName != 'DA_Division' &&
+                roleName != 'EE_Division' &&
+                roleName != 'RO' &&
+                roleName != 'CRO' && roleName != 'SE' &&
+                roleName != 'CE' && roleName != 'AO' && roleName != 'DCAO' && roleName != 'FA' && roleName != 'MD'
+              ">
+              <label class="label-name">
+                <h2>Date :</h2>
+              </label>
+              <input style="border: 2px solid" class="form-control mt-3" formControlName="eeTCellDateRbe" readonly />
+            </div>
+
+            <div class="m-2" *ngIf="
+                roleName == 'DA_Division' ||
+                roleName == 'EE_Division' ||
+                roleName == 'RO' || roleName == 'FA' || roleName == 'SE' ||
+                roleName == 'CRO' || roleName == 'CE' || roleName == 'AO' || roleName == 'DCAO' || roleName == 'MD'
+              ">
+              <label class="label-name">
+                <h2>Date :</h2>
+              </label>
+              <input style="border: 2px solid" class="form-control mt-3" formControlName="eeTCellDateRbe" readonly />
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-expansion-panel> </mat-accordion><br *ngIf="eeTcellPanelRbe && beRbe == 'rbe'">
+
+  <!-- SE -->
+
+  <mat-accordion *ngIf="sePanelRbe && beRbe == 'rbe'">
+    <mat-expansion-panel [expanded]="true" (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+      <mat-expansion-panel-header style="color: #643843; font-size: 20px">
+        RBE - SE
+      </mat-expansion-panel-header>
+      <div class="remarksForm card" [formGroup]="seremarksFormRbe">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="m-2">
+              <label class="label-name" style="margin-bottom: 10px">
+                <h2>Remarks :</h2>
+              </label>
+              <textarea name="remarks" class="remarksField form-control mt-3" rows="5" id="sign" style="width: 100%"
+                formControlName="seRemarksRbe"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6">
+            <div class="m-2">
+              <label class="label-name">
+                <h2>Name :</h2>
+              </label>
+              <input style="border: 2px solid" id="sign" type="text" class="form-control mt-3"
+                formControlName="seSignatureRbe" />
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="m-2" *ngIf="
+                !viewMode &&
+                roleName != 'DA_Division' &&
+                roleName != 'EE_Division' &&
+                roleName != 'RO' &&
+                roleName != 'CRO' &&
+                roleName != 'CE' && roleName != 'AO' && roleName != 'DCAO' && roleName != 'FA' && roleName != 'MD'
+              ">
+              <label class="label-name">
+                <h2>Date :</h2>
+              </label>
+              <input type="date" style="border: 2px solid" class="form-control mt-3" formControlName="seDateRbe" />
+            </div>
+            <div class="m-2" *ngIf="
+                viewMode &&
+                roleName != 'DA_Division' &&
+                roleName != 'EE_Division' &&
+                roleName != 'RO' &&
+                roleName != 'CRO' &&
+                roleName != 'CE' && roleName != 'AO' && roleName != 'DCAO' && roleName != 'FA' && roleName != 'MD'
+              ">
+              <label class="label-name">
+                <h2>Date :</h2>
+              </label>
+              <input style="border: 2px solid" class="form-control mt-3" formControlName="seDateRbe" readonly />
+            </div>
+
+            <div class="m-2" *ngIf="
+                roleName == 'DA_Division' ||
+                roleName == 'EE_Division' ||
+                roleName == 'RO' ||roleName == 'FA' ||
+                roleName == 'CRO' || roleName == 'CE' || roleName == 'AO' || roleName == 'DCAO' || roleName == 'MD'
+              ">
+              <label class="label-name">
+                <h2>Date :</h2>
+              </label>
+              <input style="border: 2px solid" class="form-control mt-3" formControlName="seDateRbe" readonly />
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-expansion-panel> </mat-accordion><br *ngIf="sePanelRbe && beRbe == 'rbe'">
+
+  <!-- CE -->
+
+  <mat-accordion *ngIf="cePanelRbe && beRbe == 'rbe'">
+    <mat-expansion-panel [expanded]="true" (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+      <mat-expansion-panel-header style="color: #643843; font-size: 20px">
+        RBE - CE
+      </mat-expansion-panel-header>
+      <div class="remarksForm card" [formGroup]="CEremarksFormRbe">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="m-2">
+              <label class="label-name" style="margin-bottom: 10px">
+                <h2>Remarks :</h2>
+              </label>
+              <textarea name="remarks" class="remarksField form-control mt-3" rows="5" id="sign" style="width: 100%"
+                formControlName="ceRemarksRbe"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6">
+            <div class="m-2">
+              <label class="label-name">
+                <h2>Name :</h2>
+              </label>
+              <input style="border: 2px solid" id="sign" type="text" class="form-control mt-3"
+                formControlName="ceSignatureRbe" />
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="m-2" *ngIf="
+                  !viewMode &&
+                  roleName != 'DA_Division' &&
+                  roleName != 'EE_Division' &&
+                  roleName != 'RO' &&
+                  roleName != 'CRO' &&
+                  roleName != 'AO'  && roleName != 'DCAO' && roleName != 'FA' && roleName != 'MD'
+                ">
+              <label class="label-name">
+                <h2>Date :</h2>
+              </label>
+              <input type="date" style="border: 2px solid" class="form-control mt-3" formControlName="ceDateRbe" />
+            </div>
+            <div class="m-2" *ngIf="
+                  viewMode &&
+                  roleName != 'DA_Division' &&
+                  roleName != 'EE_Division' &&
+                  roleName != 'RO' &&
+                  roleName != 'CRO' &&
+                  roleName != 'AO' && roleName != 'DCAO' && roleName != 'FA' && roleName != 'MD'
+                ">
+              <label class="label-name">
+                <h2>Date :</h2>
+              </label>
+              <input style="border: 2px solid" class="form-control mt-3" formControlName="ceDateRbe" readonly />
+            </div>
+
+            <div class="m-2" *ngIf="
+                  roleName == 'DA_Division' ||
+                  roleName == 'EE_Division' ||
+                  roleName == 'RO' ||
+                  roleName == 'CRO' || roleName == 'AO' || roleName == 'DCAO' || roleName == 'FA' || roleName == 'MD'
+                ">
+              <label class="label-name">
+                <h2>Date :</h2>
+              </label>
+              <input style="border: 2px solid" class="form-control mt-3" formControlName="ceDateRbe" readonly />
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-expansion-panel> </mat-accordion><br *ngIf="cePanelRbe && beRbe == 'rbe'">
+
+  <!-- AO -->
+
+  <mat-accordion *ngIf="aoPanelRbe && beRbe == 'rbe'">
+    <mat-expansion-panel [expanded]="true" (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+      <mat-expansion-panel-header style="color: #643843; font-size: 20px">
+        RBE - AO
+      </mat-expansion-panel-header>
+      <div class="remarksForm card" [formGroup]="AOremarksFormRbe">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="m-2">
+              <label class="label-name" style="margin-bottom: 10px">
+                <h2>Remarks :</h2>
+              </label>
+              <textarea name="remarks" class="remarksField form-control mt-3" rows="5" id="sign" style="width: 100%"
+                formControlName="aoRemarksRbe"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6">
+            <div class="m-2">
+              <label class="label-name">
+                <h2>Name :</h2>
+              </label>
+              <input style="border: 2px solid" id="sign" type="text" class="form-control mt-3"
+                formControlName="aoSignatureRbe" />
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="m-2" *ngIf="
+                  !viewMode &&
+                  roleName != 'DA_Division' &&
+                  roleName != 'EE_Division' &&
+                  roleName != 'RO' &&
+                  roleName != 'CRO' && roleName != 'DCAO' && roleName != 'FA' && roleName != 'MD'
+                ">
+              <label class="label-name">
+                <h2>Date :</h2>
+              </label>
+              <input type="date" style="border: 2px solid" class="form-control mt-3" formControlName="aoDateRbe" />
+            </div>
+            <div class="m-2" *ngIf="
+                  viewMode &&
+                  roleName != 'DA_Division' &&
+                  roleName != 'EE_Division' &&
+                  roleName != 'RO' &&
+                  roleName != 'CRO' && roleName != 'DCAO' && roleName != 'FA' && roleName != 'MD'
+                ">
+              <label class="label-name">
+                <h2>Date :</h2>
+              </label>
+              <input style="border: 2px solid" class="form-control mt-3" formControlName="aoDateRbe" readonly />
+            </div>
+
+            <div class="m-2" *ngIf="
+                  roleName == 'DA_Division' ||
+                  roleName == 'EE_Division' ||
+                  roleName == 'RO' ||
+                  roleName == 'CRO' || roleName == 'DCAO' || roleName == 'FA' || roleName == 'MD'
+                ">
+              <label class="label-name">
+                <h2>Date :</h2>
+              </label>
+              <input style="border: 2px solid" class="form-control mt-3" formControlName="aoDateRbe" readonly />
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-expansion-panel> </mat-accordion><br *ngIf="aoPanelRbe && beRbe == 'rbe'">
+
+  <!-- DCAO -->
+
+  <mat-accordion *ngIf="dcaoPanelRbe && beRbe == 'rbe'">
+    <mat-expansion-panel [expanded]="true" (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+      <mat-expansion-panel-header style="color: #643843; font-size: 20px">
+        RBE - DCAO
+      </mat-expansion-panel-header>
+      <div class="remarksForm card" [formGroup]="DCAOremarksFormRbe">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="m-2">
+              <label class="label-name" style="margin-bottom: 10px">
+                <h2>Remarks :</h2>
+              </label>
+              <textarea name="remarks" class="remarksField form-control mt-3" rows="5" id="sign" style="width: 100%"
+                formControlName="dcAoRemarksRbe"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6">
+            <div class="m-2">
+              <label class="label-name">
+                <h2>Name :</h2>
+              </label>
+              <input style="border: 2px solid" id="sign" type="text" class="form-control mt-3"
+                formControlName="dcAoSignatureRbe" />
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="m-2" *ngIf="
+                  !viewMode &&
+                  roleName != 'DA_Division' &&
+                  roleName != 'EE_Division' &&
+                  roleName != 'RO' &&
+                  roleName != 'CRO' && roleName != 'FA' && roleName != 'MD'
+                ">
+              <label class="label-name">
+                <h2>Date :</h2>
+              </label>
+              <input type="date" style="border: 2px solid" class="form-control mt-3" formControlName="dcAoDateRbe" />
+            </div>
+            <div class="m-2" *ngIf="
+                  viewMode &&
+                  roleName != 'DA_Division' &&
+                  roleName != 'EE_Division' &&
+                  roleName != 'RO' &&
+                  roleName != 'CRO' && roleName != 'FA'  && roleName != 'MD'
+                ">
+              <label class="label-name">
+                <h2>Date :</h2>
+              </label>
+              <input style="border: 2px solid" class="form-control mt-3" formControlName="dcAoDateRbe" readonly />
+            </div>
+
+            <div class="m-2" *ngIf="
+                  roleName == 'DA_Division' ||
+                  roleName == 'EE_Division' ||
+                  roleName == 'RO' ||
+                  roleName == 'CRO' || roleName == 'FA' || roleName == 'MD'
+                ">
+              <label class="label-name">
+                <h2>Date :</h2>
+              </label>
+              <input style="border: 2px solid" class="form-control mt-3" formControlName="dcAoDateRbe" readonly />
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-expansion-panel> </mat-accordion><br *ngIf="dcaoPanelRbe && beRbe == 'rbe'">
+
+  <!--FA-->
+
+  <mat-accordion *ngIf="faPanelRbe && beRbe == 'rbe'">
+    <mat-expansion-panel [expanded]="true" (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+      <mat-expansion-panel-header style="color: #643843; font-size: 20px">
+        RBE - FA
+      </mat-expansion-panel-header>
+      <div class="remarksForm card" [formGroup]="FAremarksFormRbe">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="m-2">
+              <label class="label-name" style="margin-bottom: 10px">
+                <h2>Remarks :</h2>
+              </label>
+              <textarea name="remarks" class="remarksField form-control mt-3" rows="5" id="sign" style="width: 100%"
+                formControlName="faRemarksRbe"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6">
+            <div class="m-2">
+              <label class="label-name">
+                <h2>Name :</h2>
+              </label>
+              <input style="border: 2px solid" id="sign" type="text" class="form-control mt-3"
+                formControlName="faSignatureRbe" />
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="m-2" *ngIf="
+                !viewMode &&
+                roleName != 'DA_Division' &&
+                roleName != 'EE_Division' &&
+                roleName != 'RO' &&
+                roleName != 'CRO' && roleName != 'MD'
+              ">
+              <label class="label-name">
+                <h2>Date :</h2>
+              </label>
+              <input type="date" style="border: 2px solid" class="form-control mt-3" formControlName="faDateRbe" />
+            </div>
+            <div class="m-2" *ngIf="
+                viewMode &&
+                roleName != 'DA_Division' &&
+                roleName != 'EE_Division' &&
+                roleName != 'RO' &&
+                roleName != 'CRO' && roleName != 'MD'
+              ">
+              <label class="label-name">
+                <h2>Date :</h2>
+              </label>
+              <input style="border: 2px solid" class="form-control mt-3" formControlName="faDateRbe" readonly />
+            </div>
+
+            <div class="m-2" *ngIf="
+                roleName == 'DA_Division' ||
+                roleName == 'EE_Division' ||
+                roleName == 'RO' ||
+                roleName == 'CRO' || roleName == 'MD'
+              ">
+              <label class="label-name">
+                <h2>Date :</h2>
+              </label>
+              <input style="border: 2px solid" class="form-control mt-3" formControlName="faDateRbe" readonly />
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion> <br *ngIf="faPanelRbe && beRbe == 'rbe'">
+
+  <!--MD-->
+
+  <!-- <mat-accordion *ngIf="mdPanelRbe && beRbe == 'rbe'">
+    <mat-expansion-panel [expanded]="true" (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+      <mat-expansion-panel-header style="color: #643843; font-size: 20px">
+        RBE - MD
+      </mat-expansion-panel-header>
+      <div class="remarksForm card" [formGroup]="MDremarksFormRbe">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="m-2">
+              <label class="label-name" style="margin-bottom: 10px">
+                <h2>Remarks :</h2>
+              </label>
+              <textarea name="remarks" class="remarksField form-control mt-3" rows="5" id="sign" style="width: 100%"
+                formControlName="mdRemarksRbe"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6">
+            <div class="m-2">
+              <label class="label-name">
+                <h2>Name :</h2>
+              </label>
+              <input style="border: 2px solid" id="sign" type="text" class="form-control mt-3"
+                formControlName="mdSignatureRbe" />
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="m-2" *ngIf="
+                  !viewMode &&
+                  roleName != 'DA_Division' &&
+                  roleName != 'EE_Division' &&
+                  roleName != 'RO' &&
+                  roleName != 'CRO'
+                ">
+              <label class="label-name">
+                <h2>Date :</h2>
+              </label>
+              <input type="date" style="border: 2px solid" class="form-control mt-3" formControlName="mdDateRbe" />
+            </div>
+            <div class="m-2" *ngIf="
+                  viewMode &&
+                  roleName != 'DA_Division' &&
+                  roleName != 'EE_Division' &&
+                  roleName != 'RO' &&
+                  roleName != 'CRO'
+                ">
+              <label class="label-name">
+                <h2>Date :</h2>
+              </label>
+              <input style="border: 2px solid" class="form-control mt-3" formControlName="mdDateRbe" readonly />
+            </div>
+
+            <div class="m-2" *ngIf="
+                  roleName == 'DA_Division' ||
+                  roleName == 'EE_Division' ||
+                  roleName == 'RO' ||
+                  roleName == 'CRO'
+                ">
+              <label class="label-name">
+                <h2>Date :</h2>
+              </label>
+              <input style="border: 2px solid" class="form-control mt-3" formControlName="mdDateRbe" readonly />
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion> <br *ngIf="mdPanelRbe && beRbe == 'rbe'"> -->
+
+  <div class="buttons mt-3">
+
+    <button class="btn btn-danger" (click)="DraftBeUpdate()"
+      *ngIf="beRbe == 'be' && !viewMode && paramsValue.divisionName == 'Head_office' && daIsActiveBe == 'Active'">Draft
+    </button>
+
+    <button class=" btn btn-danger" (click)="DraftBeUpdate()" *ngIf="beRbe == 'be' && !viewMode && paramsValue.divisionName != 'Head_office' &&
+      daIsActiveBe == 'Active'">Draft
+    </button>
+
+    <button class="btn btn-danger" (click)="DraftRbeUpdate()" *ngIf="beRbe == 'rbe' && !viewMode && paramsValue.divisionName == 'Head_office' && daIsActiveRbe == 'Active'
+     ">Draft
+    </button>
+    <!-- && divisionDropDownLength == paramsValue.countOfDatas -->
+
+    <button class="btn btn-danger" (click)="DraftRbeUpdate()" *ngIf="beRbe == 'rbe' && !viewMode && paramsValue.divisionName != 'Head_office' &&
+      daIsActiveRbe == 'Active'">
+      Draft
+    </button>
+
+    <button class="btn btn-secondary" routerLink="/famodule/home/budget">
+      Back
+    </button>
+
+    <button class="btn btn-success" (click)="beUpdate()"
+      *ngIf="beRbe == 'be' && (paramsValue.divisionName == 'Head_office' && divisionNameSelect == 'all' && roleFilterDropdown == 'All') && !viewMode && divisionDropDownLength == paramsValue.countOfDatas && daIsActiveBe == 'Active'">
+      {{buttonNameValue}}
+    </button>
+
+    <button class="btn btn-success" (click)="beUpdate()"
+      *ngIf="beRbe == 'be' && paramsValue.divisionName != 'Head_office' && !viewMode && daIsActiveBe == 'Active'&& roleFilterDropdown == 'All'">
+      {{buttonNameValue}}
+    </button>
+
+    <button class="btn btn-success" (click)="rbeUpdate()"
+      *ngIf="beRbe == 'rbe' && (paramsValue.divisionName == 'Head_office' && !viewMode && divisionNameSelect == 'all' && roleFilterDropdown == 'All')  && divisionDropDownLength == paramsValue.countOfDatas && daIsActiveRbe == 'Active'">
+      {{buttonNameValue}}
+    </button>
+
+    <button class="btn btn-success" (click)="rbeUpdate()"
+      *ngIf="beRbe == 'rbe' && paramsValue.divisionName != 'Head_office' && !viewMode && daIsActiveRbe == 'Active' && roleFilterDropdown == 'All'">
+      {{buttonNameValue}}
+    </button>
+
+  </div>
+
+</section>

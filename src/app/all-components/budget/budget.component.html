@@ -1,0 +1,841 @@
+<section class="main-content">
+  <div class="header-row">
+    <h3 class="sub-heading mx-auto">Budget Estimate / Revised Budget Estimate</h3>
+  </div>
+
+  <div class="filter-row mb-1">
+    <div class="me-2">
+      <div class="search-container">
+        <div>
+          <input matInput #input [(ngModel)]="searchValue" (keyup)="applyFilter($event)" type="text" id="search-input"
+            class="search-input" placeholder="Search..." />
+          <div class="search-icon">
+            <mat-icon>search</mat-icon>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <form [formGroup]="divisionForm">
+      <input type="text" class="form-control" formControlName="divisionInput" readonly
+        *ngIf="userDivision != 'Head_office'" />
+    </form>
+
+    <div class="col-2 yearSelection ms-1" *ngIf="userDivision == 'Head_office'" [formGroup]="divisionForm">
+      <select class="form-select" formControlName="financialYear" (change)="filterDivisionsYearBE()"
+        *ngIf="choosenTab == 0">
+        <option value="">Year</option>
+        <option *ngFor="let item of financialYears" value="{{ item }}-{{ item + 1 }}">
+          {{ item }}-{{ item + 1 }}
+        </option>
+      </select>
+
+      <select class="form-select" formControlName="financialYear" (change)="filterDivisionsYearRBE()"
+        *ngIf="choosenTab == 1">
+        <option value="">Year</option>
+        <option *ngFor="let item of financialYears" value="{{ item }}-{{ item + 1 }}">
+          {{ item }}-{{ item + 1 }}
+        </option>
+      </select>
+    </div>
+
+    <div [formGroup]="divisionForm">
+      <select class="form-select me-1" formControlName="status"
+        *ngIf="userDivision === 'Head_office' && choosenTab == 0" (change)="filterDivisionsYearBE()">
+        <option value="">Status</option>
+        <option value="Approved">Approved</option>
+        <option value="Active">Pending</option>
+        <option value="Draft">Draft</option>
+      </select>
+
+      <select class="form-select me-1" formControlName="status"
+        *ngIf="userDivision === 'Head_office' && choosenTab == 1" (change)="filterDivisionsYearRBE()">
+        <option value="">Status</option>
+        <option value="Approved">Approved</option>
+        <option value="Active">Pending</option>
+        <option value="Draft">Draft</option>
+      </select>
+    </div>
+
+    <div class="col-3" *ngIf="
+        (roleName == 'ARO_Division' || roleName == 'AEE_Division' ||
+        roleName == 'ACC_Clerk' || roleName == 'RO' || 
+        roleName == 'AO' || roleName == 'EE_T_CELL') && choosenTab == 0">
+      <button class="btn btn-light add-dataBtn" (click)="newBudgetButtonClick()">
+        <span>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
+            <path
+              d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
+          </svg>
+        </span>New BE
+      </button>
+    </div>
+
+    <div class="col-3" *ngIf="
+        (roleName == 'ARO_Division' ||
+        roleName == 'AEE_Division' ||
+        roleName == 'ACC_Clerk'|| roleName == 'RO' || 
+        roleName == 'AO' || roleName == 'EE_T_CELL') && choosenTab == 1">
+      <button class="btn btn-light add-dataBtn" (click)="newBudgetButtonClick()">
+        <span><svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
+            <path
+              d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
+          </svg></span>New RBE
+      </button>
+    </div>
+
+    <div>
+      <button class="btn btn-light excelBtn me-1">
+        <span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+            class="bi bi-file-earmark-arrow-down-fill biExcel-btn" viewBox="0 0 16 16">
+            <path
+              d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0M9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1m-1 4v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 0 1 .708-.708L7.5 11.293V7.5a.5.5 0 0 1 1 0" />
+          </svg></span>Excel
+      </button>
+
+      <button class="btn btn-light pdfBtn">
+        <span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+            class="bi bi-file-earmark-arrow-down-fill biPdf-btn" viewBox="0 0 16 16">
+            <path
+              d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0M9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1m-1 4v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 0 1 .708-.708L7.5 11.293V7.5a.5.5 0 0 1 1 0" />
+          </svg></span>PDF
+      </button>
+    </div>
+
+    <!-- <div>
+      <button class="btn btn-light pdfBtn">
+        <span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+            class="bi bi-file-earmark-arrow-down-fill biPdf-btn" viewBox="0 0 16 16">
+            <path
+              d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0M9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1m-1 4v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 0 1 .708-.708L7.5 11.293V7.5a.5.5 0 0 1 1 0" />
+          </svg></span>PDF
+      </button>
+    </div> -->
+
+  </div>
+
+  <div class="beRbeTable">
+    <mat-tab-group animationDuration="400ms" color="warn" (selectedTabChange)="onTabChange($event)">
+      <mat-tab label="BE">
+        <div>
+          <table mat-table [dataSource]="allBudgetBeDataSource" matSort class="schemes-table mt-2">
+            <!-- ID Column -->
+            <ng-container matColumnDef="sNo">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header class="thFirst">
+                S.No.
+              </th>
+              <td mat-cell *matCellDef="let budget; let i = index" [ngClass]="{'highlight-first-row': i === 0}">
+                {{ i + 1 }}
+              </td>
+            </ng-container>
+
+            <!-- division -->
+            <ng-container matColumnDef="division">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header style="text-align: center;">
+                Division
+              </th>
+              <td mat-cell *matCellDef="let budget; let i = index" [ngClass]="{'highlight-first-row': i === 0}">{{
+                budget.division }}</td>
+            </ng-container>
+
+            <!-- Division Column -->
+            <ng-container matColumnDef="year">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Year</th>
+              <td mat-cell *matCellDef="let budget; let i = index" [ngClass]="{'highlight-first-row': i === 0}">{{
+                budget.beLastYear }}</td>
+            </ng-container>
+
+            <!-- Division Column -->
+            <ng-container matColumnDef="propossedTotal">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                Proposed
+              </th>
+              <td mat-cell *matCellDef="let budget; let i = index" [ngClass]="{'highlight-first-row': i === 0}"
+                style="padding-left: 60px;">
+                <p *ngIf="roleAmount == 'No'">{{(budget.beLastYearProposedTotal ||
+                  0).toFixed(2)}}</p>
+                <p *ngIf="roleAmount == 'Yes'" class="routeButton"
+                  (click)="proposedFixedSplits('BE','proposed',budget)">{{
+                  (budget.beLastYearProposedTotal ||
+                  0).toFixed(2)}}</p>
+              </td>
+            </ng-container>
+
+            <!-- Scheme Name Column -->
+            <ng-container matColumnDef="fixedTotal">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Fixed</th>
+              <td mat-cell *matCellDef="let budget; let i = index" [ngClass]="{'highlight-first-row': i === 0}"
+                style="padding-left: 60px;">
+                <p *ngIf="roleAmount == 'No'">{{(budget.beLastYearFixedTotal
+                  || 0).toFixed(2)}}</p>
+                <p *ngIf="roleAmount == 'Yes'" class="routeButton" (click)="proposedFixedSplits('BE','fixed',budget)">
+                  {{(budget.beLastYearFixedTotal
+                  || 0).toFixed(2)}}
+                </p>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="approvalStatus">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+              <td mat-cell *matCellDef="let budget; let i = index" [ngClass]="{'highlight-first-row': i === 0}">
+                <!-- ARO Division Status -->
+                <p *ngIf="roleName == 'ARO_Division' && budget.aroDivisionStatus == 'Approved'"
+                  class="status aro-status" style="color: green; font-weight: 600; font-size: medium;">
+                  {{ budget.aroDivisionStatus}}
+                </p>
+                <p *ngIf="roleName == 'ARO_Division' && budget.aroDivisionStatus == 'Active'" class="status aro-status"
+                  style="color: rgb(18, 18, 208); font-weight: 600; font-size: medium;">
+                  {{ budget.aroDivisionStatus}}
+                </p>
+                <p *ngIf="roleName == 'ARO_Division' && budget.aroDivisionStatus == 'Draft'" class="status aro-status"
+                  style="color: rgb(211, 36, 36); font-weight: 600; font-size: medium;">
+                  {{ budget.aroDivisionStatus}}
+                </p>
+
+                <!-- MMS Division Status -->
+
+                <p *ngIf="this.roleName == 'MMS_Division' && budget.mmsDivisionStatus == 'Approved'"
+                  class="status aro-status" style="color: green; font-weight: 600; font-size: medium;">
+                  {{ budget.mmsDivisionStatus }}
+                </p>
+                <p *ngIf="this.roleName == 'MMS_Division' && budget.mmsDivisionStatus == 'Active'"
+                  class="status aro-status" style="color: rgb(18, 18, 208); font-weight: 600; font-size: medium;">
+                  {{ budget.mmsDivisionStatus }}
+                </p>
+                <p *ngIf="this.roleName == 'MMS_Division' && budget.mmsDivisionStatus == 'Draft'"
+                  class="status aro-status" style="color: rgb(211, 36, 36); font-weight: 600; font-size: medium;">
+                  {{ budget.mmsDivisionStatus }}
+                </p>
+
+                <!-- AEE Division Status -->
+
+                <p *ngIf="this.roleName == 'AEE_Division' && budget.aeeDivisionStatus == 'Approved'"
+                  class="status aro-status" style="color: green; font-weight: 600; font-size: medium;">
+                  {{ budget.aeeDivisionStatus }}
+                </p>
+                <p *ngIf="this.roleName == 'AEE_Division' && budget.aeeDivisionStatus == 'Active'"
+                  class="status aro-status" style="color: rgb(18, 18, 208); font-weight: 600; font-size: medium;">
+                  {{ budget.aeeDivisionStatus }}
+                </p>
+                <p *ngIf="this.roleName == 'AEE_Division' && budget.aeeDivisionStatus == 'Draft'"
+                  class="status aro-status" style="color: rgb(211, 36, 36); font-weight: 600; font-size: medium;">
+                  {{ budget.aeeDivisionStatus }}
+                </p>
+
+                <!-- AE PLAN Division Status -->
+
+                <p *ngIf="this.roleName == 'AE_Planning' && budget.aePlanDivisionStatus == 'Approved'"
+                  class="status aro-status" style="color: green; font-weight: 600; font-size: medium;">
+                  {{ budget.aePlanDivisionStatus }}
+                </p>
+                <p *ngIf="this.roleName == 'AE_Planning' && budget.aePlanDivisionStatus == 'Active'"
+                  class="status aro-status" style="color: rgb(18, 18, 208); font-weight: 600; font-size: medium;">
+                  {{ budget.aePlanDivisionStatus }}
+                </p>
+                <p *ngIf="this.roleName == 'AE_Planning' && budget.aePlanDivisionStatus == 'Draft'"
+                  class="status aro-status" style="color: rgb(211, 36, 36); font-weight: 600; font-size: medium;">
+                  {{ budget.aePlanDivisionStatus }}
+                </p>
+
+                <!-- ACC Division Status -->
+
+                <p *ngIf="this.roleName == 'ACC_Clerk' && budget.accClerkStatus == 'Approved'" class="status aro-status"
+                  style="color: green; font-weight: 600; font-size: medium;">
+                  {{ budget.accClerkStatus }}
+                </p>
+                <p *ngIf="this.roleName == 'ACC_Clerk' && budget.accClerkStatus == 'Active'" class="status aro-status"
+                  style="color: rgb(18, 18, 208); font-weight: 600; font-size: medium;">
+                  {{ budget.accClerkStatus }}
+                </p>
+                <p *ngIf="this.roleName == 'ACC_Clerk' && budget.accClerkStatus == 'Draft'" class="status aro-status"
+                  style="color: rgb(211, 36, 36); font-weight: 600; font-size: medium;">
+                  {{ budget.accClerkStatus }}
+                </p>
+
+                <!-- DA Division Status -->
+
+                <p *ngIf="this.roleName == 'DA_Division' && budget.daDivisionStatus == 'Approved'"
+                  class="status aro-status" style="color: green; font-weight: 600; font-size: medium;">
+                  {{ budget.daDivisionStatus }}
+                </p>
+                <p *ngIf="this.roleName == 'DA_Division' && budget.daDivisionStatus == 'Active'"
+                  class="status aro-status" style="color: rgb(18, 18, 208); font-weight: 600; font-size: medium;">
+                  {{ budget.daDivisionStatus }}
+                </p>
+                <p *ngIf="this.roleName == 'DA_Division' && budget.daDivisionStatus == 'Draft'"
+                  class="status aro-status" style="color: rgb(211, 36, 36); font-weight: 600; font-size: medium;">
+                  {{ budget.daDivisionStatus }}
+                </p>
+
+                <!-- EE Division Status -->
+
+                <p *ngIf="this.roleName == 'EE_Division' && budget.eeDivisionStatus == 'Approved'"
+                  class="status aro-status" style="color: green; font-weight: 600; font-size: medium;">
+                  {{ budget.eeDivisionStatus }}
+                </p>
+                <p *ngIf="this.roleName == 'EE_Division' && budget.eeDivisionStatus == 'Active'"
+                  class="status aro-status" style="color: rgb(18, 18, 208); font-weight: 600; font-size: medium;">
+                  {{ budget.eeDivisionStatus }}
+                </p>
+                <p *ngIf="this.roleName == 'EE_Division' && budget.eeDivisionStatus == 'Draft'"
+                  class="status aro-status" style="color: rgb(211, 36, 36); font-weight: 600; font-size: medium;">
+                  {{ budget.eeDivisionStatus }}
+                </p>
+
+                <!-- RO  -->
+
+                <p *ngIf="this.roleName == 'RO' && budget.roStatus == 'Approved'" class="status aro-status"
+                  style="color: green; font-weight: 600; font-size: medium;">
+                  {{ budget.roStatus }}
+                </p>
+                <p *ngIf="this.roleName == 'RO' && budget.roStatus == 'Active'" class="status aro-status"
+                  style="color: rgb(18, 18, 208); font-weight: 600; font-size: medium;">
+                  {{ budget.roStatus }}
+                </p>
+                <p *ngIf="this.roleName == 'RO' && budget.roStatus == 'Draft'" class="status aro-status"
+                  style="color: rgb(211, 36, 36); font-weight: 600; font-size: medium;">
+                  {{ budget.roStatus }}
+                </p>
+
+                <!-- CRO -->
+
+                <p *ngIf="this.roleName == 'CRO' && budget.croStatus == 'Approved'" class="status aro-status"
+                  style="color: green; font-weight: 600; font-size: medium;">
+                  {{ budget.croStatus }}
+                </p>
+                <p *ngIf="this.roleName == 'CRO' && budget.croStatus == 'Active'" class="status aro-status"
+                  style="color: rgb(18, 18, 208); font-weight: 600; font-size: medium;">
+                  {{ budget.croStatus }}
+                </p>
+                <p *ngIf="this.roleName == 'CRO' && budget.croStatus == 'Draft'" class="status aro-status"
+                  style="color: rgb(211, 36, 36); font-weight: 600; font-size: medium;">
+                  {{ budget.croStatus }}
+                </p>
+
+                <!-- EE_T_CELL -->
+
+                <p *ngIf="this.roleName == 'EE_T_CELL' && budget.eeTCellStatus == 'Approved'" class="status aro-status"
+                  style="color: green; font-weight: 600; font-size: medium;">
+                  {{ budget.eeTCellStatus }}
+                </p>
+                <p *ngIf="this.roleName == 'EE_T_CELL' && budget.eeTCellStatus == 'Active'" class="status aro-status"
+                  style="color: rgb(18, 18, 208); font-weight: 600; font-size: medium;">
+                  {{ budget.eeTCellStatus }}
+                </p>
+                <p *ngIf="this.roleName == 'EE_T_CELL' && budget.eeTCellStatus == 'Draft'" class="status aro-status"
+                  style="color: rgb(211, 36, 36); font-weight: 600; font-size: medium;">
+                  {{ budget.eeTCellStatus }}
+                </p>
+
+                <!-- SE -->
+
+                <p *ngIf="this.roleName == 'SE' && budget.seStatus == 'Approved'" class="status aro-status"
+                  style="color: green; font-weight: 600; font-size: medium;">
+                  {{ budget.seStatus }}
+                </p>
+                <p *ngIf="this.roleName == 'SE' && budget.seStatus == 'Active'" class="status aro-status"
+                  style="color: rgb(18, 18, 208); font-weight: 600; font-size: medium;">
+                  {{ budget.seStatus }}
+                </p>
+                <p *ngIf="this.roleName == 'SE' && budget.seStatus == 'Draft'" class="status aro-status"
+                  style="color: rgb(211, 36, 36); font-weight: 600; font-size: medium;">
+                  {{ budget.seStatus }}
+                </p>
+
+                <!-- CE -->
+
+                <p *ngIf="this.roleName == 'CE' && budget.ceStatus == 'Approved'" class="status aro-status"
+                  style="color: green; font-weight: 600; font-size: medium;">
+                  {{ budget.ceStatus }}
+                </p>
+                <p *ngIf="this.roleName == 'CE' && budget.ceStatus == 'Active'" class="status aro-status"
+                  style="color: rgb(18, 18, 208); font-weight: 600; font-size: medium;">
+                  {{ budget.ceStatus }}
+                </p>
+                <p *ngIf="this.roleName == 'CE' && budget.ceStatus == 'Draft'" class="status aro-status"
+                  style="color: rgb(211, 36, 36); font-weight: 600; font-size: medium;">
+                  {{ budget.ceStatus }}
+                </p>
+
+                <!-- AO -->
+
+                <p *ngIf="this.roleName == 'AO' && budget.aoStatus == 'Approved'" class="status aro-status"
+                  style="color: green; font-weight: 600; font-size: medium;">
+                  {{ budget.aoStatus }}
+                </p>
+                <p *ngIf="this.roleName == 'AO' && budget.aoStatus == 'Active'" class="status aro-status"
+                  style="color: rgb(18, 18, 208); font-weight: 600; font-size: medium;">
+                  {{ budget.aoStatus }}
+                </p>
+                <p *ngIf="this.roleName == 'AO' && budget.aoStatus == 'Draft'" class="status aro-status"
+                  style="color: rgb(211, 36, 36); font-weight: 600; font-size: medium;">
+                  {{ budget.aoStatus }}
+                </p>
+
+                <!-- DCAO -->
+
+                <p *ngIf="this.roleName == 'DCAO' && budget.dcAoStatus == 'Approved'" class="status aro-status"
+                  style="color: green; font-weight: 600; font-size: medium;">
+                  {{ budget.dcAoStatus }}
+                </p>
+                <p *ngIf="this.roleName == 'DCAO' && budget.dcAoStatus == 'Active'" class="status aro-status"
+                  style="color: rgb(18, 18, 208); font-weight: 600; font-size: medium;">
+                  {{ budget.dcAoStatus }}
+                </p>
+                <p *ngIf="this.roleName == 'DCAO' && budget.dcAoStatus == 'Draft'" class="status aro-status"
+                  style="color: rgb(211, 36, 36); font-weight: 600; font-size: medium;">
+                  {{ budget.dcAoStatus }}
+                </p>
+
+                <!-- FA -->
+
+                <p *ngIf="this.roleName == 'FA' && budget.faStatus == 'Approved'" class="status aro-status"
+                  style="color: green; font-weight: 600; font-size: medium;">
+                  {{ budget.faStatus }}
+                </p>
+                <p *ngIf="this.roleName == 'FA' && budget.faStatus == 'Active'" class="status aro-status"
+                  style="color: rgb(18, 18, 208); font-weight: 600; font-size: medium;">
+                  {{ budget.faStatus }}
+                </p>
+                <p *ngIf="this.roleName == 'FA' && budget.faStatus == 'Draft'" class="status aro-status"
+                  style="color: rgb(211, 36, 36); font-weight: 600; font-size: medium;">
+                  {{ budget.faStatus }}
+                </p>
+
+                <!-- MD -->
+
+                <p *ngIf="this.roleName == 'MD' && budget.mdStatus == 'Approved'" class="status aro-status"
+                  style="color: green; font-weight: 600; font-size: medium;">
+                  {{ budget.mdStatus }}
+                </p>
+                <p *ngIf="this.roleName == 'MD' && budget.mdStatus == 'Active'" class="status aro-status"
+                  style="color: rgb(18, 18, 208); font-weight: 600; font-size: medium;">
+                  {{ budget.mdStatus }}
+                </p>
+                <p *ngIf="this.roleName == 'MD' && budget.mdStatus == 'Draft'" class="status aro-status"
+                  style="color: rgb(211, 36, 36); font-weight: 600; font-size: medium;">
+                  {{ budget.mdStatus }}
+                </p>
+              </td>
+            </ng-container>
+
+            <!-- Action Column -->
+            <ng-container matColumnDef="ACTION">
+              <th mat-header-cell *matHeaderCellDef class="thBottom">Action</th>
+              <td mat-cell *matCellDef="let budget; let i = index" [ngClass]="{'highlight-first-row': i === 0}">
+
+                <div class="d-flex">
+                  <a class="view-edit-icons"
+                    (click)="viewNewBudget( divisionsName, 'be', 'view', budget.beLastYear, budget.approvalStatus,budget.count)"
+                    *ngIf="divisionsName != 'all'"><span class="material-symbols-rounded">visibility</span>
+                  </a>
+
+                  <a class="view-edit-icons"
+                    (click)="viewNewBudget(divisionsName,'consolidationBE','view',budget.beLastYear,budget.approvalStatus,budget.count)"
+                    *ngIf="divisionsName == 'all'"><span class="material-symbols-rounded">visibility</span>
+                  </a>
+
+                  <a class="view-edit-icons"
+                    (click)="editNewBudget( divisionsName, 'be', 'edit', budget.beLastYear, budget.approvalStatus,budget.count)"
+                    *ngIf=" budget.approvalStatus == 'Draft' && divisionForm.value.divisionInput != 'Head_office'">
+                    <span class="material-symbols-rounded">edit</span>
+                  </a>
+
+                  <a class="view-edit-icons"
+                    (click)="editNewBudget( divisionsName, 'be', 'edit', budget.beLastYear, budget.approvalStatus,budget.count)"
+                    *ngIf=" budget.kpStatus == '' && divisionForm.value.divisionInput != 'Head_office'">
+                    <span class="material-symbols-rounded">edit</span>
+                  </a>
+
+                  <a class="view-edit-icons"
+                    (click)="editNewBudget(divisionsName,'be','edit',budget.beLastYear,budget.approvalStatus,budget.count)"
+                    *ngIf="budget.kpStatus == '' && divisionForm.value.divisionInput == 'Head_office'&& roleName !='MD'">
+                    <span class="material-symbols-rounded">edit</span>
+                  </a>
+
+                  <a class="view-edit-icons"
+                    (click)="editNewBudget(divisionsName,'be','edit',budget.beLastYear,budget.approvalStatus,budget.count)"
+                    *ngIf="divisionForm.value.divisionSelect != 'all' && userDivision == 'Head_office' && 
+                    ((divisionForm.value.divisionSelect == 'Head_office' && budget.approvalStatus == 'Draft') || 
+                    (divisionForm.value.divisionSelect != 'Head_office' && (budget.approvalStatus == 'Active' || 
+                    budget.approvalStatus == 'Pending')))"> <span class="material-symbols-rounded">edit</span>
+                  </a>
+
+                  <!-- <a style="color: #161f6d; cursor: pointer;"
+                    *ngIf="roleName == 'DA_Division' || roleName == 'EE_Division'"
+                    (click)="proposedFixedSplits('BE','proposed',budget)"><mat-icon>description</mat-icon>
+                  </a> -->
+
+                </div>
+
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="budgetBeTableColumns"></tr>
+            <tr mat-row *matRowDef="let budget; columns: budgetBeTableColumns"></tr>
+
+            <!-- Row shown when there is no matching data. -->
+            <tr class="mat-row" *matNoDataRow>
+              <td class="mat-cell" colspan="4">
+                No data matching the filter "{{ input.value }}"
+              </td>
+            </tr>
+          </table>
+        </div>
+      </mat-tab>
+
+      <mat-tab label="RBE">
+        <table mat-table [dataSource]="allBudgetDataSourceRBE" matSort class="schemes-table mt-2" id="mass">
+          <!-- ID Column -->
+          <ng-container matColumnDef="S.No">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="thFirst">
+              S.No.
+            </th>
+            <td mat-cell *matCellDef="let budget; let i = index" [ngClass]="{'highlight-first-row': i === 0}">
+              {{ i + 1 }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="division">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Division</th>
+            <td mat-cell *matCellDef="let budget; let i = index" [ngClass]="{'highlight-first-row': i === 0}">{{
+              budget.division }}</td>
+          </ng-container>
+
+          <!-- Division Column -->
+          <ng-container matColumnDef="year">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Year</th>
+            <td mat-cell *matCellDef="let budget; let i = index" [ngClass]="{'highlight-first-row': i === 0}">{{
+              budget.rbeYear }}</td>
+          </ng-container>
+
+          <!-- Division Column -->
+          <ng-container matColumnDef="proposed">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Proposed</th>
+            <td mat-cell *matCellDef="let budget; let i = index" [ngClass]="{'highlight-first-row': i === 0}"
+              style="padding-left: 60px;">
+              <p *ngIf="roleAmount == 'No'">{{ (budget.lastRbeProposedTotal || 0).toFixed(2) }}</p>
+              <p *ngIf="roleAmount == 'Yes'" class="routeButton" (click)="proposedFixedSplits('RBE','proposed',budget)">
+                {{
+                (budget.lastRbeProposedTotal ||
+                0).toFixed(2)}}</p>
+            </td>
+          </ng-container>
+
+          <!-- Scheme Name Column -->
+          <ng-container matColumnDef="fixed">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Fixed</th>
+            <td mat-cell *matCellDef="let budget; let i = index" [ngClass]="{'highlight-first-row': i === 0}"
+              style="padding-left: 60px;">
+              <p *ngIf="roleAmount == 'No'">{{ (budget.lastRbeFixedTotal || 0).toFixed(2) }}</p>
+              <p *ngIf="roleAmount == 'Yes'" class="routeButton" (click)="proposedFixedSplits('RBE','fixed',budget)">
+                {{(budget.lastRbeFixedTotal
+                || 0).toFixed(2)}}
+              </p>
+
+            </td>
+          </ng-container>
+
+          <!-- Asset Category Column -->
+          <ng-container matColumnDef="approvalStatus">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+            <td mat-cell *matCellDef="let budget; let i = index" [ngClass]="{'highlight-first-row': i === 0}">
+              <!-- ARO Division Status -->
+
+              <p *ngIf="this.roleName == 'ARO_Division' && budget.aroDivisionStatusRbe == 'Approved'"
+                class="status aro-status" style="color: green; font-weight: 600; font-size: medium;">
+                {{ budget.aroDivisionStatusRbe }}
+              </p>
+              <p *ngIf="this.roleName == 'ARO_Division' && budget.aroDivisionStatusRbe == 'Active'"
+                class="status aro-status" style="color: rgb(18, 18, 208); font-weight: 600; font-size: medium;">
+                {{ budget.aroDivisionStatusRbe }}
+              </p>
+              <p *ngIf="this.roleName == 'ARO_Division' && budget.aroDivisionStatusRbe == 'Draft'"
+                class="status aro-status" style="color: rgb(211, 36, 36); font-weight: 600; font-size: medium;">
+                {{ budget.aroDivisionStatusRbe }}
+              </p>
+
+              <!-- MMS Division Status -->
+
+              <p *ngIf="this.roleName == 'MMS_Division' && budget.mmsDivisionStatusRbe == 'Approved'"
+                class="status aro-status" style="color: green; font-weight: 600; font-size: medium;">
+                {{ budget.mmsDivisionStatusRbe }}
+              </p>
+              <p *ngIf="this.roleName == 'MMS_Division' && budget.mmsDivisionStatusRbe == 'Active'"
+                class="status aro-status" style="color: rgb(18, 18, 208); font-weight: 600; font-size: medium;">
+                {{ budget.mmsDivisionStatusRbe }}
+              </p>
+              <p *ngIf="this.roleName == 'MMS_Division' && budget.mmsDivisionStatusRbe == 'Draft'"
+                class="status aro-status" style="color: rgb(211, 36, 36); font-weight: 600; font-size: medium;">
+                {{ budget.mmsDivisionStatusRbe }}
+              </p>
+
+              <!-- AE PLAN Division Status -->
+
+              <p *ngIf="this.roleName == 'AE_Planning' && budget.aePlanDivisionStatusRbe == 'Approved'"
+                class="status aro-status" style="color: green; font-weight: 600; font-size: medium;">
+                {{ budget.aePlanDivisionStatusRbe }}
+              </p>
+              <p *ngIf="this.roleName == 'AE_Planning' && budget.aePlanDivisionStatusRbe == 'Active'"
+                class="status aro-status" style="color: rgb(18, 18, 208); font-weight: 600; font-size: medium;">
+                {{ budget.aePlanDivisionStatusRbe }}
+              </p>
+              <p *ngIf="this.roleName == 'AE_Planning' && budget.aePlanDivisionStatusRbe == 'Draft'"
+                class="status aro-status" style="color: rgb(211, 36, 36); font-weight: 600; font-size: medium;">
+                {{ budget.aePlanDivisionStatusRbe }}
+              </p>
+
+              <!-- AEE Division Status -->
+
+              <p *ngIf="this.roleName == 'AEE_Division' && budget.aeeDivisionStatusRbe == 'Approved'"
+                class="status aro-status" style="color: green; font-weight: 600; font-size: medium;">
+                {{ budget.aeeDivisionStatusRbe }}
+              </p>
+              <p *ngIf="this.roleName == 'AEE_Division' && budget.aeeDivisionStatusRbe == 'Active'"
+                class="status aro-status" style="color: rgb(18, 18, 208); font-weight: 600; font-size: medium;">
+                {{ budget.aeeDivisionStatusRbe }}
+              </p>
+              <p *ngIf="this.roleName == 'AEE_Division' && budget.aeeDivisionStatusRbe == 'Draft'"
+                class="status aro-status" style="color: rgb(211, 36, 36); font-weight: 600; font-size: medium;">
+                {{ budget.aeeDivisionStatusRbe }}
+              </p>
+
+              <!-- ACC_Clerk Division Status -->
+
+              <p *ngIf="this.roleName == 'ACC_Clerk' && budget.accClerkStatusRbe == 'Approved'"
+                class="status aro-status" style="color: green; font-weight: 600; font-size: medium;">
+                {{ budget.accClerkStatusRbe }}
+              </p>
+              <p *ngIf="this.roleName == 'ACC_Clerk' && budget.accClerkStatusRbe == 'Active'" class="status aro-status"
+                style="color: rgb(18, 18, 208); font-weight: 600; font-size: medium;">
+                {{ budget.accClerkStatusRbe }}
+              </p>
+              <p *ngIf="this.roleName == 'ACC_Clerk' && budget.accClerkStatusRbe == 'Draft'" class="status aro-status"
+                style="color: rgb(211, 36, 36); font-weight: 600; font-size: medium;">
+                {{ budget.accClerkStatusRbe }}
+              </p>
+
+              <!-- DA Division Status -->
+
+              <p *ngIf="this.roleName == 'DA_Division' && budget.daDivisionStatusRbe == 'Approved'"
+                class="status aro-status" style="color: green; font-weight: 600; font-size: medium;">
+                {{ budget.daDivisionStatusRbe }}
+              </p>
+              <p *ngIf="this.roleName == 'DA_Division' && budget.daDivisionStatusRbe == 'Active'"
+                class="status aro-status" style="color: rgb(18, 18, 208); font-weight: 600; font-size: medium;">
+                {{ budget.daDivisionStatusRbe }}
+              </p>
+              <p *ngIf="this.roleName == 'DA_Division' && budget.daDivisionStatusRbe == 'Draft'"
+                class="status aro-status" style="color: rgb(211, 36, 36); font-weight: 600; font-size: medium;">
+                {{ budget.daDivisionStatusRbe }}
+              </p>
+
+              <!-- EE Division Status -->
+
+              <p *ngIf="this.roleName == 'EE_Division' && budget.eeDivisionStatusRbe == 'Approved'"
+                class="status aro-status" style="color: green; font-weight: 600; font-size: medium;">
+                {{ budget.eeDivisionStatusRbe }}
+              </p>
+              <p *ngIf="this.roleName == 'EE_Division' && budget.eeDivisionStatusRbe == 'Active'"
+                class="status aro-status" style="color: rgb(18, 18, 208); font-weight: 600; font-size: medium;">
+                {{ budget.eeDivisionStatusRbe }}
+              </p>
+              <p *ngIf="this.roleName == 'EE_Division' && budget.eeDivisionStatusRbe == 'Draft'"
+                class="status aro-status" style="color: rgb(211, 36, 36); font-weight: 600; font-size: medium;">
+                {{ budget.eeDivisionStatusRbe }}
+              </p>
+
+              <!-- RO -->
+
+              <p *ngIf="this.roleName == 'RO' && budget.roStatusRbe == 'Approved'" class="status aro-status"
+                style="color: green; font-weight: 600; font-size: medium;">
+                {{ budget.roStatusRbe }}
+              </p>
+              <p *ngIf="this.roleName == 'RO' && budget.roStatusRbe == 'Active'" class="status aro-status"
+                style="color: rgb(18, 18, 208); font-weight: 600; font-size: medium;">
+                {{ budget.roStatusRbe }}
+              </p>
+              <p *ngIf="this.roleName == 'RO' && budget.roStatusRbe == 'Draft'" class="status aro-status"
+                style="color: rgb(211, 36, 36); font-weight: 600; font-size: medium;">
+                {{ budget.roStatusRbe }}
+              </p>
+
+              <!-- CRO -->
+
+              <p *ngIf="this.roleName == 'CRO' && budget.croStatusRbe == 'Approved'" class="status aro-status"
+                style="color: green; font-weight: 600; font-size: medium;">
+                {{ budget.croStatusRbe }}
+              </p>
+              <p *ngIf="this.roleName == 'CRO' && budget.croStatusRbe == 'Active'" class="status aro-status"
+                style="color: rgb(18, 18, 208); font-weight: 600; font-size: medium;">
+                {{ budget.croStatusRbe }}
+              </p>
+              <p *ngIf="this.roleName == 'CRO' && budget.croStatusRbe == 'Draft'" class="status aro-status"
+                style="color: rgb(211, 36, 36); font-weight: 600; font-size: medium;">
+                {{ budget.croStatusRbe }}
+              </p>
+
+              <!-- EE_T_CELL -->
+
+              <p *ngIf="this.roleName == 'EE_T_CELL' && budget.eeTCellStatusRbe == 'Approved'" class="status aro-status"
+                style="color: green; font-weight: 600; font-size: medium;">
+                {{ budget.eeTCellStatusRbe }}
+              </p>
+              <p *ngIf="this.roleName == 'EE_T_CELL' && budget.eeTCellStatusRbe == 'Active'" class="status aro-status"
+                style="color: rgb(18, 18, 208); font-weight: 600; font-size: medium;">
+                {{ budget.eeTCellStatusRbe }}
+              </p>
+              <p *ngIf="this.roleName == 'EE_T_CELL' && budget.eeTCellStatusRbe == 'Draft'" class="status aro-status"
+                style="color: rgb(211, 36, 36); font-weight: 600; font-size: medium;">
+                {{ budget.eeTCellStatusRbe }}
+              </p>
+
+              <!-- SE -->
+
+              <p *ngIf="this.roleName == 'SE' && budget.seStatusRbe == 'Approved'" class="status aro-status"
+                style="color: green; font-weight: 600; font-size: medium;">
+                {{ budget.seStatusRbe }}
+              </p>
+              <p *ngIf="this.roleName == 'SE' && budget.seStatusRbe == 'Active'" class="status aro-status"
+                style="color: rgb(18, 18, 208); font-weight: 600; font-size: medium;">
+                {{ budget.seStatusRbe }}
+              </p>
+              <p *ngIf="this.roleName == 'SE' && budget.seStatusRbe == 'Draft'" class="status aro-status"
+                style="color: rgb(211, 36, 36); font-weight: 600; font-size: medium;">
+                {{ budget.seStatusRbe }}
+              </p>
+
+              <!-- CE -->
+
+              <p *ngIf="this.roleName == 'CE' && budget.ceStatusRbe == 'Approved'" class="status aro-status"
+                style="color: green; font-weight: 600; font-size: medium;">
+                {{ budget.ceStatusRbe }}
+              </p>
+              <p *ngIf="this.roleName == 'CE' && budget.ceStatusRbe == 'Active'" class="status aro-status"
+                style="color: rgb(18, 18, 208); font-weight: 600; font-size: medium;">
+                {{ budget.ceStatusRbe }}
+              </p>
+              <p *ngIf="this.roleName == 'CE' && budget.ceStatusRbe == 'Draft'" class="status aro-status"
+                style="color: rgb(211, 36, 36); font-weight: 600; font-size: medium;">
+                {{ budget.ceStatusRbe }}
+              </p>
+
+              <!-- AO -->
+
+              <p *ngIf="this.roleName == 'AO' && budget.aoStatusRbe == 'Approved'" class="status aro-status"
+                style="color: green; font-weight: 600; font-size: medium;">
+                {{ budget.aoStatusRbe }}
+              </p>
+              <p *ngIf="this.roleName == 'AO' && budget.aoStatusRbe == 'Active'" class="status aro-status"
+                style="color: rgb(18, 18, 208); font-weight: 600; font-size: medium;">
+                {{ budget.aoStatusRbe }}
+              </p>
+              <p *ngIf="this.roleName == 'AO' && budget.aoStatusRbe == 'Draft'" class="status aro-status"
+                style="color: rgb(211, 36, 36); font-weight: 600; font-size: medium;">
+                {{ budget.aoStatusRbe }}
+              </p>
+
+              <!-- DCAO -->
+
+              <p *ngIf="this.roleName == 'DCAO' && budget.dcAoStatusRbe == 'Approved'" class="status aro-status"
+                style="color: green; font-weight: 600; font-size: medium;">
+                {{ budget.dcAoStatusRbe }}
+              </p>
+              <p *ngIf="this.roleName == 'DCAO' && budget.dcAoStatusRbe == 'Active'" class="status aro-status"
+                style="color: rgb(18, 18, 208); font-weight: 600; font-size: medium;">
+                {{ budget.dcAoStatusRbe }}
+              </p>
+              <p *ngIf="this.roleName == 'DCAO' && budget.dcAoStatusRbe == 'Draft'" class="status aro-status"
+                style="color: rgb(211, 36, 36); font-weight: 600; font-size: medium;">
+                {{ budget.dcAoStatusRbe }}
+              </p>
+
+              <!-- FA -->
+
+              <p *ngIf="this.roleName == 'FA' && budget.faStatusRbe == 'Approved'" class="status aro-status"
+                style="color: green; font-weight: 600; font-size: medium;">
+                {{ budget.faStatusRbe }}
+              </p>
+              <p *ngIf="this.roleName == 'FA' && budget.faStatusRbe == 'Active'" class="status aro-status"
+                style="color: rgb(18, 18, 208); font-weight: 600; font-size: medium;">
+                {{ budget.faStatusRbe }}
+              </p>
+              <p *ngIf="this.roleName == 'FA' && budget.faStatusRbe == 'Draft'" class="status aro-status"
+                style="color: rgb(211, 36, 36); font-weight: 600; font-size: medium;">
+                {{ budget.faStatusRbe }}
+              </p>
+
+              <!-- MD -->
+
+              <p *ngIf="this.roleName == 'MD' && budget.mdStatusRbe == 'Approved'" class="status aro-status"
+                style="color: green; font-weight: 600; font-size: medium;">
+                {{ budget.mdStatusRbe }}
+              </p>
+              <p *ngIf="this.roleName == 'MD' && budget.mdStatusRbe == 'Active'" class="status aro-status"
+                style="color: rgb(18, 18, 208); font-weight: 600; font-size: medium;">
+                {{ budget.mdStatusRbe }}
+              </p>
+              <p *ngIf="this.roleName == 'MD' && budget.mdStatusRbe == 'Draft'" class="status aro-status"
+                style="color: rgb(211, 36, 36); font-weight: 600; font-size: medium;">
+                {{ budget.mdStatusRbe }}
+              </p>
+            </td>
+          </ng-container>
+
+          <!-- Action Column -->
+          <ng-container matColumnDef="ACTION">
+            <th mat-header-cell *matHeaderCellDef class="thBottom">Action</th>
+            <td mat-cell *matCellDef="let budget; let i = index" [ngClass]="{'highlight-first-row': i === 0}">
+              <div class="d-flex">
+                <a style="color: #161f6d; cursor: pointer;" (click)="
+                    viewNewBudget(divisionsName,'rbe','view',budget.rbeYear,budget.approvalStatus,budget.count)"
+                  *ngIf="divisionsName != 'all'"><span class="material-symbols-rounded">visibility</span></a>
+
+                <a style="color: #161f6d; cursor: pointer;"
+                  (click)="
+                    viewNewBudget(divisionsName,'consolidationRBE','view',budget.rbeYear,budget.approvalStatus,budget.count)"
+                  *ngIf="divisionsName == 'all'"><span class="material-symbols-rounded">visibility</span></a>
+
+                <a style="color: #161f6d; cursor: pointer;" (click)="
+                    editNewBudget(divisionsName,'rbe','edit',budget.rbeYear,budget.approvalStatus,budget.count)"
+                  *ngIf="budget.approvalStatus == 'Draft' && divisionForm.value.divisionInput != 'Head_office'">
+                  <span class="material-symbols-rounded">edit</span></a>
+
+                <a style="color: #161f6d; cursor: pointer;" (click)="
+                    editNewBudget(divisionsName,'rbe','edit',budget.rbeYear,budget.approvalStatus,budget.count)"
+                  *ngIf="budget.kpStatus == '' && divisionForm.value.divisionInput != 'Head_office'">
+                  <span class="material-symbols-rounded">edit</span></a>
+
+                <a style="color: #161f6d; cursor: pointer;" (click)="
+                    editNewBudget(divisionsName,'rbe','edit',budget.rbeYear,budget.approvalStatus,budget.count)"
+                  *ngIf="budget.kpStatus == '' && divisionForm.value.divisionInput == 'Head_office' && roleName !='MD'">
+                  <span class="material-symbols-rounded">edit</span></a>
+
+                <a style="color: #161f6d; cursor: pointer;" (click)="
+                    editNewBudget(divisionsName,'rbe','edit',budget.rbeYear,budget.approvalStatus,budget.count)" *ngIf="divisionForm.value.divisionSelect != 'all' &&
+                    userDivision == 'Head_office' &&
+                    ((divisionForm.value.divisionSelect == 'Head_office' &&
+                      budget.approvalStatus == 'Draft') ||
+                      (divisionForm.value.divisionSelect != 'Head_office' &&
+                        (budget.approvalStatus == 'Active' ||
+                          budget.approvalStatus == 'Pending')))">
+                  <span class="material-symbols-rounded">edit</span></a>
+
+              </div>
+            </td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="budgetTableColumnsRBE"></tr>
+          <tr mat-row *matRowDef="let budget; columns: budgetTableColumnsRBE"></tr>
+
+          <!-- Row shown when there is no matching data. -->
+          <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" colspan="4">
+              No data matching the filter "{{ input.value }}"
+            </td>
+          </tr>
+        </table>
+      </mat-tab>
+
+    </mat-tab-group>
+  </div>
+</section>

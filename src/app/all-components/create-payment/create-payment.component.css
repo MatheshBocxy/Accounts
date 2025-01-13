@@ -1,0 +1,161 @@
+.main {
+    padding: 30px;
+    background-color: #f2d8d8;
+  }
+  
+  .head {
+    text-align: center;
+  }
+  
+  .btn {
+    margin-top: 20px;
+  }
+  
+  .theading th {
+    background-color: #161f6d;
+    color: white;
+  }
+  
+  .table-input {
+    width: 150px;
+  }
+  
+  .mat-mdc-table {
+    width: 100%;
+    max-height: 500px;
+    overflow: auto;
+  }
+  
+  .mat-mdc-table .mdc-data-table__header-row {
+    background-color: #0f78ac59;
+    color: white;
+  }
+  
+  .mat-table {
+    width: 100%;
+  }
+  
+  .percentage-input {
+    width: 115px;
+  }
+  
+  .venderForm {
+    margin-top: -30px;
+    margin-bottom: 10px;
+    padding: 5px;
+    display: flex;
+    flex-wrap: wrap;
+    box-shadow: black 0px 0px 5px 0px;
+    border-radius: 10px;
+  }
+  
+  .nameInput {
+    width: 450px !important;
+  }
+  
+  .gstInput {
+    width: 300px !important;
+  }
+  
+  
+  .tax-input {
+    margin-left: 37px;
+  }
+  
+  .tax-head {
+    text-align: center;
+  }
+  
+  .total {
+    /* margin-right: 20px; */
+    width: 180px;
+    /* /padding-left: 35px; */
+    display: flex;
+    justify-content: center;
+  }
+  
+  .submitButton {
+    padding: 5px;
+    margin-left: 500px;
+  }
+  
+  .submitButton .btn {
+    margin-left: 5px;
+  }
+  
+  .amount input {
+    background-color: rgba(203, 212, 212, 0.473);
+  }
+  
+  .description {
+    display: flex;
+    flex-direction: row;
+    margin: 2rem;
+    justify-content: center;
+    background-color: #f2d8d8;
+    box-shadow: black 0px 0px 5px 0px;
+    border-radius: 10px;
+  }
+  .voucherFormSy{
+    margin-top: 10px;
+    padding: 10px;
+    box-shadow: black 0px 0px 5px 0px;
+    padding: 10px;
+    border-radius: 10px;
+  }
+  
+  .description label {
+    font-size: large;
+    float: left
+  }
+  .paymentFormS{
+    display: flex;
+  }
+  .displayflex{
+    display: flex;
+  }
+  .d-flex {
+    display: flex;
+    align-items: center;
+  }
+  .paymentName{
+    display: block;
+  }
+  
+  .paymentArrayForm{
+    display: flex;
+    margin-top: 20px;
+  }
+  .addTasesCal{
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .lessTasesCal{
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .input{
+    width: 120px;
+  }
+  .tasesCalBorder{
+    box-shadow: black 0px 0px 5px 0px;
+    margin-top: 10px;
+    border-radius: 10px;
+    padding: 10px;
+  }
+  .formBorder{
+    padding: 10px;
+    box-shadow: black 0px 0px 5px 0px;
+    margin-top: 10px;
+    border-radius: 10px;
+  }
+  .remarkBoarder{
+    padding: 10px;
+    box-shadow: black 0px 0px 5px 0px;
+    margin-top: 10px;
+    border-radius: 10px;
+  }
+  .col12{
+    display: flex;
+    justify-content: flex-end;
+  }

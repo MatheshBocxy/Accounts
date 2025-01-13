@@ -1,0 +1,176 @@
+<div class="container-fluid mainSection">
+
+    <section class="main-content">
+        <div class="header-row">
+            <h3 class="sub-heading mx-auto">BUDGET HEADS</h3>
+        </div>
+
+        <div class="filter-row mb-2">
+            <div class="col-3">
+                <div class="search-container">
+                    <div class="p">
+                        <input matInput #input (keyup)="filterSearch($event)" type="text" id="search-input"
+                            class="search-input" placeholder="Search...">
+                        <mat-icon class="search-icon">search</mat-icon>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 ms-5"></div>
+            <div>
+                <button class="btn excelBtn me-1" id="excel" (click)="generateExcel()">
+                    <span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-file-earmark-arrow-down-fill biExcel-btn" id="m1" viewBox="0 0 16 16">
+                            <path
+                                d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0M9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1m-1 4v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 0 1 .708-.708L7.5 11.293V7.5a.5.5 0 0 1 1 0" />
+                        </svg></span>Excel</button>
+            </div>
+
+            <div>
+                <button class="btn btn-light pdfBtn" (click)="generatePDF()">
+                    <span>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" id="mw" fill="currentColor"
+                            class="bi bi-file-earmark-arrow-down-fill biPdf-btn" viewBox="0 0 16 16">
+                            <path
+                                d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0M9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1m-1 4v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 0 1 .708-.708L7.5 11.293V7.5a.5.5 0 0 1 1 0" />
+                        </svg>
+                    </span>PDF
+                </button>
+            </div>
+        </div>
+
+        <div class="section-background">
+            <div>
+                <form [formGroup]="budgetFormGroup" class="container">
+                    <div class="row">
+                        <div class="col-2">
+                            <label for="v_BUDGET">Budget Type</label>
+                            <select class="form-select budgetSelect" id="v_BUDGET" formControlName="v_BUDGET" required
+                                (change)="changeBudgetName()">
+                                <option value="">Select</option>
+                                <option value="Work Budget">Work Budget</option>
+                                <option value="Cash Budget">Cash Budget</option>
+                            </select>
+                        </div>
+
+                        <div class="col-2 ms-3 me-3">
+                            <label for="v_HEAD">Main Group</label>
+                            <div class="mainGroupSelect">
+                                <select class="form-select mainSelect" id="v_HEAD" formControlName="v_HEAD" required>
+                                    <option value="">Select</option>
+                                    <option *ngFor="let items of BudgetArray" value="{{items.budgetOption}}">
+                                        {{items.budgetOption}}</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-2 ms-3 me-3" *ngIf="isNotWorkBudget">
+                            <label for="">Budget Totals</label>
+                            <select class="form-select budgetTotal" formControlName="groupTotal">
+                                <option value="A">Total A</option>
+                                <option value="B">Total B</option>
+                                <option value="C">Total C</option>
+                                <option value="">Others</option>
+                            </select>
+                        </div>
+
+                        <div class="col-2">
+                            <label for="v_GROUP">Group</label>
+                            <input class="form-control" type="text" id="v_GROUP" formControlName="v_GROUP" required />
+                        </div>
+
+                        <div class="col-1 addButton ms-2">
+                            <mat-icon class="addCircleBtn mt-3" (click)="addSubgroup()">add_circle</mat-icon>
+                        </div>
+
+                        <div class="totalAbc col-2">
+
+
+                            <div class="ms-5 mt-4">
+                                <button class="btn btn-success submitbutton" (click)="postNewBudget()">Create</button>
+                            </div>
+                        </div>
+
+                    </div><br>
+
+                    <div class="subgroups" formArrayName="v_SUBGROUP">
+                        <div *ngFor="let subGroup of getSubGroup['controls']; let i = index" [formGroupName]="i">
+                            <label class="subGroupPara">Sub-Group {{ i + 1 }}: </label>
+                            <div class="subGroupForm">
+                                <input class="form-control" type="text" formControlName="subGroup" required />
+                                <button class="remove_circle" mat-icon-button color="warn" type="button"
+                                    (click)="removeSubgroup(i)"><mat-icon>remove_circle</mat-icon></button>
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+
+        <div class="mt-2" id="uu">
+            <table #table id="table" mat-table [dataSource]="allBudgetDataSource" matSort class="schemes-table">
+
+                <!-- ID Column -->
+                <ng-container matColumnDef="id">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="thFirst"> S.No. </th>
+                    <td mat-cell *matCellDef="let budget; let i=index" class="numberCenter"> {{i + 1}} </td>
+                </ng-container>
+
+                <!-- budgetType Column -->
+                <ng-container matColumnDef="budgetType">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Budget Type </th>
+                    <td mat-cell *matCellDef="let budget"> {{budget.budgetType}} </td>
+                </ng-container>
+
+                <!-- Division Column -->
+                <ng-container matColumnDef="group">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Group</th>
+                    <td mat-cell *matCellDef="let budget"> {{budget.group}} </td>
+                </ng-container>
+
+                <!-- mainGroup Column -->
+                <ng-container matColumnDef="mainGroup">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Main Group </th>
+                    <td mat-cell *matCellDef="let budget"> {{budget.mainGroup}} </td>
+                </ng-container>
+
+                <!-- subGroup Column -->
+                <ng-container matColumnDef="subGroup">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Sub-Group </th>
+                    <td mat-cell *matCellDef="let budget"> {{budget.subGroup}} </td>
+                </ng-container>
+
+                <!-- Action Column -->
+                <ng-container matColumnDef="ACTION">
+                    <th mat-header-cell *matHeaderCellDef class="thBottom"> Action </th>
+                    <td mat-cell *matCellDef="let budget" class="p-0">
+                        <div class="d-flex">
+                            <a routerLink="/famodule/home/budget-list-view" (click)=" viewBudget('view',budget.id)"
+                                style="color: #161F6D;cursor: pointer"><span
+                                    class="material-symbols-rounded">visibility</span> </a>
+
+                            <a routerLink="/famodule/home/budget-list-view" (click)=" editBudget('edit',budget.id)"
+                                style="color: #161F6D;cursor: pointer "><span
+                                    class="material-symbols-rounded">edit</span></a>
+
+                            <a (click)="openDelete(budget.id)" style="color: red; cursor:pointer "><span
+                                    class="material-symbols-rounded">delete</span></a>
+                        </div>
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="budgetTableColumns"></tr>
+                <tr mat-row *matRowDef="let budget; columns: budgetTableColumns;"></tr>
+
+                <!-- Row shown when there is no matching data. -->
+                <tr class="mat-row" *matNoDataRow>
+                    <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
+                </tr>
+            </table>
+            <!-- <mat-paginator [pageSizeOptions]="[10, 20, 25]" showFirstLastButtons
+                aria-label="Select page of periodic elements">
+            </mat-paginator> -->
+        </div>
+    </section>
+
+</div>

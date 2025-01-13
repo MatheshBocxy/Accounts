@@ -1,0 +1,93 @@
+<div class="main-content section-background" style="min-height: 91vh">
+  <section>
+    <h2 class="heading" *ngIf="!viewMode">UPDATE CODE</h2>
+    <h2 class="heading" *ngIf="viewMode">VIEW CODE</h2>
+
+    <form [formGroup]="codeFormGroup" class="formBorder">
+      <div class="codeFormStyle">
+
+        <div>
+          <label for="v_CODE">Code No</label>
+          <input class="form-control view" type="number" id="v_CODE" formControlName="codeNo" required readonly
+            style="width: 80px; margin-right: 10px;" />
+        </div>
+
+        <div>
+          <label for="v_CODE_NAME">Code Name</label>
+          <input class="form-control" type="text" id="v_CODE_NAME" formControlName="codeName" required *ngIf="!viewMode"
+            style="width: 245px; margin-right: 10px;" />
+          <input class="form-control view" type="text" id="v_CODE_NAME" formControlName="codeName" readonly
+            *ngIf="viewMode" style="width: 200px; margin-right: 10px;" />
+        </div>
+
+        <div>
+          <label for="v_SCHEDULE_NAME">Schedule Name</label>
+          <select class="form-select" type="text" id="v_SCHEDULE_NAME" formControlName="scheduleName" required
+            *ngIf="!viewMode" (change)="setScheduleNumber()" style="width: 300px; margin-right: 10px;">
+            <!-- <option value="{{scheduleDropdown.value}}" *ngFor="let scheduleDropdown of arrayScheduleDropDown">
+                {{scheduleDropdown.value}}</option> -->
+            <option value="">Select</option>
+
+            <option *ngFor="let items of arrayScheduleDropDown" [value]="items.scheduleName">
+              {{ items.scheduleName }}
+            </option>
+          </select>
+          <input type="text" class="v_SCHEDULE_NAME form-control view" formControlName="scheduleName" readonly
+            *ngIf="viewMode" style="width: 300px; margin-right: 10px;" />
+        </div>
+        <!-- <div class="col-1">
+            <label for="">Sch No</label>
+            <input type="text" class="form-control scheduleNo" formControlName="scheduleNo">
+        </div> -->
+
+        <div>
+          <label for="v_BUDGET_GROUP">Budget Head</label>
+          <select class="form-select" type="text" id="v_BUDGET_GROUP" formControlName="budgetHead" required
+            *ngIf="!viewMode" style="width: 300px; margin-right: 10px;">
+            <option value="" selected>Select an option</option>
+            <option value="{{ mainGroupDropdown }}" *ngFor="let mainGroupDropdown of allGroupDropDownSave">
+              {{ mainGroupDropdown }}
+            </option>
+          </select>
+          <input type="text" class="v_BUDGET_GROUP form-control view" formControlName="budgetHead" readonly
+            *ngIf="viewMode" style="width: 300px; margin-right: 10px;" />
+        </div>
+
+        <div style="margin-top: 20px;">
+          <label for="codeUser">User</label>
+          <select class="form-select" type="text" id="codeUser" formControlName="codeUser" required *ngIf="!viewMode"
+            style="width: 150px; margin-right: 10px;">
+            <option value="" selected disabled>Select an option</option>
+            <option *ngFor="let data of allUserData" [value]="data">
+              {{ data }}
+            </option>
+          </select>
+          <input type="text" class="v_BUDGET_GROUP form-control view" formControlName="codeUser" readonly
+            *ngIf="viewMode" style="width: 150px; margin-right: 10px;" />
+        </div>
+
+        <div style="margin-top: 20px;">
+          <label for="">Subcodes are Applicable</label>
+          <select class="form-select" type="text" id="subCodeData" formControlName="status" required
+            style="width: 180px; margin-right: 5px;" *ngIf="!viewMode">
+            <option value="" selected disabled>Select an option</option>
+            <option *ngFor="let codeList of subCodeList" [value]="codeList">
+              {{ codeList }}
+            </option>
+          </select>
+          <input type="text" class="form-control view" formControlName="status" style="width: 180px; margin-right: 5px;"
+            readonly *ngIf="viewMode">
+        </div>
+      </div>
+
+      <div class="submitButton">
+        <button class="btn btn-primary" routerLink="/famodule/home/code-list">
+          Back
+        </button>
+        <button class="btn btn-success" (click)="postUpdateCode()" *ngIf="!viewMode">
+          Update
+        </button>
+      </div>
+    </form>
+  </section>
+</div>

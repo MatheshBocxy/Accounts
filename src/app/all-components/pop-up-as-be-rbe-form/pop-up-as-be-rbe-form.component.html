@@ -1,0 +1,123 @@
+<section class="allContent">
+    <h2 class="headding">Addition Sanction Sub-Codes</h2>
+    <div>
+        <form class="subCodeForm" [formGroup]="subCodeForm">
+            <div *ngIf="data.asBeRbe == 'AS-BE'">
+                <table class="table table-primary">
+                    <thead>
+                        <tr>
+                            <th>S.No</th>
+                            <th style="width: 100px;">Sub Code</th>
+                            <th style="width: 250px;">Description</th>
+                            <th>BE Fixed</th>
+                            <th style="width: 100px;">Proposed</th>
+                            <th style="width: 100px;">Fixed</th>
+                        </tr>
+                    </thead>
+
+                    <tbody formArrayName="subCodeAs">
+                        <tr *ngFor="let subcodeArray of subCodeArrayAS.controls; let i = index" [formGroupName]="i">
+                            <td style="text-align: center;">
+                                <p style="margin-top: 7px;">{{i+1}}</p>
+                            </td>
+                            <td *ngIf="!inputBool"><input type="text" class="tableValueInput" formControlName="codeId"
+                                    style="width:80px;" readonly></td>
+                            <td *ngIf="!inputBool"><input type="text" class="tableValueInput"
+                                    formControlName="subCodeId" style="width:80px;" readonly></td>
+                            <td><input type="text" class="tableValueInput" formControlName="subCodeName"
+                                    style="width:80px;" readonly></td>
+                            <td><input type="text" class="tableValueInput" formControlName="subCodeDescription" readonly
+                                    style="width: 350px;"></td>
+                            <td><input type="text" class="tableValueInput" formControlName="subBeFixed"
+                                    style="width: 100px;text-align: right;" readonly></td>
+                            <td>
+                                <input type="number" class="tableValueInput" (input)="fiveDigitsWarning($event)"
+                                    (blur)="formatAmountOnBlur($event)" formControlName="subAsBeProposed"
+                                    placeholder="0.00" style="width: 100px;text-align: right;">
+                            </td>
+                            <td *ngIf="data.division == 'Head_office'">
+                                <input type="number" class="tableValueInput"
+                                    (input)="calculateFixedBE(i);fiveDigitsWarning($event)"
+                                    (blur)="formatAmountOnBlur($event)" formControlName="subAsBeFixed"
+                                    placeholder="0.00" style="width: 100px; text-align: right;">
+                            </td>
+                            <td *ngIf="data.division != 'Head_office'">
+                                <input type="number" class="tableValueInput"
+                                    (input)="calculateFixedBE(i);fiveDigitsWarning($event)"
+                                    (blur)="formatAmountOnBlur($event)" formControlName="subAsBeFixed"
+                                    placeholder="0.00" style="width: 100px; text-align: right;" readonly>
+                            </td>
+                            <td *ngIf="!inputBool">
+                                <input type="text" class="tableValueInput" formControlName="subBeFixedTotal" readonly>
+                            </td>
+                        </tr>
+                    </tbody>
+
+                </table>
+                <div class="submitButtons">
+                    <button class="btn btn-secondary m-2" [mat-dialog-close]="true">Back</button>
+                    <button class="btn btn-success m-2" (click)="submit()">Submit</button>
+                </div>
+            </div>
+
+            <div *ngIf="data.asBeRbe == 'AS-RBE'">
+                <table class="table table-primary">
+                    <thead>
+                        <tr>
+                            <th>S.No</th>
+                            <th style="width: 100px;">Sub Code</th>
+                            <th style="width: 250px;">Description</th>
+                            <th>RBE Fixed</th>
+                            <th style="width: 100px;">Proposed</th>
+                            <th style="width: 100px;">Fixed</th>
+                        </tr>
+                    </thead>
+
+                    <tbody formArrayName="subCodeAs">
+                        <tr *ngFor="let subcodeArray of subCodeArrayAS.controls; let i = index" [formGroupName]="i">
+                            <td style="text-align: center;">
+                                <p style="margin-top: 7px;">{{i+1}}</p>
+                            </td>
+                            <td *ngIf="!inputBool"><input type="text" class="tableValueInput" formControlName="codeId"
+                                    style="width:80px;" readonly></td>
+                            <td *ngIf="!inputBool"><input type="text" class="tableValueInput"
+                                    formControlName="subCodeId" style="width:80px;" readonly></td>
+                            <td><input type="text" class="tableValueInput" formControlName="subCodeName"
+                                    style="width:80px;" readonly></td>
+                            <td><input type="text" class="tableValueInput" formControlName="subCodeDescription" readonly
+                                    style="width: 350px;"></td>
+                            <td><input type="text" class="tableValueInput" formControlName="subBeFixed"
+                                    style="width: 100px;text-align: right;" readonly></td>
+                            <td>
+                                <input type="text" class="tableValueInput" (input)="fiveDigitsWarning($event)"
+                                    (blur)="formatAmountOnBlur($event)" formControlName="subAsBeProposed"
+                                    placeholder="0.00" style="width: 100px;text-align: right;">
+                            </td>
+                            <td *ngIf="data.division == 'Head_office'">
+                                <input type="text" class="tableValueInput"
+                                    (input)="calculateFixedRBE(i);fiveDigitsWarning($event)"
+                                    (blur)="formatAmountOnBlur($event)" formControlName="subAsBeFixed"
+                                    placeholder="0.00" style="width: 100px; text-align: right;">
+                            </td>
+                            <td *ngIf="data.division != 'Head_office'">
+                                <input type="text" class="tableValueInput"
+                                    (input)="calculateFixedRBE(i);fiveDigitsWarning($event)"
+                                    (blur)="formatAmountOnBlur($event)" formControlName="subAsBeFixed"
+                                    placeholder="0.00" style="width: 100px; text-align: right;" readonly>
+                            </td>
+                            <td>
+                                <input *ngIf="!inputBool" type="text" class="tableValueInput"
+                                    formControlName="subBeFixedTotal" readonly>
+                            </td>
+                        </tr>
+                    </tbody>
+
+                </table>
+                <div class="submitButtons">
+                    <button class="btn btn-secondary m-2" [mat-dialog-close]="true">Back</button>
+                    <button class="btn btn-success m-2" (click)="submit()">Submit</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>

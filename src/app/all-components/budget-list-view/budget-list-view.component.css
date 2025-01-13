@@ -1,0 +1,49 @@
+.main-content {
+    padding: 2rem;
+  }
+  
+  .submitbutton {
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+    /* padding: 5px; */
+  }
+  
+  .submitbutton .btn {
+    margin-left: 5px;
+  }
+  
+  .heading {
+    text-align: center;
+  }
+  
+  .custom-button {
+    background-color: #161F6D;
+    color: #ffffff;
+    margin-left: 1rem;
+  }
+  
+  .section-background {
+    background-color: beige;
+  }
+  
+  /* .addButton{
+      margin-top: 1.1rem;
+    } */
+  .deleteButton {
+    margin-top: 1rem;
+  }
+  
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+    /* Optional: Remove the margin */
+  }
+  .view{
+    border: transparent !important;
+    box-shadow: none !important;;
+  }
+  
+  
+  

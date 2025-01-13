@@ -1,0 +1,39 @@
+<div class="main-content section-background" style="min-height: 91vh">
+    <section class="main-content">
+      <!-- <h2 class="heading">CREATE SCHEDULE</h2> -->
+  
+      <form [formGroup]="scheduleFormGroup">
+        <div class="row">
+          <div class="col-2"></div>
+          <div class="col-3">
+            <label for="v_SCHEDULE">Schedule No</label>
+            <input class="form-control" type="number" id="v_SCHEDULE" formControlName="scheduleNo" required *ngIf="!viewMode" />
+            <input class="form-control view" type="number" id="v_SCHEDULE" formControlName="scheduleNo" readonly *ngIf="viewMode" />
+  
+          </div>
+          <div class="col-3">
+            <label for="v_SCHEDULE_NAME">Schedule Name</label>
+            <input class="form-control" type="text" id="v_SCHEDULE_NAME" formControlName="scheduleName" required *ngIf="!viewMode" />
+            <input class="form-control view" type="text" id="v_SCHEDULE_NAME" formControlName="scheduleName" readonly *ngIf="viewMode" />
+          </div>
+  
+          <div class="col-3">
+            <label for="v_HEAD">Category</label>
+            <select *ngIf="mode === 'edit'" class="form-select" id="v_HEAD" formControlName="under">
+              <option value="Income">Income</option>
+              <option value="Expenditures">Expenditures</option>
+              <option value="Assets">Assets</option>
+              <option value="Liabilities">Liabilities</option>
+            </select>
+            <input type="text" class="v_UNDER form-control view" formControlName="under" [readonly]="viewMode"
+              *ngIf="mode !== 'edit'">
+          </div>
+        </div>
+  
+        <div class="submitButton mt-3">
+          <button class="btn btn-primary" routerLink="/famodule/home/schedule-list">Back</button>
+          <button class="btn btn-success" (click)="postUpdateSchedule()" *ngIf="!viewMode">Update</button>
+        </div>
+      </form>
+    </section>
+  </div>

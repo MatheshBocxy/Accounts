@@ -1,0 +1,54 @@
+.allContent {
+    padding-top: 20px;
+    padding: 1rem;
+    height: 100%;
+    background-color: #e5eAF5;
+    /* background-color: #032D54; */
+}
+
+.headding {
+    font-weight: 900;
+    font-size: 20px;
+    color: rgb(15, 15, 84);
+    text-align: center;
+}
+
+.subCodeForm {
+    display: flex;
+}
+
+.subCodeForm th {
+    font-size: 14px;
+    font-weight: 500;
+    /* border: 1px solid#2E6583; */
+    border: 1px solid#c2c3c5;
+    /* background-color: #2E6583; */
+    background-color: #032D54;
+    color: #ffffff;
+    margin-left: 20px;
+    width: auto;
+    text-align: center;
+}
+
+.tableValueInput {
+    height: 30px;
+    padding: 8px;
+    margin: 5px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    transition: border-color 0.3s ease;
+    color: black;
+}
+
+.submitButtons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}

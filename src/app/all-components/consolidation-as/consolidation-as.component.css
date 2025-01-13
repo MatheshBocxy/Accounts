@@ -1,0 +1,111 @@
+.main-content {
+    padding: 2rem;
+    background-color: #e5eAF5;
+    height: 100%;
+}
+
+.beRbe_button {
+    display: flex;
+    justify-content: center;
+}
+
+.sub-heading {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #161F6D;
+}
+
+.buttonbutton {
+    box-shadow: 0px 0px 3px 1px black;
+    background-color: #d4e1f0;
+}
+
+.buttonbutton.active {
+    background-color: rgb(57, 57, 160);
+    color: white;
+}
+
+.buttonbutton {
+    margin-left: 20px;
+    padding-left: 50px;
+    padding-right: 50px;
+}
+
+.buttonbutton:focus,
+.sumbitButton:focus {
+    background-color: rgb(57, 57, 160);
+    color: white;
+}
+
+.header-row {
+    display: flex;
+    justify-content: space-between;
+}
+
+.filter-row {
+    background-color: #ffffff;
+    border-radius: 1rem;
+    padding: 0.5rem 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.search-container {
+    position: relative;
+    display: inline-block;
+}
+
+.search-input {
+    padding: 0.5rem 1rem;
+    border: 1px solid #ccc;
+    border-radius: 1rem;
+    background-color: #F6F8FA;
+}
+
+.search-icon {
+    position: absolute;
+    top: 50%;
+    right: 8px;
+    transform: translateY(-50%);
+    background-color: transparent;
+    border: none;
+    display: flex;
+}
+
+.search-icon mat-icon {
+    color: #161F6D;
+}
+
+.excelBtn {
+    box-shadow: 0px 0px 3px 1px;
+    font-weight: 500;
+    color: beige;
+    background-color: #26582fd0;
+}
+
+.pdfBtn {
+    box-shadow: 0px 0px 3px 1px;
+    font-weight: 500;
+    color: white;
+    background-color: #a5481d;
+}
+
+.schemes-table th {
+    background-color: #2E6583;
+    color: #F6F4EB;
+}
+
+.schemes-table {
+    border: 5px solid #2E6583;
+}
+
+.actionButton {
+    color: #2E6583;
+    cursor: pointer;
+}
+
+.tableButtons {
+    display: flex;
+    justify-content: center;
+}

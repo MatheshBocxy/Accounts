@@ -1,0 +1,1283 @@
+<section class="consolidation-Main">
+    <h1 class="headding">Addition Sanction Consolidation</h1>
+
+    <div class="topBackButton">
+        <a (click)="backButtonClick()" style="cursor: pointer; font-size: 16px; font-weight: 700;"><svg
+                xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                class="bi bi-arrow-bar-left" viewBox="0 0 16 16">
+                <path fill-rule="evenodd"
+                    d="M12.5 15a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5M10 8a.5.5 0 0 1-.5.5H3.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L3.707 7.5H9.5a.5.5 0 0 1 .5.5" />
+            </svg>Back</a>
+        <h2>Rs in LAKHS</h2>
+    </div>
+
+    <div class="row" *ngIf="loginDivision == 'Head_office'">
+        <div class="col-3">
+            <label for="">Filter : </label>
+            <select class="form-select" (change)="selectDivisionDropdown($event)">
+                <option value="All">All</option>
+                <option *ngFor="let item of allDivisions" value="{{item}}">{{item}}</option>
+            </select>
+        </div>
+    </div>
+
+    <div *ngIf="CashFlow && be">
+        <h2 class="headingFlow">BE - Cash Flow</h2>
+        <table class="table table-primary budgetTable">
+            <thead>
+                <tr>
+                    <th rowspan="2">S.No</th>
+                    <th rowspan="2">Particulars</th>
+                    <th>BE Fixed</th>
+                    <th>AS Proposed</th>
+                    <th>AS Fixed</th>
+                    <th>BE Fixed + AS Fixed</th>
+                </tr>
+                <tr>
+                    <th>{{asBeRbeYears}}</th>
+                    <th>{{asBeRbeYears}}</th>
+                    <th>{{asBeRbeYears}}</th>
+                    <th>{{asBeRbeYears}}</th>
+                </tr>
+            </thead>
+
+            <!-- Resource -->
+
+            <!-- Resource A -->
+            <tbody>
+                <tr>
+                    <td class="no-border"></td>
+                    <td colspan="12" class="resource-title" style="font-size: large; font-weight: 600;">RESOURCES</td>
+                </tr>
+                <ng-container *ngFor="let resource of allSubGroupsResource_A; let i = index">
+                    <!-- Row for resources without subgroups -->
+                    <tr *ngIf="resource.subGroup.length === 0">
+                        <td style="text-align: center;">{{ i + 1 }}</td>
+                        <td>
+                            <p style="cursor: pointer;" (click)="budgetSplitUpPopUp(resource.asBeRbeDto,'AS-BE')">{{
+                                resource.heading }}</p>
+                        </td>
+                        <td style="text-align: right;">{{ (resource.fixed || 0).toFixed(2) }}</td>
+                        <td style="text-align: right;">{{ (resource.asProposed || 0).toFixed(2) }}</td>
+                        <td style="text-align: right;">{{ (resource.asFixed || 0).toFixed(2) }}</td>
+                        <td style="text-align: right;">{{ (resource.fixedTotal || 0).toFixed(2) }}</td>
+                    </tr>
+
+                    <!-- Row for resources with subgroups -->
+                    <ng-container *ngIf="resource.subGroup.length !== 0">
+                        <!-- Main resource row -->
+                        <tr>
+                            <td style="text-align: center;">{{ i + 1 }}</td>
+                            <td style="cursor: pointer;" (click)="budgetSplitUpPopUp(resource.asBeRbeDto,'AS-BE')">{{
+                                resource.heading }}</td>
+                            <td style="text-align: right;">{{ resource.fixed }}</td>
+                            <td style="text-align: right;">{{ resource.asProposed }}</td>
+                            <td style="text-align: right;">{{ resource.asFixed }}</td>
+                            <td style="text-align: right;">{{ resource.fixedTotal }}</td>
+                        </tr>
+
+                        <!-- Subgroup rows -->
+                        <tr *ngFor="let subGroup of resource.subGroup">
+                            <td></td>
+                            <td style="padding-left: 20px;">
+                                <p style="cursor: pointer;" (click)="budgetSplitUpPopUp(subGroup.asBeRbeDto,'AS-BE')">{{
+                                    subGroup.heading }}</p>
+                            </td>
+                            <td style="text-align: right;">{{ (subGroup.fixed || 0).toFixed(2) }}</td>
+                            <td style="text-align: right;">{{ (subGroup.asProposed || 0).toFixed(2) }}</td>
+                            <td style="text-align: right;">{{ (subGroup.asFixed || 0).toFixed(2) }}</td>
+                            <td style="text-align: right;">{{ (subGroup.fixedTotal || 0).toFixed(2) }}</td>
+                        </tr>
+
+                    </ng-container>
+                </ng-container>
+                <tr>
+                    <td colspan="2" class="totalHeading">TOTAL (A)</td>
+                    <td class="tdRight">{{(fixedResource_A).toFixed(2)}}</td>
+                    <td class="tdRight">{{(asProposedResource_A).toFixed(2)}}</td>
+                    <td class="tdRight">{{(asFixedResource_A).toFixed(2)}}</td>
+                    <td class="tdRight">{{(fixedResource_A + asFixedResource_A).toFixed(2)}}</td>
+                </tr>
+            </tbody>
+            <!-- Resource B -->
+            <tbody>
+                <tr>
+                    <td colspan="12" class="no-border"></td>
+                </tr>
+                <ng-container *ngFor="let resource of allSubGroupsResource_B; let i = index">
+                    <!-- Row for resources without subgroups -->
+                    <tr *ngIf="resource.subGroup.length === 0">
+                        <td style="text-align: center;">{{ i + 1 }}</td>
+                        <td>
+                            <p style="cursor: pointer;" (click)="budgetSplitUpPopUp(resource.asBeRbeDto,'AS-BE')">{{
+                                resource.heading }}</p>
+                        </td>
+                        <td style="text-align: right;">{{ (resource.fixed || 0).toFixed(2) }}</td>
+                        <td style="text-align: right;">{{ (resource.asProposed || 0).toFixed(2) }}</td>
+                        <td style="text-align: right;">{{ (resource.asFixed || 0).toFixed(2) }}</td>
+                        <td style="text-align: right;">{{ (resource.fixedTotal || 0).toFixed(2) }}</td>
+                    </tr>
+
+                    <!-- Row for resources with subgroups -->
+                    <ng-container *ngIf="resource.subGroup.length !== 0">
+                        <!-- Main resource row -->
+                        <tr>
+                            <td style="text-align: center;">{{ i + 1 }}</td>
+                            <td>
+                                <p style="cursor: pointer;" (click)="budgetSplitUpPopUp(resource.asBeRbeDto,'AS-BE')">{{
+                                    resource.heading }}</p>
+                            </td>
+                            <td style="text-align: right;">{{ resource.fixed }}</td>
+                            <td style="text-align: right;">{{ resource.asProposed }}</td>
+                            <td style="text-align: right;">{{ resource.asFixed }}</td>
+                            <td style="text-align: right;">{{ resource.fixedTotal }}</td>
+                        </tr>
+
+                        <!-- Subgroup rows -->
+                        <tr *ngFor="let subGroup of resource.subGroup">
+                            <td></td>
+                            <td style="padding-left: 20px;">
+                                <p style="cursor: pointer;" (click)="budgetSplitUpPopUp(subGroup.asBeRbeDto,'AS-BE')">{{
+                                    subGroup.heading }}</p>
+                            </td>
+                            <td style="text-align: right;">{{ (subGroup.fixed || 0).toFixed(2) }}</td>
+                            <td style="text-align: right;">{{ (subGroup.asProposed || 0).toFixed(2) }}</td>
+                            <td style="text-align: right;">{{ (subGroup.asFixed || 0).toFixed(2) }}</td>
+                            <td style="text-align: right;">{{ (subGroup.fixedTotal || 0).toFixed(2) }}</td>
+                        </tr>
+                    </ng-container>
+                </ng-container>
+                <tr>
+                    <td colspan="2" class="totalHeading">TOTAL (B)</td>
+                    <td class="tdRight">{{(fixedResource_B).toFixed(2)}}</td>
+                    <td class="tdRight">{{(asProposedResource_B).toFixed(2)}}</td>
+                    <td class="tdRight">{{(asFixedResource_B).toFixed(2)}}</td>
+                    <td class="tdRight">{{(fixedResource_B + asFixedResource_B).toFixed(2)}}</td>
+                </tr>
+            </tbody>
+            <!-- Resource C -->
+            <tbody>
+                <tr>
+                    <td colspan="12" class="no-border"></td>
+                </tr>
+                <ng-container *ngFor="let resource of allSubGroupsResource_C; let i = index">
+                    <!-- Row for resources without subgroups -->
+                    <tr *ngIf="resource.subGroup.length === 0">
+                        <td style="text-align: center;">{{ i + 1 }}</td>
+                        <td>
+                            <p style="cursor: pointer;" (click)="budgetSplitUpPopUp(resource.asBeRbeDto,'AS-BE')">{{
+                                resource.heading }}</p>
+                        </td>
+                        <td style="text-align: right;">{{ (resource.fixed || 0).toFixed(2) }}</td>
+                        <td style="text-align: right;">{{ (resource.asProposed || 0).toFixed(2) }}</td>
+                        <td style="text-align: right;">{{ (resource.asFixed || 0).toFixed(2) }}</td>
+                        <td style="text-align: right;">{{ (resource.fixedTotal || 0).toFixed(2) }}</td>
+                    </tr>
+
+                    <!-- Row for resources with subgroups -->
+                    <ng-container *ngIf="resource.subGroup.length !== 0">
+                        <!-- Main resource row -->
+                        <tr>
+                            <td style="text-align: center;">{{ i + 1 }}</td>
+                            <td>
+                                <p style="cursor: pointer;" (click)="budgetSplitUpPopUp(resource.asBeRbeDto,'AS-BE')">{{
+                                    resource.heading }}</p>
+                            </td>
+                            <td style="text-align: right;">{{ resource.fixed }}</td>
+                            <td style="text-align: right;">{{ resource.asProposed }}</td>
+                            <td style="text-align: right;">{{ resource.asFixed }}</td>
+                            <td style="text-align: right;">{{ resource.fixedTotal }}</td>
+
+                        </tr>
+
+                        <!-- Subgroup rows -->
+                        <tr *ngFor="let subGroup of resource.subGroup">
+                            <td></td>
+                            <td style="padding-left: 20px;">
+                                <p style="cursor: pointer;" (click)="budgetSplitUpPopUp(subGroup.asBeRbeDto,'AS-BE')">{{
+                                    subGroup.heading }}</p>
+                            </td>
+                            <td style="text-align: right;">{{ (subGroup.fixed || 0).toFixed(2) }}</td>
+                            <td style="text-align: right;">{{ (subGroup.asProposed || 0).toFixed(2) }}</td>
+                            <td style="text-align: right;">{{ (subGroup.asFixed || 0).toFixed(2) }}</td>
+                            <td style="text-align: right;">{{ (subGroup.fixedTotal || 0).toFixed(2) }}</td>
+
+                        </tr>
+                    </ng-container>
+                </ng-container>
+
+                <tr>
+                    <td colspan="2" class="totalHeading">TOTAL (C)</td>
+                    <td class="tdRight">{{(fixedResource_C).toFixed(2)}}</td>
+                    <td class="tdRight">{{(asProposedResource_C).toFixed(2)}}</td>
+                    <td class="tdRight">{{(asFixedResource_C).toFixed(2)}}</td>
+                    <td class="tdRight">{{(fixedResource_C + asFixedResource_C).toFixed(2)}}</td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="totalHeading"> Total (A + B + C)</td>
+                    <td class="tdRight">{{(fixedResourceTotal).toFixed(2)}}</td>
+                    <td class="tdRight">{{(asProposedResourceTotal).toFixed(2)}}</td>
+                    <td class="tdRight">{{(asFixedResourceTotal).toFixed(2)}}</td>
+                    <td class="tdRight">{{(fixedResourceTotal + asFixedResourceTotal).toFixed(2)}}</td>
+                </tr>
+            </tbody>
+
+            <!-- Commitments -->
+
+            <!-- Commitments A -->
+
+            <tbody>
+                <tr>
+                    <td class="no-border"></td>
+                    <td colspan="12" class="resource-title" style="font-size: large; font-weight: 600;">COMMITMENTS</td>
+                </tr>
+                <ng-container *ngFor="let resource of allSubGroupsCommitments_A; let i = index">
+                    <!-- Row for resources without subgroups -->
+                    <tr *ngIf="resource.subGroup.length === 0">
+                        <td style="text-align: center;">{{ i + 1 }}</td>
+                        <td>
+                            <p style="cursor: pointer;" (click)="budgetSplitUpPopUp(resource.asBeRbeDto,'AS-BE')">{{
+                                resource.heading }}</p>
+                        </td>
+                        <td style="text-align: right;">{{ (resource.fixed || 0).toFixed(2) }}</td>
+                        <td style="text-align: right;">{{ (resource.asProposed || 0).toFixed(2) }}</td>
+                        <td style="text-align: right;">{{ (resource.asFixed || 0).toFixed(2) }}</td>
+                        <td style="text-align: right;">{{ (resource.fixedTotal || 0).toFixed(2) }}</td>
+                    </tr>
+
+                    <!-- Row for resources with subgroups -->
+                    <ng-container *ngIf="resource.subGroup.length !== 0">
+                        <!-- Main resource row -->
+                        <tr>
+                            <td style="text-align: center;">{{ i + 1 }}</td>
+                            <p style="cursor: pointer;" (click)="budgetSplitUpPopUp(resource.asBeRbeDto,'AS-BE')">{{
+                                resource.heading }}</p>
+                            <td style="text-align: right;">{{ resource.fixed }}</td>
+                            <td style="text-align: right;">{{ resource.asProposed }}</td>
+                            <td style="text-align: right;">{{ resource.asFixed }}</td>
+                            <td style="text-align: right;">{{ resource.fixedTotal }}</td>
+
+                        </tr>
+
+                        <!-- Subgroup rows -->
+                        <tr *ngFor="let subGroup of resource.subGroup">
+                            <td></td>
+                            <td style="padding-left: 20px;">
+                                <p style="cursor: pointer;" (click)="budgetSplitUpPopUp(subGroup.asBeRbeDto,'AS-BE')">{{
+                                    subGroup.heading }}</p>
+                            </td>
+                            <td style="text-align: right;">{{ (subGroup.fixed || 0).toFixed(2) }}</td>
+                            <td style="text-align: right;">{{ (subGroup.asProposed || 0).toFixed(2) }}</td>
+                            <td style="text-align: right;">{{ (subGroup.asFixed || 0).toFixed(2) }}</td>
+                            <td style="text-align: right;">{{ (subGroup.fixedTotal || 0).toFixed(2) }}</td>
+
+                        </tr>
+
+                    </ng-container>
+                </ng-container>
+                <tr>
+                    <td colspan="2" class="totalHeading">TOTAL (A)</td>
+                    <td class="tdRight">{{(fixedCommitments_A).toFixed(2)}}</td>
+                    <td class="tdRight">{{(asProposedCommitments_A).toFixed(2)}}</td>
+                    <td class="tdRight">{{(asFixedCommitments_A).toFixed(2)}}</td>
+                    <td class="tdRight">{{(fixedCommitments_A + asFixedCommitments_A).toFixed(2)}}</td>
+                    <!-- <td></td> -->
+                </tr>
+            </tbody>
+            <!-- Commitments B -->
+            <tbody>
+                <tr>
+                    <td colspan="12" class="no-border"></td>
+                </tr>
+                <ng-container *ngFor="let resource of allSubGroupsCommitments_B; let i = index">
+                    <!-- Row for resources without subgroups -->
+                    <tr *ngIf="resource.subGroup.length === 0">
+                        <td style="text-align: center;">{{ i + 1 }}</td>
+                        <td>
+                            <p style="cursor: pointer;" (click)="budgetSplitUpPopUp(resource.asBeRbeDto,'AS-BE')">{{
+                                resource.heading }}</p>
+                        </td>
+                        <td style="text-align: right;">{{ (resource.fixed || 0).toFixed(2) }}</td>
+                        <td style="text-align: right;">{{ (resource.asProposed || 0).toFixed(2) }}</td>
+                        <td style="text-align: right;">{{ (resource.asFixed || 0).toFixed(2) }}</td>
+                        <td style="text-align: right;">{{ (resource.fixedTotal || 0).toFixed(2) }}</td>
+                    </tr>
+
+                    <!-- Row for resources with subgroups -->
+                    <ng-container *ngIf="resource.subGroup.length !== 0">
+                        <!-- Main resource row -->
+                        <tr>
+                            <td style="text-align: center;">{{ i + 1 }}</td>
+                            <td>
+                                <p style="cursor: pointer;" (click)="budgetSplitUpPopUp(resource.asBeRbeDto,'AS-BE')">{{
+                                    resource.heading }}</p>
+                            </td>
+                            <td style="text-align: right;">{{ resource.fixed }}</td>
+                            <td style="text-align: right;">{{ resource.asProposed }}</td>
+                            <td style="text-align: right;">{{ resource.asFixed }}</td>
+                            <td style="text-align: right;">{{ resource.fixedTotal }}</td>
+                        </tr>
+
+                        <!-- Subgroup rows -->
+                        <tr *ngFor="let subGroup of resource.subGroup">
+                            <td></td>
+                            <td style="padding-left: 20px;">
+                                <p style="cursor: pointer;" (click)="budgetSplitUpPopUp(subGroup.asBeRbeDto,'AS-BE')">{{
+                                    subGroup.heading }}</p>
+                            </td>
+                            <td style="text-align: right;">{{ (subGroup.fixed || 0).toFixed(2) }}</td>
+                            <td style="text-align: right;">{{ (subGroup.asProposed || 0).toFixed(2) }}</td>
+                            <td style="text-align: right;">{{ (subGroup.asFixed || 0).toFixed(2) }}</td>
+                            <td style="text-align: right;">{{ (subGroup.fixedTotal || 0).toFixed(2) }}</td>
+                        </tr>
+
+                    </ng-container>
+                </ng-container>
+                <tr>
+                    <td colspan="2" class="totalHeading">TOTAL (B)</td>
+                    <td class="tdRight">{{(fixedCommitments_B).toFixed(2)}}</td>
+                    <td class="tdRight">{{(asProposedCommitments_B).toFixed(2)}}</td>
+                    <td class="tdRight">{{(asFixedCommitments_B).toFixed(2)}}</td>
+                    <td class="tdRight">{{(fixedCommitments_B + asFixedCommitments_B).toFixed(2)}}</td>
+                </tr>
+            </tbody>
+            <!-- Commitments C -->
+            <tbody>
+                <tr>
+                    <td colspan="12" class="no-border"></td>
+                </tr>
+                <ng-container *ngFor="let resource of allSubGroupsCommitments_C; let i = index">
+                    <!-- Row for resources without subgroups -->
+                    <tr *ngIf="resource.subGroup.length === 0">
+                        <td style="text-align: center;">{{ i + 1 }}</td>
+                        <td>
+                            <p style="cursor: pointer;" (click)="budgetSplitUpPopUp(resource.asBeRbeDto,'AS-BE')">{{
+                                resource.heading }}</p>
+                        </td>
+                        <td style="text-align: right;">{{ (resource.fixed || 0).toFixed(2) }}</td>
+                        <td style="text-align: right;">{{ (resource.asProposed || 0).toFixed(2) }}</td>
+                        <td style="text-align: right;">{{ (resource.asFixed || 0).toFixed(2) }}</td>
+                        <td style="text-align: right;">{{ (resource.fixedTotal || 0).toFixed(2) }}</td>
+
+                    </tr>
+
+                    <!-- Row for resources with subgroups -->
+                    <ng-container *ngIf="resource.subGroup.length !== 0">
+                        <!-- Main resource row -->
+                        <tr>
+                            <td style="text-align: center;">{{ i + 1 }}</td>
+                            <td>
+                                <p style="cursor: pointer;" (click)="budgetSplitUpPopUp(resource.asBeRbeDto,'AS-BE')">{{
+                                    resource.heading }}</p>
+                            </td>
+                            <td style="text-align: right;">{{ resource.fixed }}</td>
+                            <td style="text-align: right;">{{ resource.asProposed }}</td>
+                            <td style="text-align: right;">{{ resource.asFixed }}</td>
+                            <td style="text-align: right;">{{ resource.fixedTotal }}</td>
+
+                        </tr>
+
+                        <!-- Subgroup rows -->
+                        <tr *ngFor="let subGroup of resource.subGroup">
+                            <td></td>
+                            <td style="padding-left: 20px;">
+                                <p style="cursor: pointer;" (click)="budgetSplitUpPopUp(subGroup.asBeRbeDto,'AS-BE')">{{
+                                    subGroup.heading }}</p>
+                            </td>
+                            <td style="text-align: right;">{{ (subGroup.fixed || 0).toFixed(2) }}</td>
+                            <td style="text-align: right;">{{ (subGroup.asProposed || 0).toFixed(2) }}</td>
+                            <td style="text-align: right;">{{ (subGroup.asFixed || 0).toFixed(2) }}</td>
+                            <td style="text-align: right;">{{ (subGroup.fixedTotal || 0).toFixed(2) }}</td>
+
+                        </tr>
+
+                    </ng-container>
+                </ng-container>
+                <tr>
+                    <td style="text-align: center;">{{lenthOfCommitments_C}}</td>
+                    <td>
+                        <p style="cursor:pointer;" (click)="cashToWorkRoute('BE')">Works expenditure & Maintenance
+                        </p>
+                    </td>
+                    <td style="text-align: right;">{{(fixedTotalWork || 0).toFixed(2)}}</td>
+                    <td style="text-align: right;">{{(asProposedTotalWork || 0).toFixed(2)}}</td>
+                    <td style="text-align: right;">{{(asFixedTotalWork || 0).toFixed(2)}}</td>
+                    <td style="text-align: right;">{{(fixedTotalWork + asFixedTotalWork || 0).toFixed(2)}}</td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="totalHeading">TOTAL (C)</td>
+                    <td class="tdRight">{{(fixedCommitments_C).toFixed(2)}}</td>
+                    <td class="tdRight">{{(asProposedCommitments_C).toFixed(2)}}</td>
+                    <td class="tdRight">{{(asFixedCommitments_C).toFixed(2)}}</td>
+                    <td class="tdRight">{{(fixedCommitments_C + asFixedCommitments_C).toFixed(2)}}</td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="totalHeading">TOTAL (A+B+C)</td>
+                    <td class="tdRight">{{(fixedCommitmentsTotal).toFixed(2)}}</td>
+                    <td class="tdRight">{{(asProposedCommitmentsTotal).toFixed(2)}}</td>
+                    <td class="tdRight">{{(asFixedCommitmentsTotal).toFixed(2)}}</td>
+                    <td class="tdRight">{{(fixedCommitmentsTotal + asFixedCommitmentsTotal).toFixed(2)}}</td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="totalHeading">CASH FLOW TOTAL</td>
+                    <td class="tdRight">{{(fixedAllTotal).toFixed(2)}}</td>
+                    <td class="tdRight">{{(asProposedAllTotal).toFixed(2)}}</td>
+                    <td class="tdRight">{{(asFixedAllTotal).toFixed(2)}}</td>
+                    <td class="tdRight">{{(fixedAllTotal + asFixedAllTotal).toFixed(2)}}</td>
+                </tr>
+            </tbody>
+
+        </table>
+    </div>
+
+    <div *ngIf="CashFlow && rbe">
+        <h2 class="headingFlow">RBE - Cash Flow</h2>
+        <table class="table table-primary budgetTable">
+            <thead>
+                <tr>
+                    <th rowspan="2">S.No</th>
+                    <th rowspan="2">Particulars</th>
+                    <th>RBE Fixed</th>
+                    <th>AS Proposed</th>
+                    <th>AS Fixed</th>
+                    <th>RBE Fixed + AS Fixed</th>
+                </tr>
+                <tr>
+                    <th>{{asBeRbeYears}}</th>
+                    <th>{{asBeRbeYears}}</th>
+                    <th>{{asBeRbeYears}}</th>
+                    <th>{{asBeRbeYears}}</th>
+                </tr>
+            </thead>
+
+            <!-- Resource -->
+
+            <!-- Resource A -->
+            <tbody>
+                <tr>
+                    <td class="no-border"></td>
+                    <td colspan="12" class="resource-title" style="font-size: large; font-weight: 600;">RESOURCES</td>
+                </tr>
+                <ng-container *ngFor="let resource of allSubGroupsResource_A; let i = index">
+                    <!-- Row for resources without subgroups -->
+                    <tr *ngIf="resource.subGroup.length === 0">
+                        <td style="text-align: center;">{{ i + 1 }}</td>
+                        <td>
+                            <p style="cursor: pointer;" (click)="budgetSplitUpPopUp(resource.asBeRbeDto,'AS-RBE')">{{
+                                resource.heading }}</p>
+                        </td>
+                        <td style="text-align: right;">{{ (resource.fixed || 0).toFixed(2) }}</td>
+                        <td style="text-align: right;">{{ (resource.asProposed || 0).toFixed(2) }}</td>
+                        <td style="text-align: right;">{{ (resource.asFixed || 0).toFixed(2) }}</td>
+                        <td style="text-align: right;">{{ (resource.fixedTotal || 0).toFixed(2) }}</td>
+
+                    </tr>
+
+                    <!-- Row for resources with subgroups -->
+                    <ng-container *ngIf="resource.subGroup.length !== 0">
+                        <!-- Main resource row -->
+                        <tr>
+                            <td style="text-align: center;">{{ i + 1 }}</td>
+                            <td>
+                                <p style="cursor: pointer;" (click)="budgetSplitUpPopUp(resource.asBeRbeDto,'AS-RBE')">
+                                    {{ resource.heading }}</p>
+                            </td>
+                            <td style="text-align: right;">{{ resource.fixed }}</td>
+                            <td style="text-align: right;">{{ resource.asProposed }}</td>
+                            <td style="text-align: right;">{{ resource.asFixed }}</td>
+                            <td style="text-align: right;">{{ resource.fixedTotal }}</td>
+
+                        </tr>
+
+                        <!-- Subgroup rows -->
+                        <tr *ngFor="let subGroup of resource.subGroup">
+                            <td></td>
+                            <td style="padding-left: 20px;">
+                                <p style="cursor: pointer;" (click)="budgetSplitUpPopUp(subGroup.asBeRbeDto,'AS-RBE')">
+                                    {{ subGroup.heading }}</p>
+                            </td>
+                            <td style="text-align: right;">{{ (subGroup.fixed || 0).toFixed(2) }}</td>
+                            <td style="text-align: right;">{{ (subGroup.asProposed || 0).toFixed(2) }}</td>
+                            <td style="text-align: right;">{{ (subGroup.asFixed || 0).toFixed(2) }}</td>
+                            <td style="text-align: right;">{{ (subGroup.fixedTotal || 0).toFixed(2) }}</td>
+                        </tr>
+
+                    </ng-container>
+                </ng-container>
+                <tr>
+                    <td colspan="2" class="totalHeading">TOTAL (A)</td>
+                    <td class="tdRight">{{(fixedResource_A).toFixed(2)}}</td>
+                    <td class="tdRight">{{(asProposedResource_A).toFixed(2)}}</td>
+                    <td class="tdRight">{{(asFixedResource_A).toFixed(2)}}</td>
+                    <td class="tdRight">{{(fixedResource_A + asFixedResource_A).toFixed(2)}}</td>
+                </tr>
+            </tbody>
+            <!-- Resource B -->
+            <tbody>
+                <tr>
+                    <td colspan="12" class="no-border"></td>
+                </tr>
+                <ng-container *ngFor="let resource of allSubGroupsResource_B; let i = index">
+                    <!-- Row for resources without subgroups -->
+                    <tr *ngIf="resource.subGroup.length === 0">
+                        <td style="text-align: center;">{{ i + 1 }}</td>
+                        <td>
+                            <p style="cursor: pointer;" (click)="budgetSplitUpPopUp(resource.asBeRbeDto,'AS-RBE')">{{
+                                resource.heading }}</p>
+                        </td>
+                        <td style="text-align: right;">{{ (resource.fixed || 0).toFixed(2) }}</td>
+                        <td style="text-align: right;">{{ (resource.asProposed || 0).toFixed(2) }}</td>
+                        <td style="text-align: right;">{{ (resource.asFixed || 0).toFixed(2) }}</td>
+                        <td style="text-align: right;">{{ (resource.fixedTotal || 0).toFixed(2) }}</td>
+
+                    </tr>
+
+                    <!-- Row for resources with subgroups -->
+                    <ng-container *ngIf="resource.subGroup.length !== 0">
+                        <!-- Main resource row -->
+                        <tr>
+                            <td style="text-align: center;">{{ i + 1 }}</td>
+                            <td>
+                                <p style="cursor: pointer;" (click)="budgetSplitUpPopUp(resource.asBeRbeDto,'AS-RBE')">
+                                    {{ resource.heading }}</p>
+                            </td>
+                            <td style="text-align: right;">{{ resource.fixed }}</td>
+                            <td style="text-align: right;">{{ resource.asProposed }}</td>
+                            <td style="text-align: right;">{{ resource.asFixed }}</td>
+                            <td style="text-align: right;">{{ resource.fixedTotal }}</td>
+
+                        </tr>
+
+                        <!-- Subgroup rows -->
+                        <tr *ngFor="let subGroup of resource.subGroup">
+                            <td></td>
+                            <td style="padding-left: 20px;">
+                                <p style="cursor: pointer;" (click)="budgetSplitUpPopUp(subGroup.asBeRbeDto,'AS-RBE')">
+                                    {{ subGroup.heading }}</p>
+                            </td>
+                            <td style="text-align: right;">{{ (subGroup.fixed || 0).toFixed(2) }}</td>
+                            <td style="text-align: right;">{{ (subGroup.asProposed || 0).toFixed(2) }}</td>
+                            <td style="text-align: right;">{{ (subGroup.asFixed || 0).toFixed(2) }}</td>
+                            <td style="text-align: right;">{{ (subGroup.fixedTotal || 0).toFixed(2) }}</td>
+
+                        </tr>
+                    </ng-container>
+                </ng-container>
+                <tr>
+                    <td colspan="2" class="totalHeading">TOTAL (B)</td>
+                    <td class="tdRight">{{(fixedResource_B).toFixed(2)}}</td>
+                    <td class="tdRight">{{(asProposedResource_B).toFixed(2)}}</td>
+                    <td class="tdRight">{{(asFixedResource_B).toFixed(2)}}</td>
+                    <td class="tdRight">{{(fixedResource_B + asFixedResource_B).toFixed(2)}}</td>
+                    <!-- <td></td> -->
+                </tr>
+            </tbody>
+            <!-- Resource C -->
+            <tbody>
+                <tr>
+                    <td colspan="12" class="no-border"></td>
+                </tr>
+                <ng-container *ngFor="let resource of allSubGroupsResource_C; let i = index">
+                    <!-- Row for resources without subgroups -->
+                    <tr *ngIf="resource.subGroup.length === 0">
+                        <td style="text-align: center;">{{ i + 1 }}</td>
+                        <td>
+                            <p style="cursor: pointer;" (click)="budgetSplitUpPopUp(resource.asBeRbeDto,'AS-RBE')">{{
+                                resource.heading }}</p>
+                        </td>
+                        <td style="text-align: right;">{{ (resource.fixed || 0).toFixed(2) }}</td>
+                        <td style="text-align: right;">{{ (resource.asProposed || 0).toFixed(2) }}</td>
+                        <td style="text-align: right;">{{ (resource.asFixed || 0).toFixed(2) }}</td>
+                        <td style="text-align: right;">{{ (resource.fixedTotal || 0).toFixed(2) }}</td>
+
+                    </tr>
+
+                    <!-- Row for resources with subgroups -->
+                    <ng-container *ngIf="resource.subGroup.length !== 0">
+                        <!-- Main resource row -->
+                        <tr>
+                            <td style="text-align: center;">{{ i + 1 }}</td>
+                            <td>
+                                <p style="cursor: pointer;" (click)="budgetSplitUpPopUp(resource.asBeRbeDto,'AS-RBE')">
+                                    {{ resource.heading }}</p>
+                            </td>
+                            <td style="text-align: right;">{{ resource.fixed }}</td>
+                            <td style="text-align: right;">{{ resource.asProposed }}</td>
+                            <td style="text-align: right;">{{ resource.asFixed }}</td>
+                            <td style="text-align: right;">{{ resource.fixedTotal }}</td>
+
+                        </tr>
+                        <!-- Subgroup rows -->
+                        <tr *ngFor="let subGroup of resource.subGroup">
+                            <td></td>
+                            <td style="padding-left: 20px;">
+                                <p style="cursor: pointer;" (click)="budgetSplitUpPopUp(subGroup.asBeRbeDto,'AS-RBE')">
+                                    {{ subGroup.heading }}</p>
+                            </td>
+                            <td style="text-align: right;">{{ (subGroup.fixed || 0).toFixed(2) }}</td>
+                            <td style="text-align: right;">{{ (subGroup.asProposed || 0).toFixed(2) }}</td>
+                            <td style="text-align: right;">{{ (subGroup.asFixed || 0).toFixed(2) }}</td>
+                            <td style="text-align: right;">{{ (subGroup.fixedTotal || 0).toFixed(2) }}</td>
+
+                        </tr>
+                    </ng-container>
+                </ng-container>
+                <tr>
+                    <td colspan="2" class="totalHeading">TOTAL (C)</td>
+                    <td class="tdRight">{{(fixedResource_C).toFixed(2)}}</td>
+                    <td class="tdRight">{{(asProposedResource_C).toFixed(2)}}</td>
+                    <td class="tdRight">{{(asFixedResource_C).toFixed(2)}}</td>
+                    <td class="tdRight">{{(fixedResource_C + asFixedResource_C).toFixed(2)}}</td>
+                    <!-- <td></td> -->
+                </tr>
+                <tr>
+                    <td colspan="2" class="totalHeading"> Total (A + B + C)</td>
+                    <td class="tdRight">{{(fixedResourceTotal).toFixed(2)}}</td>
+                    <td class="tdRight">{{(asProposedResourceTotal).toFixed(2)}}</td>
+                    <td class="tdRight">{{(asFixedResourceTotal).toFixed(2)}}</td>
+                    <td class="tdRight">{{(fixedResourceTotal + asFixedResourceTotal).toFixed(2)}}</td>
+                    <!-- <td></td> -->
+                </tr>
+            </tbody>
+
+            <!-- Commitments -->
+
+            <!-- Commitments A -->
+            <tbody>
+                <tr>
+                    <td class="no-border"></td>
+                    <td colspan="12" class="resource-title" style="font-size: large; font-weight: 600;">COMMITMENTS</td>
+                </tr>
+                <ng-container *ngFor="let resource of allSubGroupsCommitments_A; let i = index">
+                    <!-- Row for resources without subgroups -->
+                    <tr *ngIf="resource.subGroup.length === 0">
+                        <td style="text-align: center;">{{ i + 1 }}</td>
+                        <td>
+                            <p style="cursor: pointer;" (click)="budgetSplitUpPopUp(resource.asBeRbeDto,'AS-RBE')">{{
+                                resource.heading }}</p>
+                        </td>
+                        <td style="text-align: right;">{{ (resource.fixed || 0).toFixed(2) }}</td>
+                        <td style="text-align: right;">{{ (resource.asProposed || 0).toFixed(2) }}</td>
+                        <td style="text-align: right;">{{ (resource.asFixed || 0).toFixed(2) }}</td>
+                        <td style="text-align: right;">{{ (resource.fixedTotal || 0).toFixed(2) }}</td>
+
+                    </tr>
+
+                    <!-- Row for resources with subgroups -->
+                    <ng-container *ngIf="resource.subGroup.length !== 0">
+                        <!-- Main resource row -->
+                        <tr>
+                            <td style="text-align: center;">{{ i + 1 }}</td>
+                            <td>
+                                <p style="cursor: pointer;" (click)="budgetSplitUpPopUp(resource.asBeRbeDto,'AS-RBE')">
+                                    {{ resource.heading }}</p>
+                            </td>
+                            <td style="text-align: right;">{{ resource.fixed }}</td>
+                            <td style="text-align: right;">{{ resource.asProposed }}</td>
+                            <td style="text-align: right;">{{ resource.asFixed }}</td>
+                            <td style="text-align: right;">{{resource.fixedTotal}}</td>
+
+                        </tr>
+
+                        <!-- Subgroup rows -->
+                        <tr *ngFor="let subGroup of resource.subGroup">
+                            <td></td>
+                            <td style="padding-left: 20px;">
+                                <p style="cursor: pointer;" (click)="budgetSplitUpPopUp(subGroup.asBeRbeDto,'AS-RBE')">
+                                    {{ subGroup.heading }}</p>
+                            </td>
+                            <td style="text-align: right;">{{ (subGroup.fixed || 0).toFixed(2) }}</td>
+                            <td style="text-align: right;">{{ (subGroup.asProposed || 0).toFixed(2) }}</td>
+                            <td style="text-align: right;">{{ (subGroup.asFixed || 0).toFixed(2) }}</td>
+                            <td style="text-align: right;">{{ (subGroup.fixedTotal || 0).toFixed(2) }}</td>
+
+                        </tr>
+
+                    </ng-container>
+                </ng-container>
+                <tr>
+                    <td colspan="2" class="totalHeading">TOTAL (A)</td>
+                    <td class="tdRight">{{(fixedCommitments_A).toFixed(2)}}</td>
+                    <td class="tdRight">{{(asProposedCommitments_A).toFixed(2)}}</td>
+                    <td class="tdRight">{{(asFixedCommitments_A).toFixed(2)}}</td>
+                    <td class="tdRight">{{(fixedCommitments_A + asFixedCommitments_A).toFixed(2)}}</td>
+                    <!-- <td></td> -->
+                </tr>
+            </tbody>
+            <!-- Commitments B -->
+            <tbody>
+                <tr>
+                    <td colspan="12" class="no-border"></td>
+                </tr>
+                <ng-container *ngFor="let resource of allSubGroupsCommitments_B; let i = index">
+                    <!-- Row for resources without subgroups -->
+                    <tr *ngIf="resource.subGroup.length === 0">
+                        <td style="text-align: center;">{{ i + 1 }}</td>
+                        <td>
+                            <p style="cursor: pointer;" (click)="budgetSplitUpPopUp(resource.asBeRbeDto,'AS-RBE')">{{
+                                resource.heading }}</p>
+                        </td>
+                        <td style="text-align: right;">{{ (resource.fixed || 0).toFixed(2) }}</td>
+                        <td style="text-align: right;">{{ (resource.asProposed || 0).toFixed(2) }}</td>
+                        <td style="text-align: right;">{{ (resource.asFixed || 0).toFixed(2) }}</td>
+                        <td style="text-align: right;">{{ (resource.fixedTotal || 0).toFixed(2) }}</td>
+
+                    </tr>
+
+                    <!-- Row for resources with subgroups -->
+                    <ng-container *ngIf="resource.subGroup.length !== 0">
+                        <!-- Main resource row -->
+                        <tr>
+                            <td style="text-align: center;">{{ i + 1 }}</td>
+                            <td>
+                                <p style="cursor: pointer;" (click)="budgetSplitUpPopUp(resource.asBeRbeDto,'AS-RBE')">
+                                    {{ resource.heading }}</p>
+                            </td>
+                            <td style="text-align: right;">{{ resource.fixed }}</td>
+                            <td style="text-align: right;">{{ resource.asProposed }}</td>
+                            <td style="text-align: right;">{{ resource.asFixed }}</td>
+                            <td style="text-align: right;">{{ resource.fixedTotal }}</td>
+
+                        </tr>
+
+                        <!-- Subgroup rows -->
+                        <tr *ngFor="let subGroup of resource.subGroup">
+                            <td></td>
+                            <td style="padding-left: 20px;">
+                                <p style="cursor: pointer;" (click)="budgetSplitUpPopUp(subGroup.asBeRbeDto,'AS-RBE')">
+                                    {{ subGroup.heading }}</p>
+                            </td>
+                            <td style="text-align: right;">{{ (subGroup.fixed || 0).toFixed(2) }}</td>
+                            <td style="text-align: right;">{{ (subGroup.asProposed || 0).toFixed(2) }}</td>
+                            <td style="text-align: right;">{{ (subGroup.asFixed || 0).toFixed(2) }}</td>
+                            <td style="text-align: right;">{{ (subGroup.fixedTotal || 0).toFixed(2) }}</td>
+
+                        </tr>
+
+                    </ng-container>
+                </ng-container>
+                <tr>
+                    <td colspan="2" class="totalHeading">TOTAL (B)</td>
+                    <td class="tdRight">{{(fixedCommitments_B).toFixed(2)}}</td>
+                    <td class="tdRight">{{(asProposedCommitments_B).toFixed(2)}}</td>
+                    <td class="tdRight">{{(asFixedCommitments_B).toFixed(2)}}</td>
+                    <td class="tdRight">{{(fixedCommitments_B + asFixedCommitments_B).toFixed(2)}}</td>
+                </tr>
+            </tbody>
+            <!-- Commitments C -->
+            <tbody>
+                <tr>
+                    <td colspan="12" class="no-border"></td>
+                </tr>
+                <ng-container *ngFor="let resource of allSubGroupsCommitments_C; let i = index">
+                    <!-- Row for resources without subgroups -->
+                    <tr *ngIf="resource.subGroup.length === 0">
+                        <td style="text-align: center;">{{ i + 1 }}</td>
+                        <td>
+                            <p style="cursor: pointer;" (click)="budgetSplitUpPopUp(resource.asBeRbeDto,'AS-RBE')">{{
+                                resource.heading }}</p>
+                        </td>
+                        <td style="text-align: right;">{{ (resource.fixed || 0).toFixed(2) }}</td>
+                        <td style="text-align: right;">{{ (resource.asProposed || 0).toFixed(2) }}</td>
+                        <td style="text-align: right;">{{ (resource.asFixed || 0).toFixed(2) }}</td>
+                        <td style="text-align: right;">{{ (resource.fixedTotal || 0).toFixed(2) }}</td>
+
+                    </tr>
+
+                    <!-- Row for resources with subgroups -->
+                    <ng-container *ngIf="resource.subGroup.length !== 0">
+                        <!-- Main resource row -->
+                        <tr>
+                            <td style="text-align: center;">{{ i + 1 }}</td>
+                            <td>
+                                <p style="cursor: pointer;" (click)="budgetSplitUpPopUp(resource.asBeRbeDto,'AS-RBE')">
+                                    {{ resource.heading }}</p>
+                            </td>
+                            <td style="text-align: right;">{{ resource.fixed }}</td>
+                            <td style="text-align: right;">{{ resource.asProposed }}</td>
+                            <td style="text-align: right;">{{ resource.asFixed }}</td>
+                            <td style="text-align: right;">{{ resource.fixedTotal}}</td>
+                        </tr>
+
+                        <!-- Subgroup rows -->
+                        <tr *ngFor="let subGroup of resource.subGroup">
+                            <td></td>
+                            <td style="padding-left: 20px;">
+                                <p style="cursor: pointer;" (click)="budgetSplitUpPopUp(subGroup.asBeRbeDto,'AS-RBE')">
+                                    {{ subGroup.heading }}</p>
+                            </td>
+                            <td style="text-align: right;">{{ (subGroup.fixed || 0).toFixed(2) }}</td>
+                            <td style="text-align: right;">{{ (subGroup.asProposed || 0).toFixed(2) }}</td>
+                            <td style="text-align: right;">{{ (subGroup.asFixed || 0).toFixed(2) }}</td>
+                            <td style="text-align: right;">{{ (subGroup.fixedTotal || 0).toFixed(2) }}</td>
+                        </tr>
+
+                    </ng-container>
+                </ng-container>
+                <tr>
+                    <td style="text-align: center;">{{lenthOfCommitments_C}}</td>
+                    <td>
+                        <p style="cursor:pointer;" (click)="cashToWorkRoute('RBE')">Works expenditure & Maintenance
+                        </p>
+                    </td>
+                    <td style="text-align: right;">{{(fixedTotalWork || 0).toFixed(2)}}</td>
+                    <td style="text-align: right;">{{(asProposedTotalWork || 0).toFixed(2)}}</td>
+                    <td style="text-align: right;">{{(asFixedTotalWork || 0).toFixed(2)}}</td>
+                    <td style="text-align: right;">{{(fixedTotalWork + asFixedTotalWork || 0).toFixed(2)}}</td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="totalHeading">TOTAL (C)</td>
+                    <td class="tdRight">{{(fixedCommitments_C).toFixed(2)}}</td>
+                    <td class="tdRight">{{(asProposedCommitments_C).toFixed(2)}}</td>
+                    <td class="tdRight">{{(asFixedCommitments_C).toFixed(2)}}</td>
+                    <td class="tdRight">{{(fixedCommitments_C + asFixedCommitments_C).toFixed(2)}}</td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="totalHeading">TOTAL (A+B+C)</td>
+                    <td class="tdRight">{{(fixedCommitmentsTotal).toFixed(2)}}</td>
+                    <td class="tdRight">{{(asProposedCommitmentsTotal).toFixed(2)}}</td>
+                    <td class="tdRight">{{(asFixedCommitmentsTotal).toFixed(2)}}</td>
+                    <td class="tdRight">{{(fixedCommitmentsTotal + asFixedCommitmentsTotal).toFixed(2)}}</td>
+                    <!-- <td></td> -->
+                </tr>
+                <tr>
+                    <td colspan="2" class="totalHeading">CASH FLOW TOTAL</td>
+                    <td class="tdRight">{{(fixedAllTotal).toFixed(2)}}</td>
+                    <td class="tdRight">{{(asProposedAllTotal).toFixed(2)}}</td>
+                    <td class="tdRight">{{(asFixedAllTotal).toFixed(2)}}</td>
+                    <td class="tdRight">{{(fixedAllTotal + asFixedAllTotal).toFixed(2)}}</td>
+                    <!-- <td></td> -->
+                </tr>
+            </tbody>
+
+        </table>
+    </div>
+
+    <div *ngIf="WorkFlow && be">
+        <h2 class="headingFlow">BE - Work Flow</h2>
+        <table class="table table-primary budgetTable">
+            <thead>
+                <tr>
+                    <th rowspan="2">S.No</th>
+                    <th rowspan="2">Particulars</th>
+                    <th>BE Fixed</th>
+                    <th>AS Proposed</th>
+                    <th>AS Fixed</th>
+                    <th>BE Fixed + AS Fixed</th>
+                </tr>
+                <tr>
+                    <th>{{asBeRbeYears}}</th>
+                    <th>{{asBeRbeYears}}</th>
+                    <th>{{asBeRbeYears}}</th>
+                    <th>{{asBeRbeYears}}</th>
+                </tr>
+            </thead>
+
+            <!-- Work A -->
+            <tbody>
+                <tr>
+                    <td class="no-border"></td>
+                    <td colspan="11" class="resource-title" style="font-size: large; font-weight: 600;">A.Capital Outlay
+                </tr>
+                <ng-container *ngFor="let resource of allSubGroupsWork_A; let i = index">
+                    <!-- Row for resources without subgroups -->
+                    <tr *ngIf="resource.subGroup.length === 0">
+                        <td style="text-align: center;">{{ i + 1 }}</td>
+                        <td>
+                            <p style="cursor: pointer;" (click)="budgetSplitUpPopUp(resource.asBeRbeDto,'AS-BE')">{{
+                                resource.heading }}</p>
+                        </td>
+                        <td style="text-align: right;">{{ (resource.fixed || 0).toFixed(2) }}</td>
+                        <td style="text-align: right;">{{ (resource.asProposed || 0).toFixed(2) }}</td>
+                        <td style="text-align: right;">{{ (resource.asFixed || 0).toFixed(2) }}</td>
+                        <td style="text-align: right;">{{ (resource.fixedTotal || 0).toFixed(2) }}</td>
+                    </tr>
+
+                    <!-- Row for resources with subgroups -->
+                    <ng-container *ngIf="resource.subGroup.length !== 0">
+                        <!-- Main resource row -->
+                        <tr>
+                            <td style="text-align: center;">{{ i + 1 }}</td>
+                            <td>
+                                <p style="cursor: pointer;" (click)="budgetSplitUpPopUp(resource.asBeRbeDto,'AS-BE')">{{
+                                    resource.heading }}</p>
+                            </td>
+                            <td style="text-align: right;">{{ resource.fixed }}</td>
+                            <td style="text-align: right;">{{ resource.asProposed }}</td>
+                            <td style="text-align: right;">{{ resource.asFixed }}</td>
+                            <td style="text-align: right;">{{ resource.fixedTotal}}</td>
+
+                        </tr>
+
+                        <!-- Subgroup rows -->
+                        <tr *ngFor="let subGroup of resource.subGroup">
+                            <td></td>
+                            <td style="padding-left: 20px;">
+                                <p style="cursor: pointer;" (click)="budgetSplitUpPopUp(subGroup.asBeRbeDto,'AS-BE')">
+                                    {{ subGroup.heading }}</p>
+                            </td>
+                            <td style="text-align: right;">{{ (subGroup.fixed || 0).toFixed(2) }}</td>
+                            <td style="text-align: right;">{{ (subGroup.asProposed || 0).toFixed(2) }}</td>
+                            <td style="text-align: right;">{{ (subGroup.asFixed || 0).toFixed(2) }}</td>
+                            <td style="text-align: right;">{{ (subGroup.fixedTotal || 0).toFixed(2) }}</td>
+
+                        </tr>
+
+                    </ng-container>
+                </ng-container>
+                <tr>
+                    <td colspan="2" class="totalHeading">TOTAL (A)</td>
+                    <td class="tdRight">{{(fixedWorkTotal_A).toFixed(2)}}</td>
+                    <td class="tdRight">{{(asProposedWorkTotal_A).toFixed(2)}}</td>
+                    <td class="tdRight">{{(asFixedWorkTotal_A).toFixed(2)}}</td>
+                    <td class="tdRight">{{(fixedWorkTotal_A + asFixedWorkTotal_A).toFixed(2)}}</td>
+                </tr>
+            </tbody>
+            <!-- Work B -->
+            <tbody>
+                <tr>
+                    <td class="no-border"></td>
+                    <td colspan="11" class="resource-title" style="font-size: large; font-weight: 600;">B.Deposit-Works
+                </tr>
+                <ng-container *ngFor="let resource of allSubGroupsWork_B; let i = index">
+                    <!-- Row for resources without subgroups -->
+                    <tr *ngIf="resource.subGroup.length === 0">
+                        <td style="text-align: center;">{{ i + 1 }}</td>
+                        <td>
+                            <p style="cursor: pointer;" (click)="budgetSplitUpPopUp(resource.asBeRbeDto,'AS-BE')">{{
+                                resource.heading }}</p>
+                        </td>
+                        <td style="text-align: right;">{{ (resource.fixed || 0).toFixed(2) }}</td>
+                        <td style="text-align: right;">{{ (resource.asProposed || 0).toFixed(2) }}</td>
+                        <td style="text-align: right;">{{ (resource.asFixed || 0).toFixed(2) }}</td>
+                        <td style="text-align: right;">{{ (resource.fixedTotal || 0).toFixed(2) }}</td>
+
+                    </tr>
+
+                    <!-- Row for resources with subgroups -->
+                    <ng-container *ngIf="resource.subGroup.length !== 0">
+                        <!-- Main resource row -->
+                        <tr>
+                            <td style="text-align: center;">{{ i + 1 }}</td>
+                            <td>
+                                <p style="cursor: pointer;" (click)="budgetSplitUpPopUp(resource.asBeRbeDto,'AS-BE')">{{
+                                    resource.heading }}</p>
+                            </td>
+                            <td style="text-align: right;">{{ resource.fixed }}</td>
+                            <td style="text-align: right;">{{ resource.asProposed }}</td>
+                            <td style="text-align: right;">{{ resource.asFixed }}</td>
+                            <td style="text-align: right;">{{ resource.fixedTotal }}</td>
+
+                        </tr>
+
+                        <!-- Subgroup rows -->
+                        <tr *ngFor="let subGroup of resource.subGroup">
+                            <td></td>
+                            <td style="padding-left: 20px;">
+                                <p style="cursor: pointer;" (click)="budgetSplitUpPopUp(subGroup.asBeRbeDto,'AS-BE')">
+                                    {{ subGroup.heading }}</p>
+                            </td>
+                            <td style="text-align: right;">{{ (subGroup.fixed || 0).toFixed(2) }}</td>
+                            <td style="text-align: right;">{{ (subGroup.asProposed || 0).toFixed(2) }}</td>
+                            <td style="text-align: right;">{{ (subGroup.asFixed || 0).toFixed(2) }}</td>
+                            <td style="text-align: right;">{{ (subGroup.fixedTotal || 0).toFixed(2) }}</td>
+
+                        </tr>
+                    </ng-container>
+                </ng-container>
+                <tr>
+                    <td colspan="2" class="totalHeading">TOTAL (B)</td>
+                    <td class="tdRight">{{(fixedWorkTotal_B).toFixed(2)}}</td>
+                    <td class="tdRight">{{(asProposedWorkTotal_B).toFixed(2)}}</td>
+                    <td class="tdRight">{{(asFixedWorkTotal_B).toFixed(2)}}</td>
+                    <td class="tdRight">{{(fixedWorkTotal_B + asFixedWorkTotal_B).toFixed(2)}}</td>
+                </tr>
+            </tbody>
+            <!-- Work C -->
+            <tbody>
+                <tr>
+                    <td class="no-border"></td>
+                    <td colspan="11" class="resource-title" style="font-size: large; font-weight: 600;">C.Revenue</td>
+                </tr>
+                <ng-container *ngFor="let resource of allSubGroupsWork_C; let i = index">
+                    <!-- Row for resources without subgroups -->
+                    <tr *ngIf="resource.subGroup.length === 0">
+                        <td style="text-align: center;">{{ i + 1 }}</td>
+                        <td>
+                            <p style="cursor: pointer;" (click)="budgetSplitUpPopUp(resource.asBeRbeDto,'AS-BE')">{{
+                                resource.heading }}</p>
+                        </td>
+                        <td style="text-align: right;">{{ (resource.fixed || 0).toFixed(2) }}</td>
+                        <td style="text-align: right;">{{ (resource.asProposed || 0).toFixed(2) }}</td>
+                        <td style="text-align: right;">{{ (resource.asFixed || 0).toFixed(2) }}</td>
+                        <td style="text-align: right;">{{ (resource.fixedTotal || 0).toFixed(2) }}</td>
+
+                    </tr>
+
+                    <!-- Row for resources with subgroups -->
+                    <ng-container *ngIf="resource.subGroup.length !== 0">
+                        <!-- Main resource row -->
+                        <tr>
+                            <td style="text-align: center;">{{ i + 1 }}</td>
+                            <td>
+                                <p style="cursor: pointer;" (click)="budgetSplitUpPopUp(resource.asBeRbeDto,'AS-BE')">{{
+                                    resource.heading }}</p>
+                            </td>
+                            <td style="text-align: right;">{{ resource.fixed }}</td>
+                            <td style="text-align: right;">{{ resource.asProposed }}</td>
+                            <td style="text-align: right;">{{ resource.asFixed }}</td>
+                            <td style="text-align: right;">{{ resource.fixedTotal }}</td>
+
+                        </tr>
+
+                        <!-- Subgroup rows -->
+                        <tr *ngFor="let subGroup of resource.subGroup">
+                            <td></td>
+                            <td style="padding-left: 20px;">
+                                <p style="cursor: pointer;" (click)="budgetSplitUpPopUp(subGroup.asBeRbeDto,'AS-BE')">
+                                    {{ subGroup.heading }}</p>
+                            </td>
+                            <td style="text-align: right;">{{ (subGroup.fixed || 0).toFixed(2) }}</td>
+                            <td style="text-align: right;">{{ (subGroup.asProposed || 0).toFixed(2) }}</td>
+                            <td style="text-align: right;">{{ (subGroup.asFixed || 0).toFixed(2) }}</td>
+                            <td style="text-align: right;">{{ (subGroup.fixedTotal || 0).toFixed(2) }}</td>
+
+                        </tr>
+                    </ng-container>
+                </ng-container>
+                <tr>
+                    <td colspan="2" class="totalHeading">TOTAL (C)</td>
+                    <td class="tdRight">{{(fixedWorkTotal_C).toFixed(2)}}</td>
+                    <td class="tdRight">{{(asProposedWorkTotal_C).toFixed(2)}}</td>
+                    <td class="tdRight">{{(asFixedWorkTotal_C).toFixed(2)}}</td>
+                    <td class="tdRight">{{(fixedWorkTotal_C + asFixedWorkTotal_C).toFixed(2)}}</td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="totalHeading"> Total (A + B + C)</td>
+                    <td class="tdRight">{{(fixedWorkTotal).toFixed(2)}}</td>
+                    <td class="tdRight">{{(asProposedWorkTotal).toFixed(2)}}</td>
+                    <td class="tdRight">{{(asFixedWorkTotal).toFixed(2)}}</td>
+                    <td class="tdRight">{{(fixedWorkTotal + asFixedWorkTotal).toFixed(2)}}</td>
+                </tr>
+            </tbody>
+
+        </table>
+    </div>
+
+    <div *ngIf="WorkFlow && rbe">
+        <h2 class="headingFlow">RBE - Work Flow</h2>
+        <table class="table table-primary budgetTable">
+            <thead>
+                <tr>
+                    <th rowspan="2">S.No</th>
+                    <th rowspan="2">Particulars</th>
+                    <th>RBE Fixed</th>
+                    <th>AS Proposed</th>
+                    <th>AS Fixed</th>
+                    <th>RBE Fixed + AS Fixed</th>
+                </tr>
+                <tr>
+                    <th>{{asBeRbeYears}}</th>
+                    <th>{{asBeRbeYears}}</th>
+                    <th>{{asBeRbeYears}}</th>
+                    <th>{{asBeRbeYears}}</th>
+                </tr>
+            </thead>
+
+            <!-- Work A -->
+            <tbody>
+                <tr>
+                    <td class="no-border"></td>
+                    <td colspan="11" class="resource-title" style="font-size: large; font-weight: 600;">A.Capital Outlay
+                </tr>
+                <ng-container *ngFor="let resource of allSubGroupsWork_A; let i = index">
+                    <!-- Row for resources without subgroups -->
+                    <tr *ngIf="resource.subGroup.length === 0">
+                        <td style="text-align: center;">{{ i + 1 }}</td>
+                        <td>
+                            <p style="cursor: pointer;" (click)="budgetSplitUpPopUp(resource.asBeRbeDto,'AS-RBE')">{{
+                                resource.heading }}</p>
+                        </td>
+                        <td style="text-align: right;">{{ (resource.fixed || 0).toFixed(2) }}</td>
+                        <td style="text-align: right;">{{ (resource.asProposed || 0).toFixed(2) }}</td>
+                        <td style="text-align: right;">{{ (resource.asFixed || 0).toFixed(2) }}</td>
+                        <td style="text-align: right;">{{ (resource.fixedTotal || 0).toFixed(2) }}</td>
+
+                    </tr>
+
+                    <!-- Row for resources with subgroups -->
+                    <ng-container *ngIf="resource.subGroup.length !== 0">
+                        <!-- Main resource row -->
+                        <tr>
+                            <td style="text-align: center;">{{ i + 1 }}</td>
+                            <td>
+                                <p style="cursor: pointer;" (click)="budgetSplitUpPopUp(resource.asBeRbeDto,'AS-RBE')">
+                                    {{ resource.heading }}</p>
+                            </td>
+                            <td style="text-align: right;">{{ resource.fixed }}</td>
+                            <td style="text-align: right;">{{ resource.asProposed }}</td>
+                            <td style="text-align: right;">{{ resource.asFixed }}</td>
+                            <td style="text-align: right;">{{ resource.fixedTotal}}</td>
+
+                        </tr>
+
+                        <!-- Subgroup rows -->
+                        <tr *ngFor="let subGroup of resource.subGroup">
+                            <td></td>
+                            <td style="padding-left: 20px;">
+                                <p style="cursor: pointer;" (click)="budgetSplitUpPopUp(subGroup.asBeRbeDto,'AS-RBE')">
+                                    {{ subGroup.heading }}</p>
+                            </td>
+                            <td style="text-align: right;">{{ (subGroup.fixed || 0).toFixed(2) }}</td>
+                            <td style="text-align: right;">{{ (subGroup.asProposed || 0).toFixed(2) }}</td>
+                            <td style="text-align: right;">{{ (subGroup.asFixed || 0).toFixed(2) }}</td>
+                            <td style="text-align: right;">{{ (subGroup.fixedTotal || 0).toFixed(2) }}</td>
+
+                        </tr>
+
+                    </ng-container>
+                </ng-container>
+                <tr>
+                    <td colspan="2" class="totalHeading">TOTAL (A)</td>
+                    <td class="tdRight">{{(fixedWorkTotal_A).toFixed(2)}}</td>
+                    <td class="tdRight">{{(asProposedWorkTotal_A).toFixed(2)}}</td>
+                    <td class="tdRight">{{(asFixedWorkTotal_A).toFixed(2)}}</td>
+                    <td class="tdRight">{{(fixedWorkTotal_A + asFixedWorkTotal_A).toFixed(2)}}</td>
+                </tr>
+            </tbody>
+            <!-- Work B -->
+            <tbody>
+                <tr>
+                    <td class="no-border"></td>
+                    <td colspan="11" class="resource-title" style="font-size: large; font-weight: 600;">B.Deposit-Works
+                </tr>
+                <ng-container *ngFor="let resource of allSubGroupsWork_B; let i = index">
+                    <!-- Row for resources without subgroups -->
+                    <tr *ngIf="resource.subGroup.length === 0">
+                        <td style="text-align: center;">{{ i + 1 }}</td>
+                        <td>
+                            <p style="cursor: pointer;" (click)="budgetSplitUpPopUp(resource.asBeRbeDto,'AS-RBE')">{{
+                                resource.heading }}</p>
+                        </td>
+                        <td style="text-align: right;">{{ (resource.fixed || 0).toFixed(2) }}</td>
+                        <td style="text-align: right;">{{ (resource.asProposed || 0).toFixed(2) }}</td>
+                        <td style="text-align: right;">{{ (resource.asFixed || 0).toFixed(2) }}</td>
+                        <td style="text-align: right;">{{ (resource.fixedTotal || 0).toFixed(2) }}</td>
+
+                    </tr>
+
+                    <!-- Row for resources with subgroups -->
+                    <ng-container *ngIf="resource.subGroup.length !== 0">
+                        <!-- Main resource row -->
+                        <tr>
+                            <td style="text-align: center;">{{ i + 1 }}</td>
+                            <td>
+                                <p style="cursor: pointer;" (click)="budgetSplitUpPopUp(resource.asBeRbeDto,'AS-RBE')">
+                                    {{ resource.heading }}</p>
+                            </td>
+                            <td style="text-align: right;">{{ resource.fixed }}</td>
+                            <td style="text-align: right;">{{ resource.asProposed }}</td>
+                            <td style="text-align: right;">{{ resource.asFixed }}</td>
+                            <td style="text-align: right;">{{ resource.fixedTotal }}</td>
+
+                        </tr>
+
+                        <!-- Subgroup rows -->
+                        <tr *ngFor="let subGroup of resource.subGroup">
+                            <td></td>
+                            <td style="padding-left: 20px;">
+                                <p style="cursor: pointer;" (click)="budgetSplitUpPopUp(subGroup.asBeRbeDto,'AS-RBE')">
+                                    {{ subGroup.heading }}</p>
+                            </td>
+                            <td style="text-align: right;">{{ (subGroup.fixed || 0).toFixed(2) }}</td>
+                            <td style="text-align: right;">{{ (subGroup.asProposed || 0).toFixed(2) }}</td>
+                            <td style="text-align: right;">{{ (subGroup.asFixed || 0).toFixed(2) }}</td>
+                            <td style="text-align: right;">{{ (subGroup.fixedTotal || 0).toFixed(2) }}</td>
+
+                        </tr>
+                    </ng-container>
+                </ng-container>
+                <tr>
+                    <td colspan="2" class="totalHeading">TOTAL (B)</td>
+                    <td class="tdRight">{{(fixedWorkTotal_B).toFixed(2)}}</td>
+                    <td class="tdRight">{{(asProposedWorkTotal_B).toFixed(2)}}</td>
+                    <td class="tdRight">{{(asFixedWorkTotal_B).toFixed(2)}}</td>
+                    <td class="tdRight">{{(fixedWorkTotal_B + asFixedWorkTotal_B).toFixed(2)}}</td>
+                </tr>
+            </tbody>
+            <!-- Work C -->
+            <tbody>
+                <tr>
+                    <td class="no-border"></td>
+                    <td colspan="11" class="resource-title" style="font-size: large; font-weight: 600;">C.Revenue</td>
+                </tr>
+                <ng-container *ngFor="let resource of allSubGroupsWork_C; let i = index">
+                    <!-- Row for resources without subgroups -->
+                    <tr *ngIf="resource.subGroup.length === 0">
+                        <td style="text-align: center;">{{ i + 1 }}</td>
+                        <td>
+                            <p style="cursor: pointer;" (click)="budgetSplitUpPopUp(resource.asBeRbeDto,'AS-RBE')">{{
+                                resource.heading }}</p>
+                        </td>
+                        <td style="text-align: right;">{{ (resource.fixed || 0).toFixed(2) }}</td>
+                        <td style="text-align: right;">{{ (resource.asProposed || 0).toFixed(2) }}</td>
+                        <td style="text-align: right;">{{ (resource.asFixed || 0).toFixed(2) }}</td>
+                        <td style="text-align: right;">{{ (resource.fixedTotal || 0).toFixed(2) }}</td>
+
+                    </tr>
+
+                    <!-- Row for resources with subgroups -->
+                    <ng-container *ngIf="resource.subGroup.length !== 0">
+                        <!-- Main resource row -->
+                        <tr>
+                            <td style="text-align: center;">{{ i + 1 }}</td>
+                            <td>
+                                <p style="cursor: pointer;" (click)="budgetSplitUpPopUp(resource.asBeRbeDto,'AS-RBE')">
+                                    {{ resource.heading }}</p>
+                            </td>
+                            <td style="text-align: right;">{{ resource.fixed }}</td>
+                            <td style="text-align: right;">{{ resource.asProposed }}</td>
+                            <td style="text-align: right;">{{ resource.asFixed }}</td>
+                            <td style="text-align: right;">{{ resource.fixedTotal }}</td>
+
+                        </tr>
+
+                        <!-- Subgroup rows -->
+                        <tr *ngFor="let subGroup of resource.subGroup">
+                            <td></td>
+                            <td style="padding-left: 20px;">
+                                <p style="cursor: pointer;" (click)="budgetSplitUpPopUp(subGroup.asBeRbeDto,'AS-RBE')">
+                                    {{ subGroup.heading }}</p>
+                            </td>
+                            <td style="text-align: right;">{{ (subGroup.fixed || 0).toFixed(2) }}</td>
+                            <td style="text-align: right;">{{ (subGroup.asProposed || 0).toFixed(2) }}</td>
+                            <td style="text-align: right;">{{ (subGroup.asFixed || 0).toFixed(2) }}</td>
+                            <td style="text-align: right;">{{ (subGroup.fixedTotal || 0).toFixed(2) }}</td>
+
+                        </tr>
+                    </ng-container>
+                </ng-container>
+                <tr>
+                    <td colspan="2" class="totalHeading">TOTAL (C)</td>
+                    <td class="tdRight">{{(fixedWorkTotal_C).toFixed(2)}}</td>
+                    <td class="tdRight">{{(asProposedWorkTotal_C).toFixed(2)}}</td>
+                    <td class="tdRight">{{(asFixedWorkTotal_C).toFixed(2)}}</td>
+                    <td class="tdRight">{{(fixedWorkTotal_C + asFixedWorkTotal_C).toFixed(2)}}</td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="totalHeading"> Total (A + B + C)</td>
+                    <td class="tdRight">{{(fixedWorkTotal).toFixed(2)}}</td>
+                    <td class="tdRight">{{(asProposedWorkTotal).toFixed(2)}}</td>
+                    <td class="tdRight">{{(asFixedWorkTotal).toFixed(2)}}</td>
+                    <td class="tdRight">{{(fixedWorkTotal + asFixedWorkTotal).toFixed(2)}}</td>
+                </tr>
+            </tbody>
+
+        </table>
+    </div>
+
+    <div class="backButtonButtom">
+        <button class="btn btn-secondary" (click)="backButtonClick()">Back</button>
+    </div>
+
+</section>

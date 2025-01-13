@@ -1,0 +1,115 @@
+<section class="main">
+    <div class="main-content">
+      <h2 class="heading">Journal Voucher</h2>
+  
+      <form [formGroup]="journalForm">
+        <div class="jvForm">
+  
+          <div class="mx-2">
+            <label>JV No: </label>
+            <input type="text" class="form-control" formControlName="jvNo" style="width: 120px;" readonly>
+          </div>
+  
+          <div class="mx-2">
+            <label>File No : </label>
+            <input type="text" class="form-control" formControlName="fileNo" style="width: 350px;">
+          </div>
+  
+          <div class="mx-2">
+            <label>Date : </label>
+            <input class="form-control" type="text" id="Date" formControlName="jvDate" style="width: 130px;">
+          </div>
+  
+          <div class="mx-2">
+            <label>Bill Number: </label>
+            <select class="form-select" formControlName="billNumberjv">
+              <option value="">Select</option>
+              <option *ngFor="let billNumber of billNumbers" [value]="billNumber">{{ billNumber }}</option>
+            </select>
+          </div>
+          
+        </div>
+  
+  
+        <div formArrayName="reqJournalArrayDTOList" class="my-4">
+          <div class="accountForm">
+            <div *ngFor="let row of journalArray.controls; let i = index" [formGroupName]="i"
+              class="accountFormArray mt-2">
+  
+              <div class="mx-1">
+                <label for="">Acc Code</label>
+                
+                <select class="form-select" formControlName="accCode" >
+                  <option *ngFor="let items of accountCode" [value]="items.codeAndDescription">
+                    {{ items.codeAndDescription }}
+                  </option>
+                </select> 
+              </div>
+  
+              <div class="mx-1">
+                <label for="">Debit</label>
+                <input type="text" formControlName="debit" class="form-control" required style="text-align: right;"
+                  oninput="this.value=this.value.replace(/[^0-9]/g,'');" (input)="decimalInput('journalForm','debit',i)"
+                  (blur)="formatToTwoDecimals('journalForm','debit',i)" />
+              </div>
+  
+              <div class="mx-1">
+                <label for="">Credit</label>
+                <input type="text" formControlName="credit" class="form-control" required style="text-align: right;"
+                  oninput="this.value=this.value.replace(/[^0-9]/g,'');" (input)="decimalInput('journalForm','credit',i)"
+                  (blur)="formatToTwoDecimals('journalForm','credit',i)" />
+              </div>
+  
+              <div class="mx-1 addButton">
+                <mat-icon class=" add_button" (click)="addPaymentRow()" *ngIf="i<=0">add_circle</mat-icon>
+                <mat-icon class="delete_button" (click)="removePaymentRow(i)" *ngIf="i>0">delete_forever</mat-icon>
+                <!-- <button type="button" (click)="addPaymentRow()" class="btn btn-primary">Add</button> -->
+                <!-- <button type="button" (click)="removePaymentRow(i)" *ngIf="i>0" class="btn btn-danger">Delete</button> -->
+              </div>
+  
+            </div>
+          </div>
+        </div>
+  
+        <div class="my-2 row" [formGroup]="journalForm">
+          <div class="col-3"></div>
+          <div class="col-3"></div>
+          <div class="col-3">
+            <label for="">Total Debit(Rs)</label>
+            <input type="text" class="form-control" readonly formControlName="totalDebit"
+              style="text-align: right; background-color: rgb(222, 215, 215);">
+          </div>
+          <div class="col-3">
+            <label for="">Total Credit(Rs)</label>
+            <input type="text" class="form-control" readonly formControlName="totalCredit"
+              style="text-align: right; background-color: rgb(222, 215, 215);">
+          </div>
+        </div>
+  
+        <form class="remarksBorder" [formGroup]="journalForm">
+          <div formArrayName="reqJournalRemarkDTOList">
+            <div class="description" *ngFor="let row of journalRamarksArray.controls; let i = index" [formGroupName]="i">
+              <div class="mx-2">
+                <label for="">Narration : </label>
+                <textarea class="form-control" cols="40" rows="5" formControlName="narration"></textarea>
+              </div>
+              <div class="mx-2">
+                <label for="">Signature : </label>
+                <input type="text" class="form-control" formControlName="signature">
+              </div>
+              <div class="mx-2">
+                <label for="">Date : </label>
+                <input type="date" class="form-control" formControlName="date">
+              </div>
+            </div>
+          </div>
+        </form>
+  
+      </form>
+    </div>
+  
+    <div class="downButtons">
+      <button class="btn btn-secondary" routerLink="/famodule/home/journal">Back</button>
+      <button class="btn btn-success" (click)="saveJV()">Submit</button>
+    </div>
+  </section>

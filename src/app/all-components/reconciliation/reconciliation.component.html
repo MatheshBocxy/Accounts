@@ -1,0 +1,203 @@
+<section class="main-content">
+    <div class="header-row">
+      <h3 class="sub-heading mx-auto">BANK RECONCILITATION</h3>
+    </div>
+    <div class="filter-row mb-2">
+      <div class="col-5">
+        <div class="search-container">
+          <div>
+            <input matInput #input type="text" id="search-input" class="search-input" placeholder="Search..." />
+            <div class="search-icon">
+              <mat-icon>search</mat-icon>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+      <div class="col-2 ms-5">
+        <button class="btn btn-light add-dataBtn" routerLink="/famodule/home/create-journal">
+          <span><svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
+              <path
+                d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
+            </svg>
+          </span>New JV
+        </button>
+      </div>
+  
+      <div class="col-2"></div>
+  
+      <!-- <div class="excelContent col-1">
+        <a>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+            class="bi bi-file-earmark-excel-fill" viewBox="0 0 16 16">
+            <path
+              d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0M9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1M5.884 6.68 8 9.219l2.116-2.54a.5.5 0 1 1 .768.641L8.651 10l2.233 2.68a.5.5 0 0 1-.768.64L8 10.781l-2.116 2.54a.5.5 0 0 1-.768-.641L7.349 10 5.116 7.32a.5.5 0 1 1 .768-.64" />
+          </svg>
+        </a>
+  
+        <a>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+            class="bi bi-file-earmark-pdf-fill" viewBox="0 0 16 16">
+            <path
+              d="M5.523 12.424q.21-.124.459-.238a8 8 0 0 1-.45.606c-.28.337-.498.516-.635.572l-.035.012a.3.3 0 0 1-.026-.044c-.056-.11-.054-.216.04-.36.106-.165.319-.354.647-.548m2.455-1.647q-.178.037-.356.078a21 21 0 0 0 .5-1.05 12 12 0 0 0 .51.858q-.326.048-.654.114m2.525.939a4 4 0 0 1-.435-.41q.344.007.612.054c.317.057.466.147.518.209a.1.1 0 0 1 .026.064.44.44 0 0 1-.06.2.3.3 0 0 1-.094.124.1.1 0 0 1-.069.015c-.09-.003-.258-.066-.498-.256M8.278 6.97c-.04.244-.108.524-.2.829a5 5 0 0 1-.089-.346c-.076-.353-.087-.63-.046-.822.038-.177.11-.248.196-.283a.5.5 0 0 1 .145-.04c.013.03.028.092.032.198q.008.183-.038.465z" />
+            <path fill-rule="evenodd"
+              d="M4 0h5.293A1 1 0 0 1 10 .293L13.707 4a1 1 0 0 1 .293.707V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2m5.5 1.5v2a1 1 0 0 0 1 1h2zM4.165 13.668c.09.18.23.343.438.419.207.075.412.04.58-.03.318-.13.635-.436.926-.786.333-.401.683-.927 1.021-1.51a11.7 11.7 0 0 1 1.997-.406c.3.383.61.713.91.95.28.22.603.403.934.417a.86.86 0 0 0 .51-.138c.155-.101.27-.247.354-.416.09-.181.145-.37.138-.563a.84.84 0 0 0-.2-.518c-.226-.27-.596-.4-.96-.465a5.8 5.8 0 0 0-1.335-.05 11 11 0 0 1-.98-1.686c.25-.66.437-1.284.52-1.794.036-.218.055-.426.048-.614a1.24 1.24 0 0 0-.127-.538.7.7 0 0 0-.477-.365c-.202-.043-.41 0-.601.077-.377.15-.576.47-.651.823-.073.34-.04.736.046 1.136.088.406.238.848.43 1.295a20 20 0 0 1-1.062 2.227 7.7 7.7 0 0 0-1.482.645c-.37.22-.699.48-.897.787-.21.326-.275.714-.08 1.103" />
+          </svg>
+        </a>
+  
+      </div> -->
+      
+      <div>
+        <button class="btn excelBtn me-1" id="excel">
+            <span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                    class="bi bi-file-earmark-arrow-down-fill biExcel-btn" id="m1" viewBox="0 0 16 16">
+                    <path
+                        d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0M9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1m-1 4v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 0 1 .708-.708L7.5 11.293V7.5a.5.5 0 0 1 1 0" />
+                </svg></span>Excel</button>
+    </div>
+    <div>
+        <button class="btn btn-light pdfBtn">
+            <span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" id="mw" fill="currentColor"
+                    class="bi bi-file-earmark-arrow-down-fill biPdf-btn" viewBox="0 0 16 16">
+                    <path
+                        d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0M9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1m-1 4v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 0 1 .708-.708L7.5 11.293V7.5a.5.5 0 0 1 1 0" />
+                </svg></span>PDF</button>
+    </div>
+  
+    </div>
+  
+    <div class="row">
+      <div class="col-2" scope="col">
+        <select class="form-select">
+          <option value="" selected>Division</option>
+          <option *ngFor="let division of divisions" [value]="division">
+            {{ division }}
+          </option>
+        </select>
+      </div>
+      <div class="col-2" scope="col">
+        <select class="form-select" [(ngModel)]="selectedDivision1">
+          <option value="" selected>Bank code</option>
+          <option *ngFor="let division1 of divisions1" [value]="division1">
+            {{ division1 }}
+          </option>
+        </select>
+      </div>
+      <div class="col-2" scope="col">
+        <select class="form-select">
+          <option selected>Month</option>
+          <option *ngFor="let month of months" [value]="month">
+            {{ month }}
+          </option>
+        </select>
+      </div>
+  
+      <div class="col-2" scope="col">
+        <select [(ngModel)]="selectedAnnualYear" class="form-select">
+          <option value="Select Annual Year" selected>Financial Year</option>
+          <option *ngFor="let year of annualYears" [value]="year">
+            {{ year }}
+          </option>
+        </select>
+      </div>
+    </div>
+  
+  
+    <div class="table-wrapper-scroll-y my-custom-scrollbar">
+      <table class="table table-bordered table-striped mb-0">
+        <thead>
+          <tr class="theading">
+            <th class="col">SNo</th>
+            <th class="col">Date</th>
+            <th class="col">Acc Code</th>
+            <th class="col">Vch Type</th>
+            <th class="col">Vch No</th>
+            <th class="col">Inst No</th>
+            <th class="col">Inst Date </th>
+            <th class="col">Bank Date</th>
+            <th class="col">Reasons</th>
+            <th class="col">Debit</th>
+            <th class="col">Credit</th>
+            <!-- <th class="col">Action</th> -->
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let row of tableData; let i = index" class="tdata-input">
+            <td>{{ row.id }}</td>
+            <td><input type="text" [(ngModel)]="row.date"></td>
+            <td><input type="text" [(ngModel)]="row.accCode"></td>
+            <td><input type="text" [(ngModel)]="row.voucherType"></td>
+            <td><input type="text" [(ngModel)]="row.voucherNo"></td>
+            <td><input type="text" [(ngModel)]="row.instNo"></td>
+            <td><input type="text" [(ngModel)]="row.instDate"></td>
+            <td>
+              <input type="date" [(ngModel)]="row.bankDate">
+            </td>
+            <td>
+              <select [(ngModel)]="row.reasons">
+                <option *ngFor="let option of Reasons" [value]="option" placeholder="Reasons"> {{ option }}</option>
+              </select>
+            </td>
+            <td><input type="text" [(ngModel)]="row.debit"></td>
+            <td><input type="text" [(ngModel)]="row.credit"></td>
+            <!-- <td>
+          <svg (click)="addRow()" style="color: green;" xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-plus" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+            <path d="M12 5l0 14" />
+            <path d="M5 12l14 0" />
+          </svg>
+          <svg (click)="removePaymentRow(i)" *ngIf="i>0" style="color:red;" xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+            <path d="M4 7l16 0" />
+            <path d="M10 11l0 6" />
+            <path d="M14 11l0 6" />
+            <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
+            <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
+          </svg>
+        </td> -->
+            <!-- <mat-icon (click)="addPaymentRow()">add</mat-icon> -->
+            <!-- <mat-icon (click)="removePaymentRow(i)" *ngIf="i>0">delete</mat-icon> -->
+  
+            <!-- <td><mat-icon (click)="addRow()" color="success">add</mat-icon>
+          <mat-icon (click)="removePaymentRow(i)" *ngIf="i>0" color="danger">delete</mat-icon>
+        </td> -->
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  
+    <div class="row">
+      <div class="footerHeading col-9">Balance as per Company Book</div>
+      <div class="box col-2">
+        <input type="text" class="input form-control">
+      </div>
+    </div>
+  
+    <!-- Receipt Total Section -->
+    <div class="row">
+      <div class="footerHeading1 col-10">Reason 1</div>
+      <div class="col-2">
+        <label></label>
+        <input type="text" class="debit-input form-control">
+      </div>
+    </div>
+  
+    <!-- Payment Total Section -->
+    <div class="row">
+      <div class="footerHeading1 col-9">Reason 2</div>
+      <div class="col-2">
+        <label></label>
+        <input type="text" class="debit-input form-control">
+      </div>
+    </div><br>
+  
+    <!-- JV Total Section -->
+    <div class="row">
+      <div class="footerHeading col-9">Balance as per Bank Book</div>
+      <div class="col-2">
+        <input type="text" class="input form-control">
+      </div>
+    </div>
+  
+  
+  </section>

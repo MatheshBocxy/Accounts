@@ -1,0 +1,21 @@
+.theadathaborder th{
+    background-color: rgb(73, 83, 222);
+    color: rgb(255, 255, 255);
+    border: 1px solid black;
+}
+.table th, .table td {
+    border: 1px solid rgb(0, 0, 0);
+    padding: 8px;
+}
+.revenueColumn td , .capitalColumn td{
+    background-color: rgb(212, 143, 228);
+    color: rgb(0, 0, 0);
+    font-size: 15px;
+    font-weight: 580;
+}
+.totalColumn td{
+    background-color: rgb(181, 240, 199);
+    color: rgb(0, 0, 0);
+    font-size: 15px;
+    font-weight: 580;
+}

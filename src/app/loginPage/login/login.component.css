@@ -1,0 +1,129 @@
+.grid-container {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.grid-container::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    background-image: url(../../../assets/assets/images/bg\ ImageLogin.webp);
+    /* opacity: 0.5; */
+    z-index: -1;
+}
+
+.grid-container::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(134, 132, 132, 0.9); 
+    z-index: 0; /* Ensure it's above the background image */
+}
+
+.login-container {
+    position: relative;
+    z-index: 1;
+    /* Ensures the login container is above the background */
+}
+
+
+/* Styling for the login container */
+.login-container {
+    display: flex;
+    flex-direction: row;
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    max-width: 1000px;
+    width: 100%;
+}
+
+/* Styling for the image */
+.image-container {
+    flex: 1;
+}
+
+.login-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-right: 1px solid #ddd;
+}
+
+/* Styling for the form section */
+.login-form-container {
+    flex: 1;
+    padding: 50px;
+    background-color: #fff;
+}
+
+.logo {
+    width: 300px;
+    margin-top: -40px;
+    margin-bottom: 25px;
+    align-self: center;
+}
+
+h3 {
+    font-weight: 600;
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 30px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+/* Form field styling */
+mat-form-field {
+    margin-bottom: 25px;
+}
+
+.input-field {
+    font-size: 1.1rem;
+    padding: 10px;
+}
+
+button {
+    font-weight: 600;
+    padding: 12px;
+    font-size: 1.1rem;
+    transition: background-color 0.3s;
+}
+
+/* Button hover and active states */
+button:hover {
+    background-color: #0056b3;
+}
+
+button:active {
+    background-color: #004099;
+}
+
+/* Mobile-friendly styling */
+/* @media (max-width: 768px) {
+    .login-container {
+        flex-direction: column;
+    }
+
+    .login-image {
+        height: 250px;
+        border-right: none;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .login-form-container {
+        padding: 30px;
+    }
+} */

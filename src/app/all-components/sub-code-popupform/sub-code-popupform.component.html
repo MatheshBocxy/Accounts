@@ -1,0 +1,221 @@
+<section class="main-section">
+    <div class="main-table">
+        <form [formGroup]="subCodeForm">
+            <table class="table table-primary table-bordered">
+                <thead class="subCodeForm">
+                    <tr class="tableHeadings">
+                        <th rowspan="3">S.No</th>
+                        <th rowspan="3">Sub Codes</th>
+                        <th rowspan="3" colspan="2">Description</th>
+                        <th>Actuals</th>
+                        <th *ngIf="data.beRbe == 'be' || data.beRbe == 'BE'">RBE</th>
+                        <th *ngIf="data.beRbe == 'rbe' || data.beRbe == 'RBE'">BE</th>
+                        <th>Actual Up To</th>
+                        <th colspan="2" *ngIf="data.beRbe == 'be' || data.beRbe == 'BE'">BE</th>
+                        <th colspan="2" *ngIf="data.beRbe == 'rbe' || data.beRbe == 'RBE'">RBE</th>
+                    </tr>
+
+                    <tr>
+                        <th>{{actualYear}}</th>
+                        <th>{{beRbeYear}}</th>
+                        <th>{{actualUpToYear}}</th>
+                        <th colspan="2">{{beRbeLastYear}}</th>
+                    </tr>
+
+                    <tr>
+                        <th></th>
+                        <th></th>
+                        <th>{{beRbemonth}}</th>
+                        <th>Proposed</th>
+                        <th>Fixed</th>
+                    </tr>
+                </thead>
+
+                <!-- create and Edit table -->
+                <tbody *ngIf="data.beRbe == 'be' && ((data.type == 'create') || (data.type == 'edit'))"
+                    formArrayName="subCodeBES">
+                    <tr *ngFor="let subcodeArray of subCodeArrayBES.controls; let i = index" [formGroupName]="i">
+                        <td style="text-align: center; padding-top: 20px;">{{i + 1}}</td>
+                        <td *ngIf="isId">
+                            <input type="number" class="tableValueInput" formControlName="subCodeIdBE" readonly>
+                        </td>
+                        <td>
+                            <input type="text" class="subCodeNameInput" formControlName="subCodeName" readonly>
+                        </td>
+                        <td colspan="2">
+                            <input type="text" class="tableValueInput" formControlName="subCodeDescription" readonly>
+                        </td>
+
+                        <td>
+                            <input type="number" class="tableValueInput" formControlName="subActuals"
+                                (input)="fiveDigitsWarning($event)" (blur)="formatAmountOnBlur($event)"
+                                placeholder="0.00" style="text-align: right;">
+
+                        </td>
+
+                        <td>
+                            <input type="number" class="tableValueInput" formControlName="subRbe"
+                                (input)="fiveDigitsWarning($event)" (blur)="formatAmountOnBlur($event)"
+                                placeholder="0.00" style="text-align: right;">
+                        </td>
+                        <td>
+                            <input type="number" class="tableValueInput" formControlName="subActualsUpto"
+                                (input)="fiveDigitsWarning($event)" (blur)="formatAmountOnBlur($event)"
+                                placeholder="0.00" style="text-align: right;">
+                        </td>
+                        <td>
+                            <input type="number" class="tableValueInput" formControlName="subBeProposed"
+                                (input)="fiveDigitsWarning($event)" (blur)="formatAmountOnBlur($event)"
+                                placeholder="0,00" style="text-align: right;">
+                        </td>
+                        <td *ngIf="idHeadOffice">
+                            <input type="number" class="tableValueInput" formControlName="subBeFixed"
+                                (input)="fiveDigitsWarning($event)" (blur)="formatAmountOnBlur($event)"
+                                placeholder="0.00" style="text-align: right;">
+                        </td>
+                        <td *ngIf="!idHeadOffice">
+                            <input type="number" class="tableValueInput" formControlName="subBeFixed"
+                                (input)="fiveDigitsWarning($event)" (blur)="formatAmountOnBlur($event)"
+                                placeholder="0.00" style="text-align: right;" readonly>
+                        </td>
+                    </tr>
+                </tbody>
+
+                <tbody *ngIf="data.beRbe == 'rbe' && ((data.type == 'create') || (data.type == 'edit'))"
+                    formArrayName="subCodeRBES">
+                    <tr *ngFor="let subcodeArray of subCodeArrayRBES.controls; let i = index" [formGroupName]="i">
+                        <td style="text-align: center; padding-top: 20px;">{{i + 1}}</td>
+                        <td *ngIf="isId">
+                            <input type="number" class="tableValueInput" formControlName="subCodeIdRBE" readonly>
+                        </td>
+                        <td>
+                            <input type="text" class="subCodeNameInput" formControlName="subCodeName" readonly>
+                        </td>
+                        <td colspan="2">
+                            <input type="text" class="tableValueInput" formControlName="subCodeDescription" readonly>
+                        </td>
+                        <td>
+                            <input type="number" class="tableValueInput" formControlName="subActualsRbe"
+                                (input)="fiveDigitsWarning($event)" (blur)="formatAmountOnBlur($event)"
+                                placeholder="0.00" style="text-align: right;">
+                        </td>
+                        <td>
+                            <input type="number" class="tableValueInput" formControlName="subBeRbe"
+                                (input)="fiveDigitsWarning($event)" (blur)="formatAmountOnBlur($event)"
+                                placeholder="0.00" style="text-align: right;">
+                        </td>
+                        <td>
+                            <input type="number" class="tableValueInput" formControlName="subActualsUptoRbe"
+                                (input)="fiveDigitsWarning($event)" (blur)="formatAmountOnBlur($event)"
+                                placeholder="0.00" style="text-align: right;">
+                        </td>
+                        <td>
+                            <input type="number" class="tableValueInput" formControlName="subRbeProposed"
+                                (input)="fiveDigitsWarning($event)" (blur)="formatAmountOnBlur($event)"
+                                placeholder="0.00" style="text-align: right;">
+                        </td>
+                        <td *ngIf="idHeadOffice">
+                            <input type="number" class="tableValueInput" formControlName="subRbeFixed"
+                                (input)="fiveDigitsWarning($event)" (blur)="formatAmountOnBlur($event)"
+                                placeholder="0.00" style="text-align: right;">
+                        </td>
+                        <td *ngIf="!idHeadOffice">
+                            <input type="number" class="tableValueInput" formControlName="subRbeFixed"
+                                (input)="fiveDigitsWarning($event)" (blur)="formatAmountOnBlur($event)"
+                                placeholder="0.00" style="text-align: right;" readonly>
+                        </td>
+                    </tr>
+                </tbody>
+
+                <!-- view table -->
+
+                <tbody *ngIf="data.beRbe == 'be' && data.type == 'view' " formArrayName="subCodeBES">
+                    <tr *ngFor="let subcodeArray of subCodeArrayBES.controls; let i = index" [formGroupName]="i">
+                        <td style="text-align: center; padding-top: 20px;">{{i + 1}}</td>
+                        <td *ngIf="isId">
+                            <input type="number" class="tableValueInput" formControlName="subCodeIdBE" readonly>
+                        </td>
+                        <td>
+                            <input type="text" class="subCodeNameInput" formControlName="subCodeName" readonly>
+                        </td>
+                        <td colspan="2">
+                            <input type="text" class="tableValueInput" formControlName="subCodeDescription" readonly>
+                        </td>
+                        <td>
+                            <input type="text" class="tableValueInput" formControlName="subActuals"
+                                style="text-align: right;" readonly>
+                        </td>
+                        <td>
+                            <input type="text" class="tableValueInput" formControlName="subRbe"
+                                style="text-align: right;" readonly>
+                        </td>
+                        <td>
+                            <input type="text" class="tableValueInput" formControlName="subActualsUpto"
+                                style="text-align: right;" readonly>
+                        </td>
+                        <td>
+                            <input type="text" class="tableValueInput" formControlName="subBeProposed"
+                                style="text-align: right;" readonly>
+                        </td>
+                        <td *ngIf="idHeadOffice">
+                            <input type="text" class="tableValueInput" formControlName="subBeFixed"
+                                style="text-align: right;" readonly>
+                        </td>
+                        <td *ngIf="!idHeadOffice">
+                            <input type="text" class="tableValueInput" formControlName="subBeFixed"
+                                style="text-align: right;" readonly>
+                        </td>
+                    </tr>
+                </tbody>
+                <tbody *ngIf="data.beRbe == 'rbe' && data.type == 'view'" formArrayName="subCodeRBES">
+                    <tr *ngFor="let subcodeArray of subCodeArrayRBES.controls; let i = index" [formGroupName]="i">
+                        <td style="text-align: center; padding-top: 20px;">{{i + 1}}</td>
+                        <td *ngIf="isId">
+                            <input type="number" class="tableValueInput" formControlName="subCodeIdRBE" readonly>
+                        </td>
+                        <td>
+                            <input type="text" class="subCodeNameInput" formControlName="subCodeName" readonly>
+                        </td>
+                        <td colspan="2">
+                            <input type="text" class="tableValueInput" formControlName="subCodeDescription" readonly>
+                        </td>
+                        <td>
+                            <input type="text" class="tableValueInput" formControlName="subActualsRbe"
+                                style="text-align: right;" readonly>
+                        </td>
+                        <td>
+                            <input type="text" class="tableValueInput" formControlName="subBeRbe"
+                                style="text-align: right;" readonly>
+                        </td>
+                        <td>
+                            <input type="text" class="tableValueInput" formControlName="subActualsUptoRbe"
+                                style="text-align: right;" readonly>
+                        </td>
+                        <td>
+                            <input type="text" class="tableValueInput" formControlName="subRbeProposed"
+                                style="text-align: right;" readonly>
+                        </td>
+                        <td *ngIf="idHeadOffice">
+                            <input type="text" class="tableValueInput" formControlName="subRbeFixed"
+                                style="text-align: right;" readonly>
+                        </td>
+                        <td *ngIf="!idHeadOffice">
+                            <input type="text" class="tableValueInput" formControlName="subRbeFixed"
+                                style="text-align: right;" readonly>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </form>
+    </div>
+
+    <div class="buttonsBottom">
+        <div class="sumbitButtonSubmit" *ngIf="data.type == 'edit' || data.type =='create'">
+            <button class="btn btn-primary" (click)="onNoClick()">Submit</button>
+        </div>
+        <div class="sumbitButtonBack">
+            <button class="btn btn-secondary" [mat-dialog-close]="true">Back</button>
+        </div>
+    </div>
+
+</section>

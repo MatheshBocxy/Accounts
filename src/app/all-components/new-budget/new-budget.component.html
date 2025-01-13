@@ -1,0 +1,651 @@
+<section class="main-table">
+  <div *ngIf="isLoading" class="loader-overlay">
+    <div class="spinner"></div>
+  </div>
+  <h3 class="Headding" *ngIf="beRbe == 'BE'">
+    Budget Estimate For The Year - {{ beRbeLastYear }}
+  </h3>
+  <h3 class="Headding" *ngIf="beRbe == 'RBE'">
+    Revised Budget Estimate For The Year - {{ beRbeLastYear }}
+  </h3>
+
+  <div class="topBackButton">
+    <a (click)="backButtonClick()" style="cursor: pointer; font-size: 16px; font-weight: 700;"><svg
+        xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-bar-left"
+        viewBox="0 0 16 16">
+        <path fill-rule="evenodd"
+          d="M12.5 15a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5M10 8a.5.5 0 0 1-.5.5H3.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L3.707 7.5H9.5a.5.5 0 0 1 .5.5" />
+      </svg>Back</a>
+    <h2>Rs in LAKH</h2>
+  </div>
+  <div class="col-3">
+    <div class="search-container">
+      <div class="position">
+        <input matInput #input (keyup)="searchFilters($event)" type="text" id="search-input" class="search-input"
+          placeholder="Search...">
+        <mat-icon class="search-icon">search</mat-icon>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="beRbe == 'BE'">
+    <form [formGroup]="yearMonthFormBE" class="container-fluid">
+      <table class="table mt-2">
+        <thead class="first_heading">
+          <tr>
+            <th rowspan="3" class="stickyTop" style="text-align: center; width:40px;">Sch No</th>
+            <th rowspan="3" class="stickyTop" style="text-align: center; width:40px;">Code No</th>
+            <th rowspan="3" class="stickyTop">
+              <div style="width: 350px; text-align: center;">Description</div>
+            </th>
+            <th class="table-heading stickyTop" style="text-align: center;">Actuals</th>
+            <th class="table-heading stickyTop" style="text-align: center; width: 100px;">RBE</th>
+            <th class="table-heading stickyTop" style="text-align: center; width: 100px;">Actuals upto</th>
+            <th colspan="2" class="table-headingBe stickyTop" style="text-align: center;">BE</th>
+          </tr>
+
+          <tr>
+            <th class="table-heading stickyTopYear">
+              <input type="text" class="form-control" formControlName="actualsYear" readonly style="width: 100px" />
+            </th>
+
+            <th class="table-heading stickyTopYear">
+              <input type="text" class="form-control" formControlName="rbeYear" readonly style="width: 100px" />
+            </th>
+
+            <th class="table-heading stickyTopYear">
+              <input type="text" class="form-control" formControlName="actualsUpToYear" readonly style="width: 100px" />
+            </th>
+
+            <th colspan="2" class="table-heading stickyTopYear" style="text-align: center;">
+              <input type="text" class="form-control mx-auto" formControlName="beLastYear" style="width: 100px"
+                readonly />
+            </th>
+          </tr>
+
+          <tr>
+            <th colspan="2" class="stickyTopMonth"></th>
+            <th class="table-heading stickyTopMonth" scope="col">
+              <input type="text" class="form-control" formControlName="actualsUpToMonths" readonly
+                style="width: 100px;">
+            </th>
+            <th style="text-align: center; padding-bottom: 20px" class="stickyTopMonth">
+              Proposed
+            </th>
+            <th style="text-align: center; padding-bottom: 20px" class="stickyTopMonth">
+              Fixed
+            </th>
+          </tr>
+        </thead>
+
+        <tbody>
+
+          <tr *ngFor="let item of budgetDateSource; let i = index">
+            <td>
+              <input type="text" formControlname="schedule" readonly style="width: 40px; text-align: center;"
+                [value]="item.schedule.scheduleNo" />
+            </td>
+            <td>
+              <input type="text" formControlname="codeNumber" readonly style="width: 40px; text-align: center;"
+                [value]="item.codeNumber" />
+            </td>
+            <td>
+              <div class="d-flex">
+                <input type="text" formControlname="codeName" readonly [value]="item.codeName"
+                  style="text-align: left;" />
+                <svg *ngIf="budgetDateSource[i].status == 'Yes'"
+                  (click)="openPanelSubCode(budgetDateSource[i],i,'create','be')" xmlns="http://www.w3.org/2000/svg"
+                  width="16" height="16" fill="currentColor" class="bi bi-caret-down-square-fill dropdownButton"
+                  viewBox="0 0 16 16">
+                  <path
+                    d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm4 4a.5.5 0 0 0-.374.832l4 4.5a.5.5 0 0 0 .748 0l4-4.5A.5.5 0 0 0 12 6z" />
+                </svg>
+              </div>
+            </td>
+            <td>
+              <input type="number" [(ngModel)]="item.actual" [ngModelOptions]="{standalone: true}"
+                (input)="this.calculateTotals(); fiveDigitsWarning($event)" (blur)="formatAmountOnBlur($event)"
+                style="text-align: right; width: 100px; height: 30px" [disabled]="budgetDateSource[i].status == 'Yes'"
+                placeholder="0.00" />
+            </td>
+            <td>
+              <input type="number" [(ngModel)]="item.rbe" [ngModelOptions]="{ standalone: true }"
+                (input)="this.calculateTotals(); fiveDigitsWarning($event)" (blur)="formatAmountOnBlur($event)"
+                style="text-align: right; width: 100px; height: 30px" [disabled]="budgetDateSource[i].status == 'Yes'"
+                placeholder="0.00" />
+            <td>
+              <input type="number" [(ngModel)]="item.actualsUpTo" [ngModelOptions]="{ standalone: true }"
+                (input)="this.calculateTotals(); fiveDigitsWarning($event)" (blur)="formatAmountOnBlur($event)"
+                style="text-align: right; width: 100px; height: 30px" [disabled]="budgetDateSource[i].status == 'Yes'"
+                placeholder="0.00" />
+            </td>
+            <td>
+              <input type="number" [(ngModel)]="item.beLastYearProposed" [ngModelOptions]="{ standalone: true }"
+                (input)="this.calculateTotals(); fiveDigitsWarning($event)" (blur)="formatAmountOnBlur($event)"
+                style="text-align: right; width: 100px; height: 30px" [disabled]="budgetDateSource[i].status == 'Yes'"
+                placeholder="0.00" />
+            </td>
+            <td>
+              <input type="number" [(ngModel)]="item.beLastYearFixed" [ngModelOptions]="{ standalone: true }"
+                (input)="this.calculateTotals(); fiveDigitsWarning($event)" (blur)="formatAmountOnBlur($event)"
+                [disabled]="userDivision != 'Head_office' || budgetDateSource[i].status == 'Yes'"
+                style="text-align: right; width: 100px; height: 30px" placeholder="0.00" />
+            </td>
+          </tr>
+
+          <tr>
+            <td colspan="3" style="padding-top: 25px; text-align: center;">TOTAL</td>
+            <td colspan="" style="width: 30px">
+              <input style="background-color: rgb(236, 231, 231); text-align: right; height: 30px; width: 100px;"
+                type="text" formControlName="actualstotal" readonly />
+            </td>
+            <td>
+              <input style="background-color: rgb(236, 231, 231);
+                  text-align: right; height: 30px; width: 100px" type="text" formControlName="rbeTotal" readonly />
+            </td>
+            <td>
+              <input style=" background-color: rgb(236, 231, 231); text-align: right; height: 30px; width: 100px"
+                type="text" formControlName="actualsUpToTotal" readonly />
+            </td>
+            <td>
+              <input style=" background-color: rgb(236, 231, 231); text-align: right; height: 30px; width: 100px"
+                type="text" formControlName="beLastYearProposedTotal" readonly />
+            </td>
+            <td>
+              <input style=" background-color: rgb(236, 231, 231); text-align: right; height: 30px; width: 100px"
+                type="text" formControlName="beLastYearFixedTotal" readonly />
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </form>
+  </div>
+  <br />
+
+
+  <!-- ------------------------------------RBE---------------------------------------------- -->
+
+  <div *ngIf="beRbe == 'RBE'">
+    <form [formGroup]="yearMonthRbeForm">
+      <table class="table mt-2">
+        <thead class="first_heading">
+          <tr>
+            <th rowspan="3" class="stickyTop" style="width: 40px;">Sch No</th>
+            <th rowspan="3" class="stickyTop" style="width: 40px;">Code No</th>
+            <th rowspan="3" class="stickyTop">
+              <div style="width: 350px; text-align: center;">Description</div>
+            </th>
+            <th class="table-heading" class="stickyTop" style="text-align: center; width: 100px;">Actuals</th>
+            <th class="table-heading" class="stickyTop" style="text-align: center; width: 100px;">BE</th>
+            <th class="table-heading" class="stickyTop" style="text-align: center; width: 100px;">Actuals upto</th>
+            <th colspan="2" class="table-headingBe stickyTop" style="text-align: center; width: 100px;">RBE</th>
+          </tr>
+
+          <tr>
+            <th class="table-heading stickyTopYear">
+              <input type="text" class="form-control" formControlName="actualsYearRbe" style="width: 100px;" />
+            </th>
+
+            <th class="table-heading stickyTopYear">
+              <input type="text" class="form-control" formControlName="beYearRbe" style="width: 100px;" />
+            </th>
+
+            <th class="table-heading stickyTopYear">
+              <input type="text" class="form-control" formControlName="actualsUpToYearRbe" style="width: 100px;" />
+            </th>
+
+            <th colspan="2" class="table-heading stickyTopYear">
+              <input type="text" class="form-control mx-auto" style="width: 170px" formControlName="lastRbeYear"
+                style="width: 100px;" />
+            </th>
+          </tr>
+
+          <tr>
+            <th colspan="2" class="stickyTopMonth"></th>
+            <th class="table-heading stickyTopMonth">
+              <input type="text" class="form-control" formControlName="actualsUpToMonthRbe" readonly
+                style="width: 100px;">
+            </th>
+            <th style="text-align: center; padding-bottom: 20px;width: 100px;" class="stickyTopMonth">
+              Proposed
+            </th>
+            <th style="text-align: center; padding-bottom: 20px;width: 100px;" class="stickyTopMonth">
+              Fixed
+            </th>
+          </tr>
+        </thead>
+
+        <tbody>
+
+          <tr *ngFor="let item of rbeBudgetDataSource; let i = index">
+            <td>
+              <input type="number" formControlname="schedule" readonly style="width: 40px; text-align: center;"
+                [value]="item.schedule.scheduleNo" />
+            </td>
+            <td>
+              <input type="number" formControlname="codeNumber" readonly style="width: 40px; text-align: center; "
+                [value]="item.codeNumber" />
+            </td>
+            <td>
+              <div class="d-flex">
+                <input type="text" formControlname="codeName" readonly [value]="item.codeName" />
+                <svg *ngIf="rbeBudgetDataSource[i].status == 'Yes'"
+                  (click)="openPanelSubCode(rbeBudgetDataSource[i],i,'create','rbe')" xmlns="http://www.w3.org/2000/svg"
+                  width="16" height="16" fill="currentColor" class="bi bi-caret-down-square-fill dropdownButton"
+                  viewBox="0 0 16 16">
+                  <path
+                    d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm4 4a.5.5 0 0 0-.374.832l4 4.5a.5.5 0 0 0 .748 0l4-4.5A.5.5 0 0 0 12 6z" />
+                </svg>
+              </div>
+            </td>
+
+            <td>
+              <input type="number" [(ngModel)]="item.actualRbe" [ngModelOptions]="{ standalone: true }"
+                (input)="this.calculateTotalsRBE(); fiveDigitsWarning($event)" (blur)="formatAmountOnBlur($event)"
+                style="text-align: right; width: 100px; height: 30px"
+                [disabled]="rbeBudgetDataSource[i].status == 'Yes'" placeholder="0.00" />
+            </td>
+            <td>
+              <input type="number" [(ngModel)]="item.beRbe" [ngModelOptions]="{ standalone: true }"
+                (input)="this.calculateTotalsRBE(); fiveDigitsWarning($event)" (blur)="formatAmountOnBlur($event)"
+                style="text-align: right; width: 100px; height: 30px"
+                [disabled]="rbeBudgetDataSource[i].status == 'Yes'" placeholder="0.00" />
+            </td>
+            <td>
+              <input type="number" [(ngModel)]="item.actualsUpToRbe" [ngModelOptions]="{ standalone: true }"
+                (input)="this.calculateTotalsRBE(); fiveDigitsWarning($event)" (blur)="formatAmountOnBlur($event)"
+                style="text-align: right; width: 100px; height: 30px"
+                [disabled]="rbeBudgetDataSource[i].status == 'Yes'" placeholder="0.00" />
+            </td>
+            <td>
+              <input type="number" [(ngModel)]="item.LastRbeProposed" [ngModelOptions]="{ standalone: true }"
+                (input)="this.calculateTotalsRBE(); fiveDigitsWarning($event)" (blur)="formatAmountOnBlur($event)"
+                style="text-align: right; width: 100px; height: 30px"
+                [disabled]="rbeBudgetDataSource[i].status == 'Yes'" placeholder="0.00" />
+            </td>
+            <td>
+              <input type="number" [(ngModel)]="item.LastRbeFixed" [ngModelOptions]="{ standalone: true }"
+                (input)="this.calculateTotalsRBE(); fiveDigitsWarning($event)" (blur)="formatAmountOnBlur($event)"
+                [disabled]="userDivision != 'Head_office' || rbeBudgetDataSource[i].status == 'Yes'"
+                style="text-align: right; width: 100px; height: 30px" placeholder="0.00" />
+            </td>
+          </tr>
+
+          <tr>
+            <th colspan="3" style="text-align: center;">TOTAL</th>
+            <th>
+              <input style=" background-color: rgb(236, 231, 231); text-align: right; height: 30px;" type="text"
+                formControlName="actualTotalRbe" readonly />
+            </th>
+            <th>
+              <input style=" background-color: rgb(236, 231, 231); text-align: right; height: 30px;" type="text"
+                formControlName="beTotalRbe" readonly />
+            </th>
+            <th>
+              <input style=" background-color: rgb(236, 231, 231); text-align: right; height: 30px; " type="text"
+                formControlName="actualsUpToTotalRbe" readonly />
+            </th>
+            <th>
+              <input style=" background-color: rgb(236, 231, 231); text-align: right; height: 30px;
+                " type="text" formControlName="lastRbeProposedTotal" readonly />
+            </th>
+            <th>
+              <input style=" background-color: rgb(236, 231, 231); text-align: right; height: 30px; " type="text"
+                formControlName="lastRbeFixedTotal" readonly />
+            </th>
+          </tr>
+        </tbody>
+      </table>
+    </form>
+  </div>
+  <br />
+
+  <!------------------------------------------- BE REMARKS FORM FOR LOGINS ------------------------------->
+
+  <!--ARO-->
+
+  <mat-accordion *ngIf="roleName == 'ARO_Division' && beRbe == 'BE'">
+    <mat-expansion-panel [expanded]="true" (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+      <mat-expansion-panel-header style="color: #643843; font-size: 20px">
+        BE - ARO
+      </mat-expansion-panel-header>
+      <div class="remarksForm" [formGroup]="AROremarksForm">
+        <div>
+          <label class="label-name">Remarks :</label>
+          <textarea name="remarks" class="remarksField form-control mt-3" rows="4" cols="40" id="sign"
+            style="width: 100%" formControlName="aroDivisionRemarks"></textarea>
+        </div>
+        <div>
+          <label class="label-name">Name :</label>
+          <input style="border: 2px solid" id="sign" type="text" class="form-control mt-3"
+            formControlName="aroDivisionSignature" />
+        </div>
+        <div>
+          <label class="label-name">Date :</label>
+          <input style="border: 2px solid" id="sign" type="date" class="form-control mt-3"
+            formControlName="aroDivisionDate" />
+        </div>
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion>
+
+  <!-- AEE -->
+
+  <mat-accordion *ngIf="roleName == 'AEE_Division' && beRbe == 'BE'">
+    <mat-expansion-panel [expanded]="true" (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+      <mat-expansion-panel-header style="color: #643843; font-size: 20px">
+        BE - AEE
+      </mat-expansion-panel-header>
+      <div class="remarksForm" [formGroup]="AEEremarksForm">
+        <div>
+          <label class="label-name">Remarks :</label>
+          <textarea name="remarks" class="remarksField form-control mt-3" rows="4" cols="40" id="sign"
+            style="width: 100%" formControlName="aeeDivisionRemarks"></textarea>
+        </div>
+        <div>
+          <label class="label-name">Name :</label>
+          <input style="border: 2px solid" id="sign" type="text" class="form-control mt-3"
+            formControlName="aeeDivisionSignature" />
+        </div>
+        <div>
+          <label class="label-name">Date :</label>
+          <input style="border: 2px solid" id="sign" type="date" class="form-control mt-3"
+            formControlName="aeeDivisionDate" />
+        </div>
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion>
+
+  <!-- ACC -->
+
+  <mat-accordion *ngIf="roleName == 'ACC_Clerk' && beRbe == 'BE'">
+    <mat-expansion-panel [expanded]="true" (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+      <mat-expansion-panel-header style="color: #643843; font-size: 20px">
+        BE - ACC Clerk
+      </mat-expansion-panel-header>
+      <div class="remarksForm" [formGroup]="ACCremarksForm">
+        <div>
+          <label class="label-name">Remarks :</label>
+          <textarea name="remarks" class="remarksField form-control mt-3" rows="4" cols="40" id="sign"
+            style="width: 100%" formControlName="accClerkRemarks"></textarea>
+        </div>
+        <div>
+          <label class="label-name">Name :</label>
+          <input style="border: 2px solid" id="sign" type="text" class="form-control mt-3"
+            formControlName="accDivisionSignature" />
+        </div>
+        <div>
+          <label class="label-name">Date :</label>
+          <input style="border: 2px solid" id="sign" type="date" class="form-control mt-3"
+            formControlName="accDivisionDate" />
+        </div>
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion>
+
+  <!--RO-->
+
+  <mat-accordion *ngIf="roleName == 'RO' && beRbe == 'BE'">
+    <mat-expansion-panel [expanded]="true" (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+      <mat-expansion-panel-header style="color: #643843; font-size: 20px">
+        BE - RO
+      </mat-expansion-panel-header>
+      <div class="remarksForm" [formGroup]="ROremarksForm">
+        <div>
+          <label class="label-name">Remarks :</label>
+          <textarea name="remarks" class="remarksField form-control mt-3" rows="4" cols="40" id="sign"
+            style="width: 100%" formControlName="roRemarks"></textarea>
+        </div>
+        <div>
+          <label class="label-name">Name :</label>
+          <input style="border: 2px solid" id="sign" type="text" class="form-control mt-3"
+            formControlName="roSignature" />
+        </div>
+        <div>
+          <label class="label-name">Date :</label>
+          <input style="border: 2px solid" id="sign" type="date" class="form-control mt-3" formControlName="roDate" />
+        </div>
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion>
+
+  <!--AO-->
+
+  <mat-accordion *ngIf="roleName == 'AO' && beRbe == 'BE'">
+    <mat-expansion-panel [expanded]="true" (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+      <mat-expansion-panel-header style="color: #643843; font-size: 20px">
+        BE - AO
+      </mat-expansion-panel-header>
+      <div class="remarksForm" [formGroup]="AOremarksForm">
+        <div>
+          <label class="label-name">Remarks :</label>
+          <textarea name="remarks" class="remarksField form-control mt-3" rows="4" cols="40" id="sign"
+            style="width: 100%" formControlName="aoRemarks"></textarea>
+        </div>
+        <div>
+          <label class="label-name">Name :</label>
+          <input style="border: 2px solid" id="sign" type="text" class="form-control mt-3"
+            formControlName="aoSignature" />
+        </div>
+        <div>
+          <label class="label-name">Date :</label>
+          <input style="border: 2px solid" id="sign" type="date" class="form-control mt-3" formControlName="aoDate" />
+        </div>
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion>
+
+  <!--EE_T_CELL-->
+
+  <mat-accordion *ngIf="roleName == 'EE_T_CELL' && beRbe == 'BE'">
+    <mat-expansion-panel [expanded]="true" (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+      <mat-expansion-panel-header style="color: #643843; font-size: 20px">
+        BE - EE_T_CELL
+      </mat-expansion-panel-header>
+      <div class="remarksForm" [formGroup]="eeTcellremarksForm">
+        <div>
+          <label class="label-name">Remarks :</label>
+          <textarea name="remarks" class="remarksField form-control mt-3" rows="4" cols="40" id="sign"
+            style="width: 100%" formControlName="eeTCellRemarks"></textarea>
+        </div>
+        <div>
+          <label class="label-name">Name :</label>
+          <input style="border: 2px solid" id="sign" type="text" class="form-control mt-3"
+            formControlName="eeTCellSignature" />
+        </div>
+        <div>
+          <label class="label-name">Date :</label>
+          <input style="border: 2px solid" id="sign" type="date" class="form-control mt-3"
+            formControlName="eeTCellDate" />
+        </div>
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion>
+
+  <!-------------------------------------------- RBE REMARKS FORM FOR LOGINS ------------------------------->
+
+  <!--ARO-->
+
+  <mat-accordion *ngIf="roleName == 'ARO_Division' && beRbe == 'RBE'" class="matExpansionPanel">
+    <mat-expansion-panel [expanded]="true" (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+      <mat-expansion-panel-header style="color: #643843; font-size: 20px">
+        RBE - ARO
+      </mat-expansion-panel-header>
+      <div class="remarksForm" [formGroup]="AROremarksFormRbe">
+        <div>
+          <label class="label-name">Remarks :</label>
+          <textarea name="remarks" class="remarksField form-control mt-3" rows="4" cols="40" id="sign"
+            style="width: 100%" formControlName="aroDivisionRemarksRbe"></textarea>
+        </div>
+        <div>
+          <label class="label-name">Name :</label>
+          <input style="border: 2px solid" id="sign" type="text" class="form-control mt-3"
+            formControlName="aroDivisionSignatureRbe" />
+        </div>
+        <div>
+          <label class="label-name">Date :</label>
+          <input style="border: 2px solid" class="form-control mt-3" formControlName="aroDivisionDateRbe" type="date" />
+        </div>
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion>
+
+  <!-- AEE -->
+
+  <mat-accordion *ngIf="roleName == 'AEE_Division' && beRbe == 'RBE'" class="matExpansionPanel">
+    <mat-expansion-panel [expanded]="true" (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+      <mat-expansion-panel-header style="color: #643843; font-size: 20px">
+        RBE - AEE
+      </mat-expansion-panel-header>
+      <div class="remarksForm" [formGroup]="AEEremarksFormRbe">
+        <div>
+          <label class="label-name">Remarks :</label>
+          <textarea name="remarks" class="remarksField form-control mt-3" rows="4" cols="40" id="sign"
+            style="width: 100%" formControlName="aeeDivisionRemarksRbe"></textarea>
+        </div>
+        <div>
+          <label class="label-name">Name :</label>
+          <input style="border: 2px solid" id="sign" type="text" class="form-control mt-3"
+            formControlName="aeeDivisionSignatureRbe" />
+        </div>
+        <div>
+          <label class="label-name">Date :</label>
+          <input style="border: 2px solid" class="form-control mt-3" formControlName="aeeDivisionDateRbe" type="date" />
+        </div>
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion>
+
+  <!-- ACC -->
+
+  <mat-accordion *ngIf="roleName == 'ACC_Clerk' && beRbe == 'RBE'" class="matExpansionPanel">
+    <mat-expansion-panel [expanded]="true" (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+      <mat-expansion-panel-header style="color: #643843; font-size: 20px">
+        RBE - ACC CLERK
+      </mat-expansion-panel-header>
+      <div class="remarksForm" [formGroup]="ACCremarksFormRbe">
+        <div>
+          <label class="label-name">Remarks :</label>
+          <textarea name="remarks" class="remarksField form-control mt-3" rows="4" cols="40" id="sign"
+            style="width: 100%" formControlName="accClerkRemarksRbe"></textarea>
+        </div>
+        <div>
+          <label class="label-name">Name :</label>
+          <input style="border: 2px solid" id="sign" type="text" class="form-control mt-3"
+            formControlName="accDivisionSignatureRbe" />
+        </div>
+        <div>
+          <label class="label-name">Date :</label>
+          <input style="border: 2px solid" class="form-control mt-3" formControlName="accDivisionDateRbe" type="date" />
+        </div>
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion>
+
+  <!--RO-->
+
+  <mat-accordion *ngIf="roleName == 'RO' && beRbe == 'RBE'" class="matExpansionPanel">
+    <mat-expansion-panel [expanded]="true" (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+      <mat-expansion-panel-header style="color: #643843; font-size: 20px">
+        RBE - RO
+      </mat-expansion-panel-header>
+      <div class="remarksForm" [formGroup]="ROremarksFormRbe">
+        <div>
+          <label class="label-name">Remarks :</label>
+          <textarea name="remarks" class="remarksField form-control mt-3" rows="4" cols="40" id="sign"
+            style="width: 100%" formControlName="roRemarksRbe"></textarea>
+        </div>
+        <div>
+          <label class="label-name">Name :</label>
+          <input style="border: 2px solid" id="sign" type="text" class="form-control mt-3"
+            formControlName="roSignatureRbe" />
+        </div>
+        <div>
+          <label class="label-name">Date :</label>
+          <input style="border: 2px solid" class="form-control mt-3" formControlName="roDateRbe" type="date" />
+        </div>
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion>
+
+  <!--AO-->
+
+  <mat-accordion *ngIf="roleName == 'AO' && beRbe == 'RBE'" class="matExpansionPanel">
+    <mat-expansion-panel [expanded]="true" (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+      <mat-expansion-panel-header style="color: #643843; font-size: 20px">
+        RBE - AO
+      </mat-expansion-panel-header>
+      <div class="remarksForm" [formGroup]="AOremarksFormRbe">
+        <div>
+          <label class="label-name">Remarks :</label>
+          <textarea name="remarks" class="remarksField form-control mt-3" rows="4" cols="40" id="sign"
+            style="width: 100%" formControlName="aoRemarksRbe"></textarea>
+        </div>
+        <div>
+          <label class="label-name">Name :</label>
+          <input style="border: 2px solid" id="sign" type="text" class="form-control mt-3"
+            formControlName="aoSignatureRbe" />
+        </div>
+        <div>
+          <label class="label-name">Date :</label>
+          <input style="border: 2px solid" class="form-control mt-3" formControlName="aoDateRbe" type="date" />
+        </div>
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion>
+
+  <!--EE_T_CELL-->
+
+  <mat-accordion *ngIf="roleName == 'EE_T_CELL' && beRbe == 'RBE'" class="matExpansionPanel">
+    <mat-expansion-panel [expanded]="true" (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+      <mat-expansion-panel-header style="color: #643843; font-size: 20px">
+        RBE - EE_T_CELL
+      </mat-expansion-panel-header>
+      <div class="remarksForm" [formGroup]="eeTcellremarksFormRbe">
+        <div>
+          <label class="label-name">Remarks :</label>
+          <textarea name="remarks" class="remarksField form-control mt-3" rows="4" cols="40" id="sign"
+            style="width: 100%" formControlName="eeTCellRemarksRbe"></textarea>
+        </div>
+        <div>
+          <label class="label-name">Name :</label>
+          <input style="border: 2px solid" id="sign" type="text" class="form-control mt-3"
+            formControlName="eeTCellSignatureRbe" />
+        </div>
+        <div>
+          <label class="label-name">Date :</label>
+          <input style="border: 2px solid" class="form-control mt-3" formControlName="eeTCellDateRbe" type="date" />
+        </div>
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion>
+
+
+  <div class="buttons mt-3" *ngIf="beRbe == 'BE'">
+    <button class="btn btn-danger sumbitButton" (click)="beDraft()">
+      Draft
+    </button>
+    <button class="btn btn-secondary sumbitButton" routerLink="/famodule/home/budget">
+      Back
+    </button>
+    <button class="btn btn-success sumbitButton"
+      *ngIf="(roleName == 'ARO_Division' || roleName == 'AEE_Division' || roleName == 'ACC_Clerk')" (click)="beSave()">
+      {{buttonNames}}
+    </button>
+  </div>
+
+  <div class="buttons mt-3" *ngIf="beRbe == 'RBE'">
+    <button class="btn btn-danger sumbitButton" (click)="rbeDraft()">
+      Draft
+    </button>
+    <button class="btn btn-secondary sumbitButton" routerLink="/famodule/home/budget">
+      Back
+    </button>
+    <button class="btn btn-success sumbitButton"
+      *ngIf="(roleName == 'ARO_Division' || roleName == 'AEE_Division' || roleName == 'ACC_Clerk') "
+      (click)="rbeSave()">
+      {{buttonNames}}
+    </button>
+    <!-- || roleName == 'RO' || roleName == 'AO' || roleName == 'EE_T_CELL' -->
+  </div>
+</section>

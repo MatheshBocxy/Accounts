@@ -1,0 +1,64 @@
+.consolidation-Main {
+    background-color: rgb(218, 235, 249);
+    padding: 1rem;
+    height: auto;
+    width: 100%;
+}
+
+.headding {
+    text-align: center;
+    font-weight: 600;
+    color: rgb(35, 35, 163);
+}
+
+.headingFlow {
+    text-align: center;
+    font-weight: 500;
+    color: rgb(25, 25, 125);
+}
+
+.topBackButton {
+    display: flex;
+    justify-content: space-between;
+}
+
+.budgetTable th {
+    font-size: 14px;
+    font-weight: 500;
+    border: 1px solid#032D54;
+    background-color: #032D54;
+    color: #ffffff;
+    margin-left: 20px;
+    width: auto;
+    text-align: center;
+    align-items: center;
+}
+
+th[rowspan="2"] {
+    vertical-align: middle;
+}
+
+th,
+td {
+    border: 0.1px solid #60aecc;
+    padding: 8px;
+    text-align: left;
+}
+
+.tdRight {
+    text-align: right;
+    font-weight: 600;
+    color: black;
+}
+
+.totalHeading {
+    font-size: 17px;
+    text-align: center;
+    font-weight: 600;
+    color: black;
+}
+
+.backButtonButtom {
+    display: flex;
+    justify-content: center;
+}

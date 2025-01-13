@@ -1,0 +1,28 @@
+.card{
+    padding: 20px;
+}
+.mainContent{
+    background: #91b5c3;
+}
+.application-table th {
+    background-color:  #161F6D;
+    color: white;
+    font-size:15px;
+    text-align: center;
+   } 
+.table th, .table td {
+    border: 1px solid rgb(0, 0, 0);
+    padding: 8px;
+}
+.tableTotal{
+    background-color: rgb(194, 234, 194); 
+    font-weight: 700;
+    color: black;
+}
+.label{
+    font-weight: 800;
+    color: black;
+}
+.bottomSpace{
+    margin-bottom: 50px !important;
+}

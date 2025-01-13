@@ -1,0 +1,334 @@
+<section class="main">
+  <h2 class="head">PAYMENT</h2>
+
+  <form [formGroup]="paymentForm">
+    <div class="paymentFormS">
+      <div class="m-1">
+        <label>Bill No : </label>
+        <input type="number" class="form-control" formControlName="billNumber" maxlength="7" 
+          style="width: 110px;" value="billNumber"   >
+       
+
+      </div>
+      <div class="m-1">
+        <label for="Date">Date : </label>
+        <input class="form-control" type="text" formControlName="billDate" style="width: 130px">
+      </div>
+      <div class="m-1">
+        <label for="">File No : </label>
+        <input type="text" class="form-control" formControlName="fileNo" style="width: 350px"  >
+
+      </div>
+    </div>
+  </form>
+
+  <form [formGroup]="paymentForm">
+    <div formArrayName="paymentArrayDTO">
+      <div *ngFor="let section of formPayment.controls; let i = index" [formGroupName]="i" class="formBorder">
+
+        <div class="paymentArrayForm row">
+          <div class="col-4">
+            <label>Debit code:</label>
+            <select class="form-select" formControlName="debitCode" (change)="budgetAllocation($event, i)">
+              <option *ngFor="let items of accountCode" [value]="items.codeNumber">
+                {{ items.codeAndDescription }}
+              </option>
+            </select>
+          </div>
+          <div class="col-4">
+            <label>Budget Allocation: </label>
+            <!-- <input type="number" class="form-control" [formControlName]="'budgetAllocation'"   > -->
+            <input type="number" class="form-control" [formControlName]="'budgetAllocation'"   >
+
+          </div>
+          <div class="col-4">
+            <label>Balance: </label>
+            <input type="number" class="form-control" [formControlName]="'balance'" >
+
+          </div>
+          
+          
+        </div>
+
+        <div class="paymentArrayForm">
+       
+          <div>
+            <label>Name: </label>
+            <div class="displayflex">
+              <select id="titleSelect" class="form-control" formControlName="mrMs" style="width:auto;"  >
+                <option value="Mr">Mr</option>
+                <option value="Mrs">Mrs</option>
+                <option value="Ms">M/S</option>
+              </select>
+              <input type="text" class="form-control input" formControlName="paymentName" id="paymentName"
+                style="width:500px;">
+            </div>
+          </div>
+
+          <div class="mx-1">
+            <label>GST No : </label>
+            <input type="text" class="form-control" maxlength="15" formControlName="gstNo"  maxlength="15" >
+
+          </div>
+          <div class="mx-1">
+            <label>PAN No : </label>
+            <input type="text" class="form-control" maxlength="10" formControlName="panNo"  maxlength="11" >
+
+          </div>
+        </div>
+
+        <div class="paymentArrayForm">
+
+          <div class="mx-1">
+            <label>Bank Name : </label>
+            <input type="text" class="form-control" formControlName="bankName"  >
+
+          </div>
+
+          <div class="mx-1">
+            <label>Branch Name : </label>
+            <input type="text" class="form-control" formControlName="bankBranch"  >
+
+          </div>
+
+          <div class="mx-1">
+            <label>Account Name : </label>
+            <input type="text" class="form-control" formControlName="accountName"  >
+
+          </div>
+
+          <div class="mx-1">
+            <label>Account Number : </label>
+            <input type="text" class="form-control" formControlName="accountNo" maxlength="12" oninput="this.value=this.value.replace(/[^0-9]/g,'');">
+
+          </div>
+
+          <div class="mx-1">
+            <label>IFSC Code : </label>
+            <input type="text" class="form-control" formControlName="ifscCode"   maxlength="11">
+
+          </div>
+        </div>
+
+        <div class="d-flex row">
+          <div class="col-8"></div>
+          <div class="col-4">
+            <label>Amount (Rs): </label>
+            <input type="text" class="form-control" formControlName="debitAmount"
+              style="background: rgb(215, 215, 224); text-align: right;" placeholder="Enter the Amount..." (input)="updateBalance(i)" >
+
+          </div>
+        
+        </div>
+
+        <div class="addTasesCal">
+          <label class="ms-2 mt-3">Add Taxes : </label>
+          <input type="number" class="form-control input mt-2 ms-1"  formControlName="addTaxes"
+            style="text-align: right;"
+            >
+        </div>
+
+        <div class="addTasesCal">
+          <div class="mb-2 m-2">
+            <label>SGST% : </label>
+            <select class="form-select" formControlName="sgstPercentage" >
+              <option value="2">2%</option>
+              <option value="5">5%</option>
+              <option value="9">9%</option>
+              <option value="12">12%</option>
+              <option value="24">24%</option>
+              <option value="28">28%</option>
+            </select>
+
+          </div>
+          <div class="mb-2 m-2">
+            <label>SGST (Rs): </label>
+            <input type="number" class="form-control input" formControlName="sgstAmount" style="text-align: right;">
+          </div>
+
+          <div class="mb-2 m-2">
+            <label>CGST% : </label>
+            <select class="form-select" formControlName="cgstPercentage" >
+              <option value="2">2%</option>
+              <option value="5">5%</option>
+              <option value="9">9%</option>
+              <option value="12">12%</option>
+              <option value="24">24%</option>
+              <option value="28">28%</option>
+            </select>
+          </div>
+
+          <div class="mb-2 m-2">
+            <label>CGST (Rs) : </label>
+            <input type="text" class="form-control input" formControlName="cgstAmount" style="text-align: right;"  >
+
+          </div>
+
+          <div class="mb-2 m-2">
+            <label>IGST% : </label>
+            <select class="form-select" formControlName="igstPercentage" >
+              <option value="2">2%</option>
+              <option value="5">5%</option>
+              <option value="9">9%</option>
+              <option value="12">12%</option>
+              <option value="24">24%</option>
+              <option value="28">28%</option>
+            </select>
+          </div>
+
+          <div class="mb-2 m-2">
+            <label>IGST (Rs) : </label>
+            <input type="text" class="form-control input" formControlName="iggstAmount" style="text-align: right;" >
+
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-8"></div>
+          <div class="col-4 mb-2">
+            <label>Gross Totals : </label>
+            <input type="text" class="form-control ms-1" formControlName="debitGrossTotal" 
+              style="background: rgb(215, 215, 224); text-align: right;"   >
+
+          </div>
+        </div>
+
+        <hr>
+
+        <div class="lessTasesCal">
+          <label class="ms-2 mt-3">Less Taxes : </label>
+          <input type="text" class="form-control input mt-2 ms-2" formControlName="lessTaxes"
+            style="text-align: right;"  >
+
+        </div>
+
+        <div class="lessTasesCal">
+          <div class="mb-2 m-2">
+            <label>ITR Ded% : </label>
+            <select class="form-select" formControlName="itrDedPercentage" >
+              <option value="2">2%</option>
+              <option value="10">10%</option>
+              <option value="1">1%</option>
+              <option value="20">20%</option>
+            </select>
+          </div>
+
+          <div class="mb-2 m-2">
+            <label>ITR Ded (Rs.) : </label>
+            <input type="text" class="form-control input" formControlName="itrDedAmount" style="text-align: right;"   >
+
+          </div>
+
+          <div class="mb-2 m-2">
+            <label>GST Ded% : </label>
+            <select class="form-select" formControlName="gstDedPercentage" >
+              <option value="2">2%</option>
+              <option value="10">10%</option>
+              <option value="1">1%</option>
+              <option value="20">20%</option>
+            </select>
+          </div>
+
+          <div class="mb-2 m-2">
+            <label>GST Ded (Rs.) : </label>
+            <input type="text" class="form-control input" formControlName="gstDedAmount" style="text-align: right;" >
+
+          </div>
+
+          <div class="mb-2 m-2">
+            <label>GST TDS% : </label>
+            <select class="form-select" formControlName="gstTdsPercentage" >
+              <option value="2">2%</option>
+              <option value="10">10%</option>
+              <option value="1">1%</option>
+              <option value="20">20%</option>
+            </select>
+          </div>
+
+          <div class="mb-2 m-2">
+            <label>GST TDS (Rs) : </label>
+            <input type="text" class="form-control input" formControlName="gstTdsAmount" style="text-align: right;" >
+          </div>
+
+          <div class="mb-2 m-2">
+            <label>JWS : </label>
+            <input type="text" class="form-control input" formControlName="jws" style="text-align: right;"   >
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-8"></div>
+          <div class="col-4 mb-2">
+            <label>Net Total : </label>
+            <input type="text" class="form-control" formControlName="debitNetTotal" 
+              style="background: rgb(190, 225, 215); text-align: right;"  >
+
+          </div>
+        </div>
+
+         <div class="col12 col-12">
+          <button class="btn btn-info" *ngIf="i==0" (click)="addPayment()">Add</button>
+          <button class="btn btn-danger" *ngIf="i>0" (click)="removePayment(i)">Remove</button>
+        </div> 
+
+      </div>
+    </div>
+  </form>
+
+  <form [formGroup]="paymentForm">
+    <div class="row">
+      <h2>Passed For </h2>
+      <div class="col-3">
+        <label>Total Amount (Rs.)</label>
+        <input type="text" class="form-control" formControlName="totalAmount" style="text-align: right;"  >
+      </div>
+      <div class="col-3">
+        <label>ADD Taxes (Rs.)</label>
+        <input type="text" class="form-control" formControlName="passedForAddTaxes" style="text-align: right;"  >
+
+      </div>
+      <div class="col-3">
+        <label>Less Taxes (Rs.)</label>
+        <input type="text" class="form-control" formControlName="passedForLessTaxes" style="text-align: right;"  >
+
+      </div>
+      <div class="col-3">
+        <label>Net Total (Rs.)</label>
+        <input type="text" class="form-control" formControlName="passedForNetTotal" style="text-align: right;"  >
+
+      </div>
+    </div>
+
+    <div class="remarkBoarder" formArrayName="paymentStatusDTO">
+
+
+      <div >
+        <div class="row" *ngFor="let status of paymentStatusArray.controls; let i = index" [formGroupName]="i">
+          <div class="col-4">
+            <label>Remarks : </label>
+            <textarea cols="20" rows="4" class="form-control" formControlName="saRemarks"
+              placeholder="ARO Remarks..."></textarea>
+          </div>
+          <div class="col-4">
+            <label>Signature</label>
+            <input type="text" class="form-control" formControlName="saSignature" placeholder="ARO Signature...">
+          </div>
+          <div class="col-2">
+            <label>date</label>
+            <input type="date" class="form-control" formControlName="saRemarksDate">
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </form>
+
+  <div class="submitButton">
+    <button class="btn btn-secondary" routerLink="/famodule/home/payment">Back</button>
+     <button class="btn btn-success" (click)="submit()" *ngIf="mode=='edit'">Submit</button>
+   <!-- <button class="btn btn-success" *ngIf="role == 'Assistant2_Division'" (click)="submit2()">Submit</button>
+    <button class="btn btn-success" *ngIf="role == 'DA_Head_office'" (click)="daHeadsubmit()">Submit</button>
+    <button class="btn btn-success" *ngIf="role == 'SA_Head_office'" (click)="saHeadsubmit()">Submit</button> -->
+  </div>
+
+</section>

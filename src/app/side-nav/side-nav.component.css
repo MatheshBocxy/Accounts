@@ -1,0 +1,167 @@
+.home-container {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+body{
+    background-color:#FEFAE0;
+}
+
+.home-toolbar {
+    background-color: #2E6583;
+    color: white;
+}
+
+.img1{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 90vh;
+    width: 100%;
+}
+
+.home-is-mobile .home-toolbar {
+    position: fixed;
+    z-index: 2;
+}
+
+h1.home-app-name {
+    margin-left: 8px;
+}
+
+.home-sidenav-container {
+    flex: 1;
+}
+
+.user{
+    margin-top: 5px !important;
+    font-size: 20px;
+}
+
+.accoutCircle{
+    margin-top: -5px;
+}
+
+.home-is-mobile .home-sidenav-container {
+    flex: 1 0 auto;
+}
+
+#tnhb-logo {
+    height: 70px;
+    margin-left: 160px;
+}
+
+.home-spacer {
+    flex: 1 1 auto;
+}
+
+.main-content {
+    background-color: #FFFAF4;
+}
+
+mat-sidenav {
+    background-color: #2E6583;
+}
+
+mat-nav-list button {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+}
+
+:host ::ng-deep .mdc-button__label,
+mat-nav-list button mat-icon {
+    color: #F6F4EB;
+}
+
+mat-nav-list button:hover {
+    background-color: #3b83aa;
+}
+
+.active {
+    background-color: #3b83aa;
+}
+
+.custom-expansion-panel {
+    background-color: #8ACDD7;
+    margin: 10px;
+ }
+
+ .custom-expansion-panel mat-panel-title {
+  color: white;
+}
+
+.p-wel{
+    color: white;
+    margin-top: 9px;
+
+    font-size: 15px;
+}
+
+::ng-deep.custom-expansion-panel .mat-expansion-indicator::after{
+    color: #ffffff;
+}
+
+.custom-expansion-panel-budget {
+    background-color: #8ACDD7;
+    margin: 10px;
+ }
+
+ .custom-expansion-panel-budget mat-panel-title {
+  color: white;
+}
+
+::ng-deep.custom-expansion-panel-budget .mat-expansion-indicator::after{
+    color: #ffffff;
+}
+.custom-expansion-panel-voucher {
+    background-color: #8ACDD7;
+    margin: 10px;
+ }
+
+ .custom-expansion-panel-voucher mat-panel-title {
+  color: white;
+}
+
+::ng-deep.custom-expansion-panel-voucher .mat-expansion-indicator::after{
+    color: #ffffff;
+}
+
+.custom-expansion-panel-report {
+    background-color: #8ACDD7;
+    margin: 10px;
+ }
+
+ .custom-expansion-panel-report mat-panel-title {
+  color: white;
+}
+
+::ng-deep.custom-expansion-panel-report .mat-expansion-indicator::after{
+    color: #ffffff;
+}
+
+.custom-expansion-panel-BR {
+    background-color: #8ACDD7;
+    margin: 10px;
+ }
+
+ .custom-expansion-panel-BR mat-panel-title {
+  color: white;
+}
+
+::ng-deep.custom-expansion-panel-BR .mat-expansion-indicator::after{
+    color: #ffffff;
+}
+
+.bio{
+    border:0px solid;
+    box-shadow:0px 0px 0px  ;
+    height: 50px;
+    width: 240px !important;
+    background-color:#8ACDD7;
+}

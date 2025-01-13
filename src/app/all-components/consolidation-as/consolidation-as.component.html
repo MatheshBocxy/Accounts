@@ -1,0 +1,171 @@
+<section class="main-content">
+
+    <div class="header-row">
+        <h3 class="sub-heading mx-auto">AS-CONSOLIDATION</h3>
+    </div>
+
+    <div class="beRbe_button">
+        <button class="btn buttonbutton" (click)="beRbeButton('AS-BE')" [class.active]="asBeRbe == 'AS-BE'">
+            BE
+        </button>
+        <button class="btn buttonbutton" (click)="beRbeButton('AS-RBE')" [class.active]="asBeRbe == 'AS-RBE'">
+            RBE
+        </button>
+    </div>
+
+    <br>
+
+    <div class="filter-row mb-2">
+        <div>
+            <div class="search-container">
+                <div>
+                    <input matInput #input type="text" [(ngModel)]="filteredValue" (keyup)="filterSearch($event)"
+                        id="search-input" class="search-input" placeholder="Search...">
+                    <div class="search-icon">
+                        <mat-icon>search</mat-icon>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-7">
+        </div>
+
+        <div>
+            <button class="btn btn-light excelBtn">
+                <span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        class="bi bi-file-earmark-arrow-down-fill biExcel-btn" viewBox="0 0 16 16">
+                        <path
+                            d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0M9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1m-1 4v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 0 1 .708-.708L7.5 11.293V7.5a.5.5 0 0 1 1 0" />
+                    </svg></span>Excel</button>
+        </div>
+        <div>
+            <button class="btn btn-light pdfBtn">
+                <span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        class="bi bi-file-earmark-arrow-down-fill biPdf-btn" viewBox="0 0 16 16">
+                        <path
+                            d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0M9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1m-1 4v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 0 1 .708-.708L7.5 11.293V7.5a.5.5 0 0 1 1 0" />
+                    </svg></span>PDF</button>
+        </div>
+    </div>
+
+    <div *ngIf="asBeRbe == 'AS-BE'">
+        <mat-tab-group color="warn" animationDuration="800ms" (selectedTabChange)="onTabChange($event)">
+
+            <mat-tab label="CASH FLOW">
+                <br>
+                <table class="table schemes-table">
+                    <thead>
+                        <tr>
+                            <th>S.No</th>
+                            <th>Year</th>
+                            <th>Proposed</th>
+                            <th>Fixed</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let items of getAllCashBeList; let i = index">
+                            <td>{{i+1}}</td>
+                            <td>{{items.beLastYear}}</td>
+                            <td>{{items.asBeProposedTotal}}</td>
+                            <td>{{items.asBeFixedTotal}}</td>
+                            <td>
+                                <a (click)="eyeButton(items.budgetTypeBE,items.keyValue,items.beLastYear)"><span
+                                        class="material-symbols-rounded actionButton">visibility</span></a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </mat-tab>
+
+            <mat-tab label="WORKS FLOW">
+                <br>
+                <table class="table schemes-table">
+                    <thead>
+                        <tr>
+                            <th>S.No</th>
+                            <th>Year</th>
+                            <th>Proposed</th>
+                            <th>Fixed</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let items of getAllWorkBeList; let i = index">
+                            <td>{{i+1}}</td>
+                            <td>{{items.beLastYear}}</td>
+                            <td>{{items.asBeProposedTotal}}</td>
+                            <td>{{items.asBeFixedTotal}}</td>
+                            <td>
+                                <a (click)="eyeButton(items.budgetTypeBE,items.keyValue,items.beLastYear)"><span
+                                        class="material-symbols-rounded actionButton">visibility</span></a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </mat-tab>
+        </mat-tab-group>
+    </div>
+
+    <div *ngIf="asBeRbe == 'AS-RBE'">
+        <mat-tab-group color="warn" animationDuration="800ms" (selectedTabChange)="onTabChange($event)">
+
+            <mat-tab label="CASH FLOW">
+                <br>
+                <table class="table schemes-table">
+                    <thead>
+                        <tr>
+                            <th>S.No</th>
+                            <th>Year</th>
+                            <th>Proposed</th>
+                            <th>Fixed</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let items of getAllCashRbeList; let i = index">
+                            <td>{{i+1}}</td>
+                            <td>{{items.rbeYear}}</td>
+                            <td>{{items.asRbeProposedTotal}}</td>
+                            <td>{{items.asRbeFixedTotal}}</td>
+                            <td>
+                                <a (click)="eyeButton(items.budgetTypeRBE,items.keyValue,items.rbeYear)"><span
+                                        class="material-symbols-rounded actionButton">visibility</span></a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </mat-tab>
+
+            <mat-tab label="WORKS FLOW">
+                <br>
+                <table class="table schemes-table">
+                    <thead>
+                        <tr>
+                            <th>S.No</th>
+                            <th>Year</th>
+                            <th>Proposed</th>
+                            <th>Fixed</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let items of getAllWorkRbeList; let i = index">
+                            <td>{{i+1}}</td>
+                            <td>{{items.rbeYear}}</td>
+                            <td>{{items.asRbeProposedTotal}}</td>
+                            <td>{{items.asRbeFixedTotal}}</td>
+                            <td>
+                                <a (click)="eyeButton(items.budgetTypeRBE,items.keyValue,items.rbeYear)"><span
+                                        class="material-symbols-rounded actionButton">visibility</span></a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </mat-tab>
+        </mat-tab-group>
+    </div>
+
+
+</section>

@@ -1,0 +1,158 @@
+<section class="main-Section">
+    <a [mat-dialog-close]="true" style="cursor: pointer; font-size: 16px; font-weight: 700;"><svg
+            xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-bar-left"
+            viewBox="0 0 16 16">
+            <path fill-rule="evenodd"
+                d="M12.5 15a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5M10 8a.5.5 0 0 1-.5.5H3.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L3.707 7.5H9.5a.5.5 0 0 1 .5.5" />
+        </svg>Back</a>
+
+    <table class="table table-warning tableBorder" *ngIf="data.beRbe == 'BE'">
+        <thead class=" tableHead">
+            <tr>
+                <th rowspan="3" style="text-align: center; width: 40px;">S.No</th>
+                <th rowspan="3" style="text-align: center; width: 80px;">Sub-Code</th>
+                <th rowspan="3" colspan="3" style="text-align: center; width: 150px;">Description</th>
+                <th style="text-align: center;">Actuals</th>
+                <th style="text-align: center;">RBE</th>
+                <th style="text-align: center;">Actuals Up To</th>
+                <th colspan="2" style="text-align: center;">BE</th>
+            </tr>
+            <tr>
+                <th style="text-align: center;width: 100px;">{{actualyear}}</th>
+                <th style="text-align: center;width: 100px;">{{beRbeYear}}</th>
+                <th style="text-align: center;width: 100px;">{{actualUpToYear}}</th>
+                <th style="text-align: center;width: 100px;" colspan="2">{{beRbeLastYear}}</th>
+            </tr>
+            <tr>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th style="text-align: center;width: 100px;">Proposed</th>
+                <th style="text-align: center;width: 100px;">Fixed</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let items of getAllData.subCodeBES; let i = index">
+                <td>{{1+i}}</td>
+                <td>{{items.subCodeGetDTO.subCode}}</td>
+                <td colspan="3" style="text-align: left;">{{items.subCodeGetDTO.subCodeDescription}}</td>
+                <td style="text-align: right;">{{(items.subActuals).toFixed(2)}}</td>
+                <td style="text-align: right;">{{(items.subRbe).toFixed(2)}}</td>
+                <td style="text-align: right;">{{(items.subActualsUpto).toFixed(2)}}</td>
+                <td style="text-align: right;">{{(items.subBeProposed).toFixed(2)}}</td>
+                <td style="text-align: right;">{{(items.subBeFixed).toFixed(2)}}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table class="table table-warning tableBorder" *ngIf="data.beRbe == 'RBE'">
+        <thead class=" tableHead">
+            <tr>
+                <th rowspan="3" style="text-align: center; width: 40px;">S.No</th>
+                <th rowspan="3" style="text-align: center; width: 80px;">Sub-Code</th>
+                <th rowspan="3" colspan="3" style="text-align: center; width: 150px;">Description</th>
+                <th style="text-align: center;">Actuals</th>
+                <th style="text-align: center;">BE</th>
+                <th style="text-align: center;">Actuals Up To</th>
+                <th colspan="2" style="text-align: center;">RBE</th>
+            </tr>
+            <tr>
+                <th style="text-align: center;width: 100px;">{{actualyear}}</th>
+                <th style="text-align: center;width: 100px;">{{beRbeYear}}</th>
+                <th style="text-align: center;width: 100px;">{{actualUpToYear}}</th>
+                <th style="text-align: center;width: 100px;" colspan="2">{{beRbeLastYear}}</th>
+            </tr>
+            <tr>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th style="text-align: center;width: 100px;">Proposed</th>
+                <th style="text-align: center;width: 100px;">Fixed</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let items of getAllData.subCodeRBES; let i = index">
+                <td>{{1+i}}</td>
+                <td>{{items.subCodeGetDTO.subCode}}</td>
+                <td colspan="3" style="text-align: left;">{{items.subCodeGetDTO.subCodeDescription}}</td>
+                <td style="text-align: right;">{{(items.subActualsRbe).toFixed(2)}}</td>
+                <td style="text-align: right;">{{(items.subBeRbe).toFixed(2)}}</td>
+                <td style="text-align: right;">{{(items.subActualsUptoRbe).toFixed(2)}}</td>
+                <td style="text-align: right;">{{(items.subRbeProposed).toFixed(2)}}</td>
+                <td style="text-align: right;">{{(items.subRbeFixed).toFixed(2)}}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table class="table table-warning tableBorder" *ngIf="data.beRbe == 'AS-BE'">
+        <thead class=" tableHead">
+            <tr>
+                <th rowspan="3" style="text-align: center; width: 40px;">S.No</th>
+                <th rowspan="3" style="text-align: center; width: 80px;">Sub-Code</th>
+                <th rowspan="3" colspan="3" style="text-align: center; width: 150px;">Description</th>
+                <th style="text-align: center;">BE Fixed</th>
+                <th style="text-align: center;">AS Proposed</th>
+                <th style="text-align: center;">AS Fixed</th>
+                <th colspan="2" style="text-align: center;">BE Fixed + AS Fixed</th>
+            </tr>
+            <tr>
+                <th style="text-align: center;width: 100px;">{{beRbeLastYear}}</th>
+                <th style="text-align: center;width: 100px;">{{beRbeLastYear}}</th>
+                <th style="text-align: center;width: 100px;">{{beRbeLastYear}}</th>
+                <th style="text-align: center;width: 100px;">{{beRbeLastYear}}</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let items of getAllData.subCodeASBES; let i = index">
+                <td>{{1+i}}</td>
+                <td>{{items.subCode.subCode}}</td>
+                <td colspan="3" style="text-align: left;">{{items.subCode.subCodeDescription}}</td>
+                <td style="text-align: right;">{{(items.subBeFixed).toFixed(2)}}</td>
+                <td style="text-align: right;">{{(items.subAsBeProposed).toFixed(2)}}</td>
+                <td style="text-align: right;">{{(items.subAsBeFixed).toFixed(2)}}</td>
+                <td style="text-align: right;">{{(items.subFixedTotal).toFixed(2)}}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table class="table table-warning tableBorder" *ngIf="data.beRbe == 'AS-RBE'">
+        <thead class=" tableHead">
+            <tr>
+                <th rowspan="3" style="text-align: center; width: 40px;">S.No</th>
+                <th rowspan="3" style="text-align: center; width: 80px;">Sub-Code</th>
+                <th rowspan="3" colspan="3" style="text-align: center; width: 150px;">Description</th>
+                <th style="text-align: center;">RBE Fixed</th>
+                <th style="text-align: center;">AS Proposed</th>
+                <th style="text-align: center;">AS Fixed</th>
+                <th colspan="2" style="text-align: center;">RBE Fixed + AS Fixed</th>
+            </tr>
+            <tr>
+                <th style="text-align: center;width: 100px;">{{beRbeLastYear}}</th>
+                <th style="text-align: center;width: 100px;">{{beRbeLastYear}}</th>
+                <th style="text-align: center;width: 100px;">{{beRbeLastYear}}</th>
+                <th style="text-align: center;width: 100px;">{{beRbeLastYear}}</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let items of getAllData.subCodeASRBES; let i = index">
+                <td>{{1+i}}</td>
+                <td>{{items.subCode.subCode}}</td>
+                <td colspan="3" style="text-align: left;">{{items.subCode.subCodeDescription}}</td>
+                <td style="text-align: right;">{{(items.subRbeFixed).toFixed(2)}}</td>
+                <td style="text-align: right;">{{(items.subAsRbeProposed).toFixed(2)}}</td>
+                <td style="text-align: right;">{{(items.subAsRbeFixed).toFixed(2)}}</td>
+                <td style="text-align: right;">{{(items.subRbeFixedTotal).toFixed(2)}}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="schDetils">
+        <a [mat-dialog-close]="true" style="cursor: pointer; font-size: 16px; font-weight: 700;"><svg
+                xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                class="bi bi-arrow-bar-left" viewBox="0 0 16 16">
+                <path fill-rule="evenodd"
+                    d="M12.5 15a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5M10 8a.5.5 0 0 1-.5.5H3.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L3.707 7.5H9.5a.5.5 0 0 1 .5.5" />
+            </svg>Back</a>
+    </div>
+
+</section>

@@ -1,0 +1,187 @@
+<section class="main-content">
+  <div class="header-row">
+    <h3 class="sub-heading mx-auto">SUB CODE</h3>
+  </div>
+  <div class="filter-row mb-2">
+    <div class="col-2">
+      <!-- <label for="search-input" class="label">Filter</label><br> -->
+      <div class="search-container">
+        <div>
+          <input matInput #input (keyup)="filterSearch($event)" type="text" id="search-input" class="search-input"
+            placeholder="Search..." />
+          <div class="search-icon">
+            <mat-icon>search</mat-icon>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="pdfExcel">
+      <button class="btn btn-light excelBtn me-1" (click)="generateExcelForSubCode()">
+        <span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+            class="bi bi-file-earmark-arrow-down-fill biExcel-btn" viewBox="0 0 16 16">
+            <path
+              d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0M9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1m-1 4v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 0 1 .708-.708L7.5 11.293V7.5a.5.5 0 0 1 1 0" />
+          </svg></span>Excel
+      </button>
+
+      <button class="btn btn-light pdfBtn" (click)="generatePdfForSubCode()">
+        <span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+            class="bi bi-file-earmark-arrow-down-fill biPdf-btn" viewBox="0 0 16 16">
+            <path
+              d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0M9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1m-1 4v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 0 1 .708-.708L7.5 11.293V7.5a.5.5 0 0 1 1 0" />
+          </svg></span>PDF
+      </button>
+    </div>
+
+  </div>
+
+  <section class="form-section-background">
+    <div>
+      <!-- <h2 class="heading">CREATE CODE</h2> -->
+      <form [formGroup]="codeFormGroup">
+        <div class="row">
+          <!-- <div class="col-2"></div> -->
+          <div class="col-2">
+            <label for="subCode">SubCode No</label>
+            <input class="form-control" type="text" id="subCode" formControlName="subCode" maxlength="6" required />
+          </div>
+          <div class="col-2">
+            <label for="subCodeDescription">SubCode Description</label>
+            <input class="form-control" type="text" id="subCodeDescription" formControlName="subCodeDescription"
+              required />
+          </div>
+          <div class="col-3">
+            <mat-label style="font-weight: bold;">Divisions</mat-label>
+            <mat-select multiple [(value)]="selectedDivisions" multiple formControlName="division"
+              (selectionChange)="onDivisionSelectionChange($event)">
+              <mat-option [value]="'All'" checked="isAllSelected">All</mat-option>
+              <mat-option *ngFor="let items of divisionDropDown" [value]="items">{{ items }}</mat-option>
+            </mat-select>
+          </div>
+
+          <!-- <div class="col-2">
+              <label for="v_SCHEDULE_NAME">Schedule Name</label>
+              <select
+                class="form-select"
+                id="v_SCHEDULE_NAME"
+                formControlName="v_SCHEDULE_NAME"
+                (change)="setScheduleNumber()"
+                required
+              >
+                <option value="" selected disabled>Select an option</option>
+                <option
+                  *ngFor="let items of arrayScheduleDropDown"
+                  [value]="items.scheduleName"
+                >
+                  {{ items.scheduleName }}
+                </option>
+              </select>
+            </div>
+            <div class="col-1" *ngIf="schNo">
+              <label for="">Sch No</label>
+              <input
+                type="text"
+                class="form-control scheduleNo"
+                formControlName="scheduleNo"
+              />
+            </div>
+  
+            <div class="col-2">
+              <label for="v_BUDGET_GROUP">Budget Head</label>
+              <select
+                class="form-select"
+                id="v_BUDGET_GROUP"
+                formControlName="v_BUDGET_GROUP"
+                required
+              >
+                <option value="" selected disabled>Select an option</option>
+                <option *ngFor="let data of allGroupDropDownSave" [value]="data">
+                  {{ data }}
+                </option>
+              </select>
+            </div>
+            <div class="col-2">
+              <label for="userData">User</label>
+              <select
+                class="form-select"
+                type="text"
+                id="userData"
+                formControlName="userData"
+                required
+              >
+                <option value="" selected disabled>Select an option</option>
+  
+                <option *ngFor="let data of allUserData" [value]="data">
+                  {{ data }}
+                </option>
+              </select>
+            </div> -->
+
+          <div class="col-2 mt-3">
+            <button id="mass" class="btn btn-success submitButton" (click)="postCreateCode()">
+              Create
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <div class="mt-2 schemeBorder">
+    <table mat-table [dataSource]="allSubCodeDataSource" matSort class="schemes-table">
+      <!-- ID Column -->
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="thFirst">
+          S.No.
+        </th>
+        <td mat-cell *matCellDef="let code; let i = index">{{ i + 1 }}</td>
+      </ng-container>
+
+      <!-- Asset Category Column -->
+      <ng-container matColumnDef="subcodeNo">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>SubCode No</th>
+        <td mat-cell *matCellDef="let code">{{ code.subCode }}</td>
+      </ng-container>
+
+      <!-- Division Column -->
+      <ng-container matColumnDef="subcodeDescription">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>SubCode Description</th>
+        <td mat-cell *matCellDef="let code">{{ code.subCodeDescription }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="division">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Divisions </th>
+        <td mat-cell *matCellDef="let code">{{ code.division }}</td>
+      </ng-container>
+
+      <!-- Action Column -->
+      <ng-container matColumnDef="ACTION">
+        <th mat-header-cell *matHeaderCellDef class="thBottom">Action</th>
+        <td mat-cell *matCellDef="let code" class="p-0">
+          <div class="d-flex">
+            <a style="color: #161f6d; cursor: pointer"><span class="material-symbols-rounded"
+                (click)="viewCode('view', code.id)">visibility</span></a>
+            <a style="color: #161f6d; cursor: pointer"><span class="material-symbols-rounded"
+                (click)="editCode('edit', code.id)">edit</span></a>
+            <a style="color: red; cursor: pointer"><span class="material-symbols-rounded"
+                (click)="openDelete(code.id)">delete</span></a>
+          </div>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="codeTableColumns"></tr>
+      <tr mat-row *matRowDef="let code; columns: codeTableColumns"></tr>
+
+      <!-- Row shown when there is no matching data. -->
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" colspan="4">
+          No data matching the filter "{{ input.value }}"
+        </td>
+      </tr>
+    </table>
+    <!-- <mat-paginator [pageSizeOptions]="[10, 20, 25]" showFirstLastButtons
+              aria-label="Select page of periodic elements">
+          </mat-paginator> -->
+  </div>
+</section>

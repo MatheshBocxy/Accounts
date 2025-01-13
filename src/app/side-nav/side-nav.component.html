@@ -1,0 +1,251 @@
+<div class="home-container" [class.home-is-mobile]="mobileQuery.matches">
+
+  <mat-toolbar class="home-toolbar">
+    <button mat-icon-button (click)="snav.toggle()">
+      <mat-icon>menu</mat-icon>
+    </button>
+    <p class="p-wel">ACCOUNTS AND FINANCE MANAGEMENT SYSTEM</p>
+    <!-- <img src="../../../assets/images/tnhb_logo1.PNG" alt="tnhb_logo" class="img-fluid" id="tnhb-logo" /> -->
+    <img src="../../assets/assets/images/tnhb_logo1.PNG
+      " alt="tnhb_logo" class="img-fluid" id="tnhb-logo" />
+    <span class="home-spacer"></span>
+    <p class="user" *ngIf="role == role">{{role}}</p>
+    <p class="user" *ngIf="role == ''">{{userDivision}}</p>
+    <mat-icon class="accoutCircle mx-2">account_circle</mat-icon>
+  </mat-toolbar>
+
+  <mat-sidenav-container class="home-sidenav-container" [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
+    <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'" opened="true"
+      [fixedInViewport]="mobileQuery.matches" fixedTopGap="56">
+      <mat-nav-list>
+        <mat-expansion-panel class="custom-expansion-panel" *ngIf="userDivision=='Head_office'">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <mat-icon class="me-1">home</mat-icon>
+              Master
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <mat-list>
+            <mat-list-item>
+              <button routerLink="budget-list" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+                mat-button>
+                <mat-icon>add_box</mat-icon>
+                Budget Head
+              </button>
+            </mat-list-item>
+
+            <mat-list-item>
+              <button routerLink="schedule-list" routerLinkActive="active" mat-button>
+                <mat-icon>add_box</mat-icon>
+                Schedule
+              </button>
+            </mat-list-item>
+
+            <mat-list-item>
+              <button routerLink="code-list" routerLinkActive="active" mat-button>
+                <mat-icon>add_box</mat-icon>
+                Code
+              </button>
+            </mat-list-item>
+
+            <mat-list-item>
+              <button routerLink="subcode" routerLinkActive="active" mat-button>
+                <mat-icon>add_box</mat-icon>
+                Sub Code
+              </button>
+            </mat-list-item>
+          </mat-list>
+        </mat-expansion-panel>
+
+        <mat-expansion-panel class="custom-expansion-panel-budget">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-coins me-1" width="24"
+                height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                <path d="M9 14c0 1.657 2.686 3 6 3s6 -1.343 6 -3s-2.686 -3 -6 -3s-6 1.343 -6 3z" />
+                <path d="M9 14v4c0 1.656 2.686 3 6 3s6 -1.344 6 -3v-4" />
+                <path
+                  d="M3 6c0 1.072 1.144 2.062 3 2.598s4.144 .536 6 0c1.856 -.536 3 -1.526 3 -2.598c0 -1.072 -1.144 -2.062 -3 -2.598s-4.144 -.536 -6 0c-1.856 .536 -3 1.526 -3 2.598z" />
+                <path d="M3 6v10c0 .888 .772 1.45 2 2" />
+                <path d="M3 11c0 .888 .772 1.45 2 2" />
+              </svg>
+              Budget
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <mat-list>
+            <mat-list-item *ngIf="loginRole != 'MD'">
+              <button routerLink="budget" routerLinkActive="active" mat-button>
+                <mat-icon>add_box</mat-icon>
+                BE/RBE
+              </button>
+            </mat-list-item>
+            <mat-list-item
+              *ngIf="loginRole == 'EE_Division' || loginRole == 'AO' || loginRole == 'DCAO' || loginRole == 'FA' ">
+              <button routerLink="as-table" routerLinkActive="active" mat-button>
+                <mat-icon>add_box</mat-icon>
+                AS-BE/AS-RBE
+              </button>
+            </mat-list-item>
+            <mat-list-item>
+              <button routerLink="cash-works" routerLinkActive="active" mat-button>
+                <mat-icon>add_box</mat-icon>
+                Consolidation
+              </button>
+            </mat-list-item>
+            <mat-list-item
+              *ngIf="loginRole == 'EE_Division' || loginRole == 'AO' || loginRole == 'DCAO' || loginRole == 'FA' || loginRole == 'MD'">
+              <button routerLink="consolidationAs" routerLinkActive="active" mat-button>
+                <mat-icon>add_box</mat-icon>
+                AS Consolidation
+              </button>
+            </mat-list-item>
+          </mat-list>
+        </mat-expansion-panel>
+        <!-- *ngIf="forNow" -->
+        <mat-expansion-panel class="custom-expansion-panel-voucher">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-gift-card me-1" width="24"
+                height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                <path d="M3 5m0 3a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v8a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3z" />
+                <path d="M7 16l3 -3l3 3" />
+                <path
+                  d="M8 13c-.789 0 -2 -.672 -2 -1.5s.711 -1.5 1.5 -1.5c1.128 -.02 2.077 1.17 2.5 3c.423 -1.83 1.372 -3.02 2.5 -3c.789 0 1.5 .672 1.5 1.5s-1.211 1.5 -2 1.5h-4z" />
+              </svg>
+              Voucher
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+
+          <mat-list>
+            <mat-list-item *ngIf="forNow">
+              <button routerLink="payment" routerLinkActive="active" mat-button>
+                <mat-icon>add_box</mat-icon>
+                Payment
+              </button>
+            </mat-list-item>
+            <mat-list-item *ngIf="forNow">
+              <button routerLink="journal" routerLinkActive="active" mat-button>
+                <mat-icon>add_box</mat-icon>
+                Journal
+              </button>
+            </mat-list-item>
+            <mat-list-item *ngIf="isReceiptLogin()">
+              <button routerLink="receipt" routerLinkActive="active" mat-button>
+                <mat-icon>add_box</mat-icon>
+                Receipt
+              </button>
+            </mat-list-item>
+            <!-- <mat-list-item>
+                <button routerLink="receipt" routerLinkActive="active" mat-button>
+                  <mat-icon>add_box</mat-icon>
+                  Assets
+                </button>
+              </mat-list-item> -->
+          </mat-list>
+        </mat-expansion-panel>
+
+        <mat-expansion-panel class="custom-expansion-panel-budget" *ngIf="forNow">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <mat-icon>account_balance</mat-icon>
+              Bank Reconciliation
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <mat-list>
+            <mat-list-item>
+              <button routerLink="reconciliation" routerLinkActive="active" mat-button>
+                <mat-icon>add_box</mat-icon>
+                Bank Reconciliation
+              </button>
+            </mat-list-item>
+          </mat-list>
+        </mat-expansion-panel>
+
+        <mat-expansion-panel class="custom-expansion-panel-report" *ngIf="forNow">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-report me-1" width="24"
+                height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                <path d="M8 5h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h5.697" />
+                <path d="M18 14v4h4" />
+                <path d="M18 11v-4a2 2 0 0 0 -2 -2h-2" />
+                <path d="M8 3m0 2a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v0a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2z" />
+                <path d="M18 18m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0" />
+                <path d="M8 11h4" />
+                <path d="M8 15h3" />
+              </svg> Report
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+
+          <mat-list>
+            <mat-list-item>
+              <button routerLink="create-cas" routerLinkActive="active" mat-button>
+                <mat-icon>add_box</mat-icon>
+                CAS
+              </button>
+            </mat-list-item>
+            <mat-list-item>
+              <button routerLink="create-gst" routerLinkActive="active" mat-button>
+                <mat-icon>add_box</mat-icon>
+                GST - I
+              </button>
+            </mat-list-item>
+            <mat-list-item>
+              <button routerLink="gstTwo" routerLinkActive="active" mat-button>
+                <mat-icon>add_box</mat-icon>
+                GST - II
+              </button>
+            </mat-list-item>
+            <mat-list-item>
+              <button routerLink="create-general-ledger" routerLinkActive="active" mat-button>
+                <mat-icon>add_box</mat-icon>
+                General Ledger
+              </button>
+            </mat-list-item>
+            <mat-list-item>
+              <button routerLink="create-balance" routerLinkActive="active" mat-button>
+                <mat-icon>add_box</mat-icon>
+                Balance Sheet
+              </button>
+            </mat-list-item>
+            <mat-list-item>
+              <button routerLink="create-ie-account" routerLinkActive="active" mat-button>
+                <mat-icon>add_box</mat-icon>
+                I&E
+              </button>
+            </mat-list-item>
+            <mat-list-item>
+              <button routerLink="rp-account" routerLinkActive="active" mat-button>
+                <mat-icon>add_box</mat-icon>
+                R&P
+              </button>
+            </mat-list-item>
+            <mat-list-item>
+              <button routerLink="trial-balance" routerLinkActive="active" mat-button>
+                <mat-icon>add_box</mat-icon>
+                Trial Balance
+              </button>
+            </mat-list-item>
+          </mat-list>
+        </mat-expansion-panel>
+
+        <mat-list-item>
+          <button mat-button (click)="logout()">
+            <mat-icon>logout</mat-icon>
+            Logout
+          </button>
+        </mat-list-item>
+      </mat-nav-list>
+    </mat-sidenav>
+
+    <mat-sidenav-content class="main-content">
+      <router-outlet></router-outlet>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</div>
